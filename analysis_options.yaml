@@ -1,0 +1,28 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/l10n/**"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+  errors:
+    missing_required_param: error
+    missing_return: error
+
+linter:
+  rules:
+    # Disable pubspec sorting to keep organized logical groups
+    sort_pub_dependencies: false
+    # Permetti print wrappato in assert durante sviluppo
+    avoid_print: true
+    # Imponi commenti sui membri pubblici
+    public_member_api_docs: false
+    # Permetti underscore per parametri inutilizzati
+    no_leading_underscores_for_local_identifiers: false

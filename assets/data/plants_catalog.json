@@ -1,0 +1,212 @@
+[
+  {
+    "pid": "epipremnum aureum",
+    "scientificName": "Epipremnum aureum",
+    "family": "Araceae",
+    "commonName": {
+      "it": "Potos dorato",
+      "en": "Golden Pothos"
+    },
+    "description": {
+      "it": "Pianta rampicante tropicale molto resistente, ideale per i principianti. Le sue foglie cuoriformi e variegate purificano l'aria degli ambienti interni.",
+      "en": "Very hardy tropical climbing plant, ideal for beginners. Its variegated heart-shaped leaves purify indoor air."
+    },
+    "careNotes": {
+      "it": "Tollera bene la poca luce ma cresce più velocemente con luce indiretta brillante. Lasciare asciugare i primi centimetri di terriccio tra un'annaffiatura e l'altra.",
+      "en": "Tolerates low light well but grows faster with bright indirect light. Let the top inches of soil dry between waterings."
+    },
+    "temperatureMin": 15,
+    "temperatureMax": 30,
+    "humidityMin": 40,
+    "humidityMax": 70,
+    "lightLuxMin": 1000,
+    "lightLuxMax": 20000,
+    "soilMoistMin": 25,
+    "soilMoistMax": 65,
+    "wateringFrequencyDays": 7,
+    "toxicPets": true,
+    "toxicHumans": false,
+    "imageAsset": null,
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Epipremnum_aureum_12082012.jpg/800px-Epipremnum_aureum_12082012.jpg"
+  },
+  {
+    "pid": "monstera deliciosa",
+    "scientificName": "Monstera deliciosa",
+    "family": "Araceae",
+    "commonName": {
+      "it": "Monstera",
+      "en": "Swiss Cheese Plant"
+    },
+    "description": {
+      "it": "Iconica pianta d'appartamento con grandi foglie profondamente frastagliate. Nel suo habitat naturale si arrampica sugli alberi.",
+      "en": "Iconic houseplant with large, deeply lobed leaves. In its natural habitat, it climbs trees."
+    },
+    "careNotes": {
+      "it": "Predilige luce luminosa e indiretta. Pulire regolarmente le foglie dalla polvere per permettere una buona fotosintesi.",
+      "en": "Prefers bright, indirect light. Regularly dust the leaves to allow for good photosynthesis."
+    },
+    "temperatureMin": 18,
+    "temperatureMax": 30,
+    "humidityMin": 50,
+    "humidityMax": 80,
+    "lightLuxMin": 2000,
+    "lightLuxMax": 25000,
+    "soilMoistMin": 30,
+    "soilMoistMax": 70,
+    "wateringFrequencyDays": 7,
+    "toxicPets": true,
+    "toxicHumans": true,
+    "imageAsset": null,
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/04/Monstera_deliciosa3.jpg"
+  },
+  {
+    "pid": "sansevieria trifasciata",
+    "scientificName": "Dracaena trifasciata",
+    "family": "Asparagaceae",
+    "commonName": {
+      "it": "Lingua di suocera",
+      "en": "Snake Plant"
+    },
+    "description": {
+      "it": "Pianta succulenta famosa per la sua incredibile resistenza e capacità di purificare l'aria, anche di notte.",
+      "en": "Succulent plant famous for its incredible resilience and ability to purify air, even at night."
+    },
+    "careNotes": {
+      "it": "Quasi indistruttibile. Teme solo i ristagni d'acqua e l'eccesso di irrigazione. Innaffiare solo quando il terriccio è completamente asciutto.",
+      "en": "Almost indestructible. Only fears waterlogging and overwatering. Water only when the soil is completely dry."
+    },
+    "temperatureMin": 12,
+    "temperatureMax": 35,
+    "humidityMin": 20,
+    "humidityMax": 60,
+    "lightLuxMin": 500,
+    "lightLuxMax": 50000,
+    "soilMoistMin": 10,
+    "soilMoistMax": 40,
+    "wateringFrequencyDays": 21,
+    "toxicPets": true,
+    "toxicHumans": true,
+    "imageAsset": null,
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Snake_plant_-_Sansevieria_trifasciata.jpg"
+  },
+  {
+    "pid": "zamioculcas zamiifolia",
+    "scientificName": "Zamioculcas zamiifolia",
+    "family": "Araceae",
+    "commonName": {
+      "it": "Pianta di Padre Pio (ZZ Plant)",
+      "en": "ZZ Plant"
+    },
+    "description": {
+      "it": "Pianta molto amata per il suo fogliame lucido e carnoso e per la sua tolleranza alla scarsa illuminazione e alle dimenticanze idriche.",
+      "en": "Well-loved plant for its glossy, fleshy foliage and its tolerance to low light and watering neglect."
+    },
+    "careNotes": {
+      "it": "Sopravvive con pochissima acqua grazie ai suoi rizomi che immagazzinano scorte idriche. Evitare sole diretto intenso.",
+      "en": "Survives with very little water thanks to its water-storing rhizomes. Avoid intense direct sun."
+    },
+    "temperatureMin": 15,
+    "temperatureMax": 30,
+    "humidityMin": 30,
+    "humidityMax": 60,
+    "lightLuxMin": 500,
+    "lightLuxMax": 15000,
+    "soilMoistMin": 15,
+    "soilMoistMax": 50,
+    "wateringFrequencyDays": 14,
+    "toxicPets": true,
+    "toxicHumans": true,
+    "imageAsset": null,
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Zamioculcas_zamiifolia_1.jpg"
+  },
+  {
+    "pid": "calathea ornata",
+    "scientificName": "Goeppertia ornata",
+    "family": "Marantaceae",
+    "commonName": {
+      "it": "Calatea",
+      "en": "Pinstripe Calathea"
+    },
+    "description": {
+      "it": "Splendida pianta nota per le foglie scure con sottili strisce rosa. Fa parte delle 'prayer plants', chiudendo le foglie di notte.",
+      "en": "Gorgeous plant known for its dark leaves with thin pink stripes. It is a 'prayer plant', folding its leaves at night."
+    },
+    "careNotes": {
+      "it": "Richiede molta umidità e non sopporta il terriccio asciutto. Annaffiare preferibilmente con acqua demineralizzata o piovana per evitare bordi secchi.",
+      "en": "Requires high humidity and cannot tolerate dry soil. Best watered with distilled or rain water to avoid brown edges."
+    },
+    "temperatureMin": 18,
+    "temperatureMax": 26,
+    "humidityMin": 60,
+    "humidityMax": 90,
+    "lightLuxMin": 1000,
+    "lightLuxMax": 10000,
+    "soilMoistMin": 40,
+    "soilMoistMax": 80,
+    "wateringFrequencyDays": 5,
+    "toxicPets": false,
+    "toxicHumans": false,
+    "imageAsset": null,
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Calathea_ornata_sanderiana.jpg"
+  },
+  {
+    "pid": "chlorophytum comosum",
+    "scientificName": "Chlorophytum comosum",
+    "family": "Asparagaceae",
+    "commonName": {
+      "it": "Falangio / Spider Plant",
+      "en": "Spider Plant"
+    },
+    "description": {
+      "it": "Classica pianta d'appartamento con foglie lunghe e arcuate, verdi o variegate. Produce stoloni con piccole piantine figlie che ricordano ragni appesi.",
+      "en": "Classic houseplant with long, arching leaves, green or variegated. Produces runners with small plantlets resembling hanging spiders."
+    },
+    "careNotes": {
+      "it": "Molto adattabile: tollera luce scarsa, sbalzi di temperatura e dimenticanze idriche. Lasciare asciugare leggermente il terriccio tra un'annaffiatura e l'altra. Adatta anche all'idrocultura.",
+      "en": "Very adaptable: tolerates low light, temperature swings, and occasional neglect. Let soil dry slightly between waterings. Also suitable for hydroponics."
+    },
+    "temperatureMin": 10,
+    "temperatureMax": 30,
+    "humidityMin": 40,
+    "humidityMax": 70,
+    "lightLuxMin": 1000,
+    "lightLuxMax": 20000,
+    "soilMoistMin": 20,
+    "soilMoistMax": 60,
+    "wateringFrequencyDays": 7,
+    "toxicPets": false,
+    "toxicHumans": false,
+    "imageAsset": "assets/illustrations/plants/chlorophytum_comosum_water.png",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Chlorophytum_comosum_0001.JPG/800px-Chlorophytum_comosum_0001.JPG"
+  },
+  {
+    "pid": "pilea peperomioides",
+    "scientificName": "Pilea peperomioides",
+    "family": "Urticaceae",
+    "commonName": {
+      "it": "Pilea / Pianta dei soldi",
+      "en": "Chinese Money Plant"
+    },
+    "description": {
+      "it": "Pianta compatta e originale con foglie rotonde e lucide su steli sottili. Originaria della Cina, è diventata un'icona del design botanico moderno.",
+      "en": "Compact and quirky plant with round, glossy leaves on thin stems. Native to China, it has become an icon of modern botanical design."
+    },
+    "careNotes": {
+      "it": "Preferisce luce indiretta brillante. Ruotare il vaso periodicamente per una crescita uniforme. Lasciare asciugare i 2-3 cm superficiali di terriccio tra le annaffiature. Tollera discreta l'idrocultura.",
+      "en": "Prefers bright indirect light. Rotate the pot periodically for even growth. Let the top 2-3 cm of soil dry between waterings. Tolerates hydroponics reasonably well."
+    },
+    "temperatureMin": 13,
+    "temperatureMax": 30,
+    "humidityMin": 40,
+    "humidityMax": 65,
+    "lightLuxMin": 1500,
+    "lightLuxMax": 20000,
+    "soilMoistMin": 25,
+    "soilMoistMax": 60,
+    "wateringFrequencyDays": 7,
+    "toxicPets": false,
+    "toxicHumans": false,
+    "imageAsset": "assets/illustrations/plants/pilea_peperomioides_water.png",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Pilea_peperomioides.jpg/800px-Pilea_peperomioides.jpg"
+  }
+]
