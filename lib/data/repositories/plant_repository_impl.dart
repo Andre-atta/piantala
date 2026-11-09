@@ -12,30 +12,55 @@ import 'package:piantala/domain/repositories/i_plant_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class PlantRepositoryImpl implements IPlantRepository {
-  PlantRepositoryImpl({Isar? isar}) : _isar = isar ?? IsarService.instance.db;
+  PlantRepositoryImpl({
+    Isar? isar,
+    String? userId,
+  })  : _isar = isar ?? IsarService.instance.db,
+        _userId = userId;
   final Isar _isar;
+  final String? _userId;
   final Uuid _uuid = const Uuid();
 
   @override
-  Stream<List<PlantEntity>> watchPlants() => _isar.plantCollections
-      .where()
-      .filter()
-      .syncStatusIndexLessThan(SyncStatus.pendingDelete.index)
-      .watch(fireImmediately: true)
-      .map((items) => items.map((item) => item.toEntity()).toList())
-      .asBroadcastStream();
+  Stream<List<PlantEntity>> watchPlants() {
+    final userId = _userId;
+    final stream = userId == null
+        ? _isar.plantCollections
+            .where()
+            .filter()
+            .syncStatusIndexLessThan(SyncStatus.pendingDelete.index)
+            .watch(fireImmediately: true)
+        : _isar.plantCollections
+            .filter()
+            .group(
+              (q) => q.userIdEqualTo(userId).and().syncStatusIndexLessThan(
+                    SyncStatus.pendingDelete.index,
+                  ),
+            )
+            .watch(fireImmediately: true);
+    return stream
+        .map((items) => items.map((item) => item.toEntity()).toList())
+        .asBroadcastStream();
+  }
 
   @override
-  Stream<PlantEntity?> watchPlant(String plantId) => _isar.plantCollections
-      .where()
-      .firestoreIdEqualTo(plantId)
-      .watch(fireImmediately: true)
-      .map((items) => items.isEmpty ? null : items.first.toEntity())
-      .asBroadcastStream();
+  Stream<PlantEntity?> watchPlant(String plantId) {
+    final userId = _userId;
+    final query = userId == null
+        ? _isar.plantCollections.where().firestoreIdEqualTo(plantId)
+        : _isar.plantCollections.filter().group(
+              (q) => q.firestoreIdEqualTo(plantId).and().userIdEqualTo(userId),
+            );
+    return query
+        .watch(fireImmediately: true)
+        .map((items) => items.isEmpty ? null : items.first.toEntity())
+        .asBroadcastStream();
+  }
 
   @override
   Future<void> addPlant(PlantEntity plant) async {
     try {
+      _assertOwner(plant.userId);
       final collection = plant.toCollection()
         ..syncStatusIndex = SyncStatus.pendingCreate.index
         ..localUpdatedAt = DateTime.now();
@@ -52,10 +77,20 @@ class PlantRepositoryImpl implements IPlantRepository {
   @override
   Future<void> updatePlant(PlantEntity plant) async {
     try {
-      final existing = await _isar.plantCollections
-          .where()
-          .firestoreIdEqualTo(plant.id)
-          .findFirst();
+      _assertOwner(plant.userId);
+      final userId = _userId;
+      final existing = userId == null
+          ? await _isar.plantCollections
+              .where()
+              .firestoreIdEqualTo(plant.id)
+              .findFirst()
+          : await _isar.plantCollections
+              .filter()
+              .group(
+                (q) =>
+                    q.firestoreIdEqualTo(plant.id).and().userIdEqualTo(userId),
+              )
+              .findFirst();
       if (existing == null) return;
       if (existing.photoUrl != null &&
           existing.photoUrl != plant.photoUrl &&
@@ -93,9 +128,11 @@ class PlantRepositoryImpl implements IPlantRepository {
 
   @override
   Future<void> deletePlant(String plantId) async {
+    final userId = _userId;
+    if (userId == null) return;
     final existing = await _isar.plantCollections
-        .where()
-        .firestoreIdEqualTo(plantId)
+        .filter()
+        .group((q) => q.firestoreIdEqualTo(plantId).and().userIdEqualTo(userId))
         .findFirst();
     if (existing == null) return;
     if (existing.photoUrl?.startsWith('https://firebasestorage') ?? false) {
@@ -117,6 +154,14 @@ class PlantRepositoryImpl implements IPlantRepository {
       await _isar.plantCollections.put(existing);
       await _isar.pendingOperationCollections.put(pending);
     });
+  }
+
+  void _assertOwner(String userId) {
+    if (_userId != null && userId != _userId) {
+      throw const LocalDatabaseException(
+        'Operazione non autorizzata per l’utente corrente.',
+      );
+    }
   }
 }
 

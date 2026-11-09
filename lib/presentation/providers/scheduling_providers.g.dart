@@ -6,7 +6,7 @@ part of 'scheduling_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$plantScheduleHash() => r'd2ac926b14448b99c5afdea0b1109ea684243582';
+String _$plantScheduleHash() => r'7e4b662f53c905fdba5b7fccd8cab34caac167e8';
 
 /// Copied from Dart SDK
 class _SystemHash {

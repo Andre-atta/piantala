@@ -6,7 +6,7 @@ part of 'room_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roomRepositoryHash() => r'c4203a93d25a7498929125fde35b6dba33bdc27d';
+String _$roomRepositoryHash() => r'34c03893ba668692a4406892166c2bace722f1cd';
 
 /// See also [roomRepository].
 @ProviderFor(roomRepository)
@@ -21,7 +21,7 @@ final roomRepositoryProvider = AutoDisposeProvider<IRoomRepository>.internal(
 );
 
 typedef RoomRepositoryRef = AutoDisposeProviderRef<IRoomRepository>;
-String _$roomsHash() => r'8ce9c8c999e6745f21bf5ed7b45b782d03e170dd';
+String _$roomsHash() => r'726dfa4936501009cc1a6edfce7c2c6a10ad8865';
 
 /// See also [rooms].
 @ProviderFor(rooms)

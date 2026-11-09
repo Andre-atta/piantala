@@ -26,7 +26,6 @@ class RoomCollection {
   late String exposure;
 
   late bool exposureConfirmedByUser;
-  int? floor;
   String? notes;
   late DateTime createdAt;
 }

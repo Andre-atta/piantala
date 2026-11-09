@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
+import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/theme_providers.dart';
 
@@ -90,8 +91,21 @@ class _LoginBody extends StatelessWidget {
         TemporalPeriod.evening => AppColors.eveningAccent,
       };
 
+  String _localizedGreeting(TemporalPeriod p, AppLocalizations? l10n) {
+    if (l10n == null) return p.greeting;
+    return switch (p) {
+      TemporalPeriod.night => l10n.greetingNight,
+      TemporalPeriod.dawn => l10n.greetingDawn,
+      TemporalPeriod.day => l10n.greetingDay,
+      TemporalPeriod.dusk => l10n.greetingDusk,
+      TemporalPeriod.evening => l10n.greetingEvening,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -103,7 +117,7 @@ class _LoginBody extends StatelessWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -114,11 +128,11 @@ class _LoginBody extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      width: 88,
-                      height: 88,
+                      width: AppSizes.avatarLg,
+                      height: AppSizes.avatarLg,
                       decoration: BoxDecoration(
                         color: _accentColor.withAlpha(25),
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(AppRadius.xl),
                         border: Border.all(
                           color: _accentColor.withAlpha(50),
                           width: 1.5,
@@ -131,9 +145,9 @@ class _LoginBody extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'Piantala',
+                      l10n?.appName ?? 'Piantala',
                       style: TextStyle(
                         fontFamily: 'DMSerifDisplay',
                         fontSize: 42,
@@ -142,9 +156,9 @@ class _LoginBody extends StatelessWidget {
                         height: 1.1,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'Il tuo giardino tascabile',
+                      l10n?.appTagline ?? 'Il tuo giardino tascabile',
                       style: TextStyle(
                         fontSize: 15,
                         color: _textColor.withAlpha(153),
@@ -161,7 +175,7 @@ class _LoginBody extends StatelessWidget {
               // ── Greeting contestuale ──────────────────────────────
               Center(
                 child: Text(
-                  '${period.icon}  ${period.greeting}',
+                  '${period.icon}  ${_localizedGreeting(period, l10n)}',
                   style: TextStyle(
                     fontSize: 16,
                     color: _textColor.withAlpha(178),
@@ -170,9 +184,9 @@ class _LoginBody extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: AppSpacing.lg),
 
-              // ── Bottone Google Sign-In ────────────────────────────
+              // ── Metodi di accesso ─────────────────────────────────
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 250),
                 child: isLoading
@@ -192,10 +206,32 @@ class _LoginBody extends StatelessWidget {
                       ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
+              OutlinedButton(
+                onPressed: isLoading
+                    ? null
+                    : () => showModalBottomSheet<void>(
+                          context: context,
+                          isScrollControlled: true,
+                          showDragHandle: true,
+                          builder: (_) => const _EmailAuthSheet(),
+                        ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: _textColor,
+                  side: BorderSide(color: _textColor.withAlpha(70)),
+                  minimumSize: const Size.fromHeight(AppSizes.buttonHeightMd),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                  ),
+                ),
+                child: Text(l10n?.authSignInWithEmail ?? 'Accedi con email'),
+              ),
+
+              const SizedBox(height: AppSpacing.md),
               Center(
                 child: Text(
-                  'Accedendo accetti i Termini di servizio',
+                  l10n?.appTosNotice ??
+                      'Accedendo accetti i Termini di servizio',
                   style: TextStyle(
                     fontSize: 11,
                     color: _textColor.withAlpha(100),
@@ -209,6 +245,263 @@ class _LoginBody extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _EmailAuthSheet extends ConsumerStatefulWidget {
+  const _EmailAuthSheet();
+
+  @override
+  ConsumerState<_EmailAuthSheet> createState() => _EmailAuthSheetState();
+}
+
+class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
+  final _formKey = GlobalKey<FormState>();
+  final _displayNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmationController = TextEditingController();
+  bool _isRegistration = false;
+  bool _isReset = false;
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _displayNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit(AppLocalizations? l10n) async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    final controller = ref.read(authControllerProvider.notifier);
+    if (_isReset) {
+      await controller.sendPasswordResetEmail(_emailController.text);
+    } else if (_isRegistration) {
+      await controller.createUserWithEmailAndPassword(
+        _emailController.text,
+        _passwordController.text,
+        _displayNameController.text,
+      );
+    } else {
+      await controller.signInWithEmailAndPassword(
+        _emailController.text,
+        _passwordController.text,
+      );
+    }
+
+    if (!mounted) return;
+    final state = ref.read(authControllerProvider);
+    if (state.hasError) return;
+
+    final message = _isReset
+        ? (l10n?.authResetEmailSent ??
+            'Se l’indirizzo è associato a un account, riceverai le istruzioni.')
+        : null;
+    Navigator.of(context).pop();
+    if (message != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+    final theme = Theme.of(context);
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final l10n = AppLocalizations.of(context);
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.sm,
+        AppSpacing.lg,
+        bottomInset + AppSpacing.lg,
+      ),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                _isReset
+                    ? (l10n?.authSheetTitleReset ?? 'Recupera password')
+                    : _isRegistration
+                        ? (l10n?.authSheetTitleRegister ?? 'Crea account')
+                        : (l10n?.authSheetTitleLogin ?? 'Accedi con email'),
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontFamily: 'DMSerifDisplay',
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                _isReset
+                    ? (l10n?.authSheetSubtitleReset ??
+                        'Inserisci la tua email. Se è associata a un account, riceverai le istruzioni.')
+                    : (l10n?.authSheetSubtitleLogin ??
+                        'Usa un indirizzo email valido e una password sicura.'),
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              if (_isRegistration) ...[
+                TextFormField(
+                  controller: _displayNameController,
+                  enabled: !authState.isLoading,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.name],
+                  decoration: InputDecoration(
+                    labelText: l10n?.authFieldName ?? 'Nome',
+                    prefixIcon: const Icon(Icons.person_outline),
+                  ),
+                  validator: (value) => value?.trim().isEmpty ?? true
+                      ? (l10n?.authValidationNameEmpty ?? 'Inserisci il tuo nome')
+                      : null,
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              TextFormField(
+                controller: _emailController,
+                enabled: !authState.isLoading,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction:
+                    _isReset ? TextInputAction.done : TextInputAction.next,
+                autofillHints: const [AutofillHints.email],
+                decoration: InputDecoration(
+                  labelText: l10n?.authFieldEmail ?? 'Email',
+                  prefixIcon: const Icon(Icons.email_outlined),
+                ),
+                validator: (value) {
+                  final email = value?.trim() ?? '';
+                  if (email.isEmpty || !email.contains('@')) {
+                    return l10n?.authValidationEmailInvalid ??
+                        'Inserisci un indirizzo email valido';
+                  }
+                  return null;
+                },
+              ),
+              if (!_isReset) ...[
+                const SizedBox(height: AppSpacing.md),
+                TextFormField(
+                  controller: _passwordController,
+                  enabled: !authState.isLoading,
+                  obscureText: _obscurePassword,
+                  textInputAction: _isRegistration
+                      ? TextInputAction.next
+                      : TextInputAction.done,
+                  autofillHints: [
+                    if (_isRegistration)
+                      AutofillHints.newPassword
+                    else
+                      AutofillHints.password,
+                  ],
+                  decoration: InputDecoration(
+                    labelText: l10n?.authFieldPassword ?? 'Password',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      onPressed: () => setState(
+                        () => _obscurePassword = !_obscurePassword,
+                      ),
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if ((value ?? '').length < 6) {
+                      return l10n?.authValidationPasswordTooShort ??
+                          'Usa almeno 6 caratteri';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+              if (_isRegistration) ...[
+                const SizedBox(height: AppSpacing.md),
+                TextFormField(
+                  controller: _confirmationController,
+                  enabled: !authState.isLoading,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    labelText: l10n?.authFieldConfirmPassword ??
+                        'Conferma password',
+                    prefixIcon: const Icon(Icons.lock_reset_outlined),
+                  ),
+                  validator: (value) => value != _passwordController.text
+                      ? (l10n?.authValidationPasswordMismatch ??
+                          'Le password non coincidono')
+                      : null,
+                ),
+              ],
+              if (authState.hasError) ...[
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  authState.error.toString(),
+                  style: TextStyle(color: theme.colorScheme.error),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.lg),
+              FilledButton(
+                onPressed: authState.isLoading ? null : () => _submit(l10n),
+                child: _submitChild(authState.isLoading, l10n),
+              ),
+              if (!_isReset && !_isRegistration)
+                TextButton(
+                  onPressed: authState.isLoading
+                      ? null
+                      : () => setState(() => _isReset = true),
+                  child: Text(
+                    l10n?.authButtonForgotPassword ?? 'Password dimenticata?',
+                  ),
+                ),
+              TextButton(
+                onPressed: authState.isLoading
+                    ? null
+                    : () => setState(() {
+                          _isReset = false;
+                          _isRegistration = !_isRegistration;
+                        }),
+                child: Text(
+                  _isReset
+                      ? (l10n?.authButtonBackToLogin ?? 'Torna all’accesso')
+                      : _isRegistration
+                          ? (l10n?.authButtonGoToLogin ??
+                              'Hai già un account? Accedi')
+                          : (l10n?.authButtonGoToRegister ??
+                              'Non hai un account? Registrati'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _submitChild(bool isLoading, AppLocalizations? l10n) {
+    if (isLoading) {
+      return const SizedBox(
+        width: 20,
+        height: 20,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      );
+    }
+
+    final label = _isReset
+        ? (l10n?.authButtonSendReset ?? 'Invia istruzioni')
+        : _isRegistration
+            ? (l10n?.authButtonRegister ?? 'Crea account')
+            : (l10n?.authButtonLogin ?? 'Accedi');
+    return Text(label);
   }
 }
 
@@ -226,8 +519,10 @@ class _GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return SizedBox(
-      height: 56,
+      height: AppSizes.buttonHeightLg,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -235,19 +530,18 @@ class _GoogleSignInButton extends StatelessWidget {
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadius.lg),
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo Google semplificato con le 4 lettere colorate
             Container(
-              width: 24,
-              height: 24,
+              width: AppSizes.iconMd,
+              height: AppSizes.iconMd,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(AppRadius.xs),
               ),
               child: const Center(
                 child: Text(
@@ -260,10 +554,10 @@ class _GoogleSignInButton extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
-            const Text(
-              'Continua con Google',
-              style: TextStyle(
+            const SizedBox(width: AppSpacing.md),
+            Text(
+              l10n?.authSignInWithGoogle ?? 'Continua con Google',
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.2,

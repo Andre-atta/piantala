@@ -3,7 +3,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:piantala/data/services/fcm_service.dart';
+import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
+import 'package:piantala/presentation/providers/locale_providers.dart';
 import 'package:piantala/presentation/providers/notification_providers.dart';
 import 'package:piantala/presentation/providers/theme_providers.dart';
 import 'package:piantala/router.dart';
@@ -14,6 +16,7 @@ class PiantalaApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeData = ref.watch(appThemeDataProvider);
+    final locale = ref.watch(appLocaleProvider);
     final router = ref.watch(routerProvider);
 
     // Osserva lo stato di autenticazione per inizializzare FCM dopo il login
@@ -31,20 +34,21 @@ class PiantalaApp extends ConsumerWidget {
     }
 
     return MaterialApp.router(
-      title: 'Piantala',
+      onGenerateTitle: (context) =>
+          AppLocalizations.of(context)?.appName ?? 'Piantala',
       theme: themeData,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       // Localizzazione — italiano di default, predisposto per EN
-      locale: const Locale('it'),
+      locale: locale,
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('it'),
-        Locale('en'),
+        ...AppLocalizations.supportedLocales,
       ],
     );
   }

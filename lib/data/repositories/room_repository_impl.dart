@@ -11,18 +11,36 @@ import 'package:piantala/domain/repositories/i_room_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class RoomRepositoryImpl implements IRoomRepository {
-  RoomRepositoryImpl({Isar? isar}) : _isar = isar ?? IsarService.instance.db;
+  RoomRepositoryImpl({
+    Isar? isar,
+    String? userId,
+  })  : _isar = isar ?? IsarService.instance.db,
+        _userId = userId;
 
   final Isar _isar;
+  final String? _userId;
   final Uuid _uuid = const Uuid();
 
   @override
   Stream<List<RoomEntity>> watchRooms() {
     try {
+      final userId = _userId;
+      if (userId == null) {
+        return _isar.roomCollections
+            .where()
+            .filter()
+            .syncStatusIndexLessThan(SyncStatus.pendingDelete.index)
+            .watch(fireImmediately: true)
+            .map((collections) => collections.map((e) => e.toEntity()).toList())
+            .asBroadcastStream();
+      }
       return _isar.roomCollections
-          .where()
           .filter()
-          .syncStatusIndexLessThan(SyncStatus.pendingDelete.index)
+          .group(
+            (q) => q.userIdEqualTo(userId).and().syncStatusIndexLessThan(
+                  SyncStatus.pendingDelete.index,
+                ),
+          )
           .watch(fireImmediately: true)
           .map((collections) => collections.map((e) => e.toEntity()).toList())
           .asBroadcastStream();
@@ -36,6 +54,7 @@ class RoomRepositoryImpl implements IRoomRepository {
   @override
   Future<void> addRoom(RoomEntity room) async {
     try {
+      _assertOwner(room.userId);
       final collection = room.toCollection()
         ..syncStatusIndex = SyncStatus.pendingCreate.index
         ..localUpdatedAt = DateTime.now();
@@ -64,10 +83,20 @@ class RoomRepositoryImpl implements IRoomRepository {
   @override
   Future<void> updateRoom(RoomEntity room) async {
     try {
-      final existing = await _isar.roomCollections
-          .where()
-          .firestoreIdEqualTo(room.id)
-          .findFirst();
+      _assertOwner(room.userId);
+      final userId = _userId;
+      final existing = userId == null
+          ? await _isar.roomCollections
+              .where()
+              .firestoreIdEqualTo(room.id)
+              .findFirst()
+          : await _isar.roomCollections
+              .filter()
+              .group(
+                (q) =>
+                    q.firestoreIdEqualTo(room.id).and().userIdEqualTo(userId),
+              )
+              .findFirst();
 
       final collection = room.toCollection()
         ..id = existing?.id ?? Isar.autoIncrement
@@ -97,10 +126,14 @@ class RoomRepositoryImpl implements IRoomRepository {
 
   @override
   Future<void> deleteRoom(String roomId) async {
+    final userId = _userId;
+    if (userId == null) return;
     try {
       final existing = await _isar.roomCollections
-          .where()
-          .firestoreIdEqualTo(roomId)
+          .filter()
+          .group(
+            (q) => q.firestoreIdEqualTo(roomId).and().userIdEqualTo(userId),
+          )
           .findFirst();
 
       if (existing == null) return;
@@ -129,6 +162,14 @@ class RoomRepositoryImpl implements IRoomRepository {
       );
     }
   }
+
+  void _assertOwner(String userId) {
+    if (_userId != null && userId != _userId) {
+      throw const LocalDatabaseException(
+        'Operazione non autorizzata per l’utente corrente.',
+      );
+    }
+  }
 }
 
 // ── Extensions per Mapping Isar ↔ Domain ─────────────────────────────────────
@@ -141,7 +182,6 @@ extension _RoomEntityToCollection on RoomEntity {
       ..name = name
       ..exposure = exposure
       ..exposureConfirmedByUser = exposureConfirmedByUser
-      ..floor = floor
       ..notes = notes
       ..createdAt = createdAt;
   }
@@ -155,7 +195,6 @@ extension _RoomCollectionToEntity on RoomCollection {
       name: name,
       exposure: exposure,
       exposureConfirmedByUser: exposureConfirmedByUser,
-      floor: floor,
       notes: notes,
       createdAt: createdAt,
     );

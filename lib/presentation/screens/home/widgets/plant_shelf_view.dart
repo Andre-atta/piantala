@@ -20,7 +20,7 @@ const _kPlantsPerRow = 3;
 /// Architettura shelf-UI (art-direction.md §2): prospettiva frontale,
 /// mensole come bande orizzontali — nessuna prospettiva 3D.
 /// Il path dello sfondo è risolto da [PlantAssetResolver], mai hardcodato
-/// nel widget (.AGENT.md §1.2).
+/// nel widget (AGENT.md §1.2).
 class PlantShelfView extends StatelessWidget {
   const PlantShelfView({
     required this.plants,

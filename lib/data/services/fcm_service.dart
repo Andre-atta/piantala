@@ -54,14 +54,20 @@ class FcmService {
         {'fcmToken': token, 'fcmTokenUpdatedAt': FieldValue.serverTimestamp()},
         SetOptions(merge: true),
       );
-      debugPrint('FcmService: token salvato → $token');
+      // FIX A-04: mascherare il token FCM nei log per sicurezza
+      debugPrint(
+        'FcmService: token salvato → ${token.substring(0, 10)}...[MASKED]',
+      );
     } catch (e) {
       debugPrint('FcmService: errore salvataggio token → $e');
     }
   }
 
   Future<void> _onTokenRefresh(String token) async {
-    debugPrint('FcmService: token aggiornato → $token');
+    // FIX A-04: mascherare il token FCM nei log per sicurezza
+    debugPrint(
+      'FcmService: token aggiornato → ${token.substring(0, 10)}...[MASKED]',
+    );
     await _saveToken();
   }
 

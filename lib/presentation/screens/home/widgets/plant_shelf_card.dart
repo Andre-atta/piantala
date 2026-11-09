@@ -11,7 +11,7 @@ import 'package:piantala/presentation/providers/species_accent_providers.dart';
 /// [speciesAccentColorProvider] tramite [ref] — mai dal catalogo
 /// direttamente. È applicato SOLO al bordo della card; non tocca
 /// bottom nav, bottoni, header o qualsiasi colore globale del tema
-/// (.AGENT.md §8.1).
+/// (AGENT.md §8.1).
 class PlantShelfCard extends ConsumerWidget {
   const PlantShelfCard({
     required this.plant,

@@ -9,6 +9,20 @@ abstract class IAuthRepository {
   /// Effettua il login usando Google Sign-In.
   Future<UserEntity?> signInWithGoogle();
 
+  Future<UserEntity?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  );
+
+  Future<UserEntity?> createUserWithEmailAndPassword(
+    String email,
+    String password,
+    String displayName,
+  );
+
+  /// Invia una richiesta di reimpostazione della password.
+  Future<void> sendPasswordResetEmail(String email);
+
   /// Effettua il logout.
   Future<void> signOut();
 

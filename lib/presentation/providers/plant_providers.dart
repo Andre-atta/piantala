@@ -1,17 +1,21 @@
 import 'package:piantala/data/repositories/plant_repository_impl.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/repositories/i_plant_repository.dart';
+import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'plant_providers.g.dart';
 
 @riverpod
 IPlantRepository plantRepository(PlantRepositoryRef ref) {
-  return PlantRepositoryImpl();
+  final user = ref.watch(currentUserProvider);
+  return PlantRepositoryImpl(userId: user?.uid);
 }
 
 @riverpod
 Stream<List<PlantEntity>> plants(PlantsRef ref) {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) return Stream.value([]);
   final repository = ref.watch(plantRepositoryProvider);
   return repository.watchPlants().map((plants) {
     final sortedPlants = List<PlantEntity>.from(plants)
@@ -22,6 +26,8 @@ Stream<List<PlantEntity>> plants(PlantsRef ref) {
 
 @riverpod
 Stream<PlantEntity?> plant(PlantRef ref, String plantId) {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) return Stream.value(null);
   final repository = ref.watch(plantRepositoryProvider);
   return repository.watchPlant(plantId);
 }

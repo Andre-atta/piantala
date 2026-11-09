@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_device_compass/flutter_device_compass.dart';
+import 'package:piantala/core/theme/app_colors.dart';
 
 class CompassScannerDialog extends StatefulWidget {
   const CompassScannerDialog({super.key});
@@ -95,32 +96,34 @@ class _CompassScannerDialogState extends State<CompassScannerDialog> {
             const CircularProgressIndicator()
           else ...[
             if (_isLocked)
-              const Icon(Icons.check_circle, color: Colors.green, size: 60)
+              const Icon(Icons.check_circle, color: AppColors.success, size: 60)
             else
               Transform.rotate(
                 angle: _currentHeading! * (math.pi / 180) * -1,
-                child: const Icon(
+                child: Icon(
                   Icons.navigation,
                   size: 80,
-                  color: Colors.deepPurple,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.md),
             Text(
               _isLocked ? 'Direzione Rilevata' : 'Punta verso la finestra',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               direction,
               style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
             if (!_isLocked)
               Padding(
-                padding: const EdgeInsets.only(top: 16),
+                padding: const EdgeInsets.only(top: AppSpacing.md),
                 child: Text(
                   'Tieni fermo per: $_countdown s',
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface.withAlpha(120),
+                  ),
                 ),
               ),
           ],

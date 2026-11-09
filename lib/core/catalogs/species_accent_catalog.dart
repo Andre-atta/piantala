@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Catalogo degli accenti cromatici per specie — curato manualmente.
 ///
-/// REGOLE (.AGENT.md §8.1 + §8.4):
+/// REGOLE (AGENT.md §8.1 + §8.4):
 ///   ✅ I colori vivono QUI, non in AppColors (sono scoped alla specie).
 ///   ✅ Il catalogo è esposto tramite SpeciesAccentProvider — mai letto
 ///      direttamente nel widget.

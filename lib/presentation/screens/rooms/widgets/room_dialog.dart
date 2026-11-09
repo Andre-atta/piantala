@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
+import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/compass_scanner_dialog.dart';
@@ -19,7 +21,6 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
   late TextEditingController _nameController;
   late TextEditingController _notesController;
   String _exposure = 'UNKNOWN';
-  int? _floor;
   bool _isLoading = false;
 
   @override
@@ -29,7 +30,6 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
     _notesController = TextEditingController(text: widget.room?.notes);
     if (widget.room != null) {
       _exposure = widget.room!.exposure;
-      _floor = widget.room!.floor;
     }
   }
 
@@ -58,7 +58,6 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
       name: _nameController.text.trim(),
       exposure: _exposure,
       createdAt: widget.room?.createdAt ?? DateTime.now(),
-      floor: _floor,
       notes: _notesController.text.trim().isEmpty
           ? null
           : _notesController.text.trim(),
@@ -77,8 +76,14 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return AlertDialog(
-      title: Text(widget.room == null ? 'Nuova Stanza' : 'Modifica Stanza'),
+      title: Text(
+        widget.room == null
+            ? (l10n?.roomDialogNewTitle ?? 'Nuova Stanza')
+            : (l10n?.roomDialogEditTitle ?? 'Modifica Stanza'),
+      ),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -87,12 +92,14 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration:
-                    const InputDecoration(labelText: 'Nome della stanza'),
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Inserisci un nome' : null,
+                decoration: InputDecoration(
+                  labelText: l10n?.roomDialogNameLabel ?? 'Nome della stanza',
+                ),
+                validator: (v) => v == null || v.isEmpty
+                    ? (l10n?.roomDialogNameValidation ?? 'Inserisci un nome')
+                    : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               InkWell(
                 onTap: () async {
                   final direction = await showDialog<String>(
@@ -104,26 +111,19 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
                   }
                 },
                 child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Esposizione Solare',
-                    suffixIcon: Icon(Icons.explore),
+                  decoration: InputDecoration(
+                    labelText: l10n?.roomDialogExposureLabel ?? 'Esposizione',
+                    suffixIcon: const Icon(Icons.explore),
                   ),
                   child: Text(_exposure),
                 ),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                initialValue: _floor?.toString(),
-                decoration:
-                    const InputDecoration(labelText: 'Piano (opzionale)'),
-                keyboardType: TextInputType.number,
-                onChanged: (v) => _floor = int.tryParse(v),
-              ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               TextFormField(
                 controller: _notesController,
-                decoration:
-                    const InputDecoration(labelText: 'Note (opzionale)'),
+                decoration: InputDecoration(
+                  labelText: l10n?.roomDialogNotesLabel ?? 'Note (opzionali)',
+                ),
                 maxLines: 3,
               ),
             ],
@@ -133,13 +133,17 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Annulla'),
+          child: Text(l10n?.commonCancel ?? 'Annulla'),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _save,
           child: _isLoading
-              ? const CircularProgressIndicator()
-              : const Text('Salva'),
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(l10n?.commonSave ?? 'Salva'),
         ),
       ],
     );

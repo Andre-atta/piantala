@@ -1,5 +1,5 @@
 # AGENT.md — Piantala
-## Regole operative per l'agente AI (antigravity)
+## Regole operative per l'agente AI (Copilot, Antigravity o altro)
 
 > Questo file è la costituzione operativa del progetto.  
 > **Leggilo per intero prima di toccare qualsiasi file.**  
@@ -13,6 +13,8 @@ Nome: **Piantala**
 Tipo: App Flutter per la cura delle piante da appartamento  
 Design intent: "Posto tranquillo" — nessuna dashboard tecnica, nessuna interfaccia aggressiva  
 Stack: Flutter + Riverpod 2.x + Firebase + Isar
+Dati di specie: OpenPlantBook (nessun'altra fonte; il testo "Perenual" nell'app è un errore da correggere)
+Pubblicazione: Play Store, quindi ogni risorsa (font, icone, asset, librerie) deve essere gratuita per uso commerciale
 Documento di riferimento architetturale: `README.md` + `docs/DATABASE_SCHEMA.md` + `docs/PROVIDERS.md`
 
 ---
@@ -23,15 +25,16 @@ Documento di riferimento architetturale: `README.md` + `docs/DATABASE_SCHEMA.md`
 
 ```
 ❌ MAI hardcodare API keys nel codice sorgente
-❌ MAI salvare la chiave Gemini in Firestore, SharedPreferences, o log
-❌ MAI committare google-services.json o GoogleService-Info.plist
+❌ MAI salvare token, chiavi o dati sensibili in Firestore, SharedPreferences o log
+❌ MAI inserire google-services.json o GoogleService-Info.plist in file versionati
 ❌ MAI esporre l'UID utente in log o analytics events
 ❌ MAI usare http:// — solo https://
 ❌ MAI disabilitare le Firestore Security Rules durante lo sviluppo
 ```
 
-La chiave Gemini dell'utente vive SOLO in `flutter_secure_storage`.  
-Ogni accesso alla chiave passa dal `GeminiKeyProvider` — nessun accesso diretto.
+Eventuali segreti dell'utente vivono SOLO in `flutter_secure_storage`, dietro un unico provider dedicato.  
+Si sfruttano le protezioni di Firebase già attive: **Firebase App Check** attivo sui servizi usati e Security Rules sempre attive. Non si aggiungono sistemi di sicurezza paralleli se Firebase già copre il caso.
+Non esistono integrazioni con AI né chiamate AI: sono in backlog (vedi sotto).
 
 ### 1.2 Architettura — Non derogare mai da questi pattern
 
@@ -139,7 +142,7 @@ import 'package:piantala/presentation/...';
 
 Dopo ogni modifica a:
 - Un file con annotazioni `@freezed`
-- Un file con annotazioni `@riverpod`  
+- Un file con annotazioni `@riverpod`
 - Un file con annotazioni Isar (`@collection`, `@embedded`)
 - Un file con annotazioni `@JsonSerializable`
 
@@ -148,8 +151,7 @@ Dopo ogni modifica a:
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-Non committare mai file `.g.dart` o `.freezed.dart` obsoleti (build runner li sovrascrive).  
-I file generati (`*.g.dart`, `*.freezed.dart`) SONO committati nel repo (no `.gitignore`).
+I file generati (`*.g.dart`, `*.freezed.dart`) restano nel repo e vanno sempre rigenerati, mai modificati a mano.
 
 ---
 
@@ -221,8 +223,6 @@ class PlantCollection {
 users/{uid}/plants/{plantId}
 users/{uid}/rooms/{roomId}
 users/{uid}/plants/{plantId}/watering_logs/{logId}
-users/{uid}/plants/{plantId}/health_logs/{logId}
-users/{uid}/plants/{plantId}/diagnoses/{diagnosisId}
 users/{uid}/plants/{plantId}/nursery/{nurseryId}
 ```
 
@@ -234,7 +234,6 @@ users/{uid}/plants/{plantId}/nursery/{nurseryId}
 ❌ MAI fare una query Firestore senza limite (usare .limit(n) sempre)
 ❌ MAI leggere una intera collection senza filtro su userId
 ❌ MAI salvare dati binari (immagini) in Firestore — usare Firebase Storage
-❌ MAI salvare la chiave Gemini in qualsiasi documento Firestore
 ```
 
 ---
@@ -253,9 +252,28 @@ Flusso obbligatorio per le foto delle piante:
 ---
 
 
+## 7. Localizzazione e Stringhe Centralizzate
+
+> **Sezione da verificare sul codice reale (repo di Mestre).** I nomi dei file qui sotto sono quelli attesi dopo il refactoring con Antigravity; se differiscono, correggere questa sezione e non il codice.
+
+```
+❌ MAI scrivere una stringa visibile all'utente dentro un widget
+❌ MAI concatenare stringhe tradotte (usare placeholder ICU)
+✅ Ogni testo UI vive nel file centrale delle stringhe / nei file ARB della libreria di traduzione
+✅ Ogni nuova stringa va aggiunta in tutte le lingue supportate (oggi: italiano, inglese)
+✅ Etichette di accessibilità (Semantics, tooltip) sono stringhe come le altre
+```
+
+- Lingue supportate: italiano (predefinita) e inglese. L'inglese nel selettore lingua è ancora da confermare.
+- I nomi di piante e stanze sono dati dell'utente, non stringhe tradotte.
+- I testi dell'enciclopedia arrivano da OpenPlantBook e non si traducono nell'app.
+- File centrali attesi (da confermare): stringhe, colori, spaziature. Se un valore manca, si aggiunge lì, mai nel widget.
+
+---
+
 ## 8. Tema & UI
 
-### 8.1 Nessun colore hardcodato nei widget
+### 8.1 Nessun colore, font o misura hardcodati nei widget
 
 ```dart
 // ❌ Sbagliato
@@ -266,6 +284,9 @@ Container(color: Theme.of(context).colorScheme.primary)
 // oppure
 Container(color: AppColors.plantGreen)  // costante da app_colors.dart
 ```
+
+Vale anche per i font (mai `fontFamily: 'Delius'` in un widget: si usa il tema) e per le misure (8.3).
+I valori di palette e tipografia sono quelli di `docs/design/art-direction.md` (v2.3.0): se un colore o un font non è lì, non si introduce.
 
 ### 8.2 Il tema temporale è read-only per i widget
 
@@ -282,6 +303,8 @@ SizedBox(height: 16)
 // ✅ Corretto
 SizedBox(height: AppSpacing.md)  // AppSpacing.xs=4, sm=8, md=16, lg=24, xl=32, xxl=48
 ```
+
+Area toccabile minima 48 dp, con almeno 8 dp tra bersagli vicini, anche quando il disegno è più piccolo o inclinato.
 
 ### 8.4 Asset Grafici — Illustrazioni Piante e Stanze
 
@@ -332,6 +355,66 @@ In tutto il progetto (cataloghi, resolver, asset, database) esiste **UNO E UN SO
 
 Questa normalizzazione è esposta dalla property `canonicalSpeciesSlug` in `PlantEntity`. Qualunque widget o logica che deve interagire con asset o cataloghi legati alla specie DEVE usare questo formato canonico.
 
+
+### 8.6 Stile visivo e componenti (vedi `docs/design/art-direction.md` §2)
+
+```
+✅ Tre font, solo regular, inclusi nell'app come file (non scaricati al volo):
+   Sue Ellen Francisco = solo nomi di piante e stanze
+   Barriecito          = microcopy brevissimo, max 2-3 per schermata, mai su pulsanti
+   Delius              = tutto il resto
+✅ Tipografia e colori arrivano da un ThemeExtension, non da valori sparsi
+✅ Il testo scala con le impostazioni di sistema; le altezze sono minimi, non valori fissi
+✅ Rispettare MediaQuery.disableAnimations
+❌ Niente ombre, sfumature, vetro, neumorfismo; niente angoli molto arrotondati
+❌ Mai un'intera schermata come immagine unica (non scala e blocca il tema temporale)
+```
+
+Metafore per schermata: Home = stanza con mensola; schede = erbario; risultati di ricerca = ritagli di carta; Profilo = bacheca di sughero.
+
+**Componenti condivisi** (in `lib/presentation/widgets/common/`, uno per file, ognuno con il suo test; nomi indicativi):
+
+| Componente | Uso |
+|------------|-----|
+| Cartellino centrale della navbar | Aggiungi pianta; nelle Stanze "nuova stanza" |
+| Card carta con cornice doppia | Base di schede e liste |
+| Segnapagina a nastro | Azioni sulla scheda pianta (Annaffia, Concima), appeso al bordo della card |
+| Etichetta appesa a due fili | Azioni principali a larghezza piena |
+| Cartellino con filo e puntina | Azioni in dialoghi e Profilo |
+| Puntina | Menu, bussola, cancella testo |
+| Testo con sottolineatura a mano | Azioni secondarie (Annulla) |
+| Post-it con puntina | Origine, orario notifiche |
+| Ritaglio di carta irregolare | Risultati di ricerca |
+| Bastoncino segna-nome | Promemoria "da annaffiare" sulla pianta, piantato nel vaso |
+
+Regole dei pulsanti: tutto ciò che si preme è attaccato a qualcosa; stato premuto = scende di 2 px; area toccabile sempre un rettangolo dritto di almeno 48 dp; inclinazione del testo al massimo 1°; nessuna ombra o spessore sotto i pulsanti.
+
+**Navigazione:** niente freccia indietro e niente titolo di schermata nella UI (i titoli restano nel router e come `Semantics(header: true)`). Solo la Home mostra i nomi delle stanze. Nessun pulsante "Gira": la scheda si gira con tap o swipe, con un'animazione che lo suggerisce e un'azione accessibile "Gira la scheda".
+
+**Irregolarità:** inclinazioni e forme dei ritagli derivano dallo `canonicalSpeciesSlug`, mai da valori casuali a ogni build.
+
+**Vettoriale:** per elementi piatti (vasi, finestra, bussola, oggetti di scena) è ammesso `flutter_svg` (licenza MIT); per piante e texture resta il PNG/WebP di 8.4.
+
+**Dati e schede:** le informazioni di specie non cambiano le scadenze di cura; l'enciclopedia non mostra mai il nome dato dall'utente; un dato mancante è un riquadro tratteggiato "Dato non disponibile per questa specie", mai un valore inventato.
+
+
+### 8.7 Modularità e semplicità
+
+```
+✅ Un solo posto per ogni cosa: stringhe, colori, tipografia, spaziature, componenti
+✅ Il sistema centrale (tema e token) viene ereditato dai widget e dai componenti; i widget non ridefiniscono
+✅ Se qualcosa si ripete due o più volte (widget, funzione, formattazione, query), si estrae in un file dedicato e si riusa
+✅ Prima di scrivere un widget o una funzione, cercare se esiste già
+✅ Strutture semplici e funzionali: nessuna astrazione, pattern o livello in più senza un bisogno concreto oggi
+✅ Widget piccoli e con un solo compito; la logica sta negli usecase (1.2)
+❌ Niente codice copiato e incollato tra schermate
+❌ Niente classi o livelli "per il futuro" (es. per le funzioni AI, ancora in backlog)
+```
+
+### 8.8 Backlog (non implementare, non predisporre)
+
+Salute delle piante e diagnosi, integrazione con AI e chiamate AI. Quando arriveranno si decideranno e si documenteranno qui; fino ad allora non lasciare stub, provider o eccezioni dedicati.
+
 ---
 
 ## 9. Testing — Requisiti Minimi
@@ -350,6 +433,11 @@ Questa normalizzazione è esposta dalla property `canonicalSpeciesSlug` in `Plan
 - Widget test che verifica il render senza crash
 - Widget test che verifica la navigazione principale
 
+### Per ogni componente visivo condiviso (8.6)
+- Golden test (stato normale, premuto, disabilitato dove esiste)
+- Test che l'area toccabile sia almeno 48 dp
+- Test con testo ingrandito (textScaleFactor 1.5) senza overflow
+
 ### Test vietati
 ```
 ❌ Non mockare Isar — usare Isar.inMemory() nei test
@@ -359,54 +447,24 @@ Questa normalizzazione è esposta dalla property `canonicalSpeciesSlug` in `Plan
 
 ---
 
-## 10. Git & Commits
+## 10. Consegna del codice
 
-### Branch naming
-```
-feature/<fase-numero>-<descrizione-breve>   # es. feature/2-home-shelf
-fix/<descrizione>                            # es. fix/watering-log-sync
-chore/<descrizione>                          # es. chore/update-dependencies
-```
+Le commit e le push le gestisce Andrea: l'agente scrive il codice, Andrea lo prova e lo pubblica. L'agente non esegue operazioni Git e non propone messaggi di commit se non richiesti.
 
-### Commit format (Conventional Commits — obbligatorio)
-```
-<type>(<scope>): <descrizione imperativa in italiano o inglese>
+Non va mai scritto in file versionati: `lib/core/constants/env.dart`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`.
 
-Types: feat, fix, refactor, test, chore, docs, style, perf
-Scopes: plants, rooms, watering, nursery, clinic, auth, sync, theme, notifications
-
-Esempi:
-feat(watering): add stick test gate before logging irrigation
-fix(sync): resolve conflict on pending_delete with stale Isar entry
-test(plants): add edge case for null species in plant detail
-chore(deps): update riverpod to 2.5.1
-```
-
-### Cosa NON committare mai
-```
-lib/core/constants/env.dart
-android/app/google-services.json
-ios/Runner/GoogleService-Info.plist
-.dart_tool/
-build/
-*.log
-```
-
----
-
-## 11. Prima di Aprire una PR
-
-Checklist obbligatoria:
+Prima di consegnare, controllare:
 
 ```
 [ ] dart run build_runner build --delete-conflicting-outputs → nessun errore
 [ ] flutter analyze → zero warning, zero error
 [ ] flutter test → tutti i test passano
-[ ] Nessuna chiave API nel diff
+[ ] Nessuna chiave o segreto nel codice
 [ ] Nessun print() in produzione (solo debugPrint wrappato in assert)
-[ ] Ogni nuovo file ha il corrispondente test file
+[ ] Ogni nuovo file ha il corrispondente test
 [ ] Isar schema modificato → migration verificata
-[ ] README aggiornato se aggiunta una dipendenza
+[ ] Nessun testo, colore, font o misura hardcodato (vedi 7 e 8)
+[ ] Nessuna logica duplicata (vedi 8.7)
 ```
 
 ---
@@ -421,8 +479,6 @@ sealed class AppException implements Exception {
 
 class NetworkUnavailableException extends AppException { ... }
 class FirestoreException extends AppException { ... }
-class GeminiApiException extends AppException { ... }
-class GeminiKeyMissingException extends AppException { ... }
 class EncyclopediaApiException extends AppException { ... }
 class WeatherApiException extends AppException { ... }
 class PermissionDeniedException extends AppException { ... }
@@ -444,4 +500,4 @@ Ogni `catch` in repository o service DEVE rilanciare come `AppException`, mai co
 
 ---
 
-*Versione: 1.1.0 — da aggiornare a ogni modifica architetturale significativa*
+*Versione: 1.2.0 (bozza del 7 novembre 2026, scritta senza accesso al codice aggiornato) — da riallineare al repository e da aggiornare a ogni modifica architetturale significativa*

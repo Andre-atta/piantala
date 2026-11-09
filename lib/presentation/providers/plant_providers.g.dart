@@ -6,7 +6,7 @@ part of 'plant_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$plantRepositoryHash() => r'04f1be2f2f237df0cdc3418afa2e9f28c72df7ea';
+String _$plantRepositoryHash() => r'927bdb5eca04ab4c55d5b12ac7afa70edaf2042e';
 
 /// See also [plantRepository].
 @ProviderFor(plantRepository)
@@ -21,7 +21,7 @@ final plantRepositoryProvider = AutoDisposeProvider<IPlantRepository>.internal(
 );
 
 typedef PlantRepositoryRef = AutoDisposeProviderRef<IPlantRepository>;
-String _$plantsHash() => r'b0c45e9a243d53a3f1cbe3c7121c0c8f50ff1bc8';
+String _$plantsHash() => r'b580808a8892eebffabea76fb5cb81762d2cd19d';
 
 /// See also [plants].
 @ProviderFor(plants)
@@ -35,7 +35,7 @@ final plantsProvider = AutoDisposeStreamProvider<List<PlantEntity>>.internal(
 );
 
 typedef PlantsRef = AutoDisposeStreamProviderRef<List<PlantEntity>>;
-String _$plantHash() => r'1126e459f906e4061088089477533b22c68f8931';
+String _$plantHash() => r'689fdc995cebf61f9af4e3ee59e2fd2878ddc7b0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -183,7 +183,7 @@ class _PlantProviderElement
   String get plantId => (origin as PlantProvider).plantId;
 }
 
-String _$overduePlantsHash() => r'f375e7051a51c4faf63ef6f42d78e112a48b49e3';
+String _$overduePlantsHash() => r'71383680d4ddcd627adacf245a47332b4e1457a4';
 
 /// See also [overduePlants].
 @ProviderFor(overduePlants)

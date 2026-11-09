@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/data/services/notification_service.dart';
+import 'package:piantala/l10n/app_localizations.dart';
+import 'package:piantala/presentation/providers/locale_providers.dart';
 import 'package:piantala/presentation/providers/notification_providers.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
@@ -15,6 +17,8 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final hour = ref.watch(reminderHourProvider);
     final minute = ref.watch(reminderMinuteProvider);
+    final locale = ref.watch(appLocaleProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     // Forza la valutazione del controller del sync notifiche ogni volta
     // che questa schermata è aperta (per aggiornarlo se l'ora è cambiata)
@@ -32,7 +36,7 @@ class SettingsScreen extends ConsumerWidget {
             elevation: 0,
             scrolledUnderElevation: 0,
             title: Text(
-              'Impostazioni',
+              l10n.settingsScreenTitle,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontFamily: 'DMSerifDisplay',
               ),
@@ -42,8 +46,48 @@ class SettingsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(AppSpacing.md),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
+                _SectionHeader(
+                  title: l10n.settingsSectionGeneral,
+                  theme: theme,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    side: BorderSide(color: theme.dividerColor.withAlpha(20)),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.language),
+                    title: Text(l10n.settingsLanguageTitle),
+                    subtitle: Text(l10n.settingsLanguageSubtitle),
+                    trailing: DropdownButton<Locale>(
+                      value: locale,
+                      underline: const SizedBox.shrink(),
+                      items: [
+                        DropdownMenuItem(
+                          value: const Locale('it'),
+                          child: Text(l10n.settingsLanguageItalian),
+                        ),
+                        DropdownMenuItem(
+                          value: const Locale('en'),
+                          child: Text(l10n.settingsLanguageEnglish),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          ref.read(appLocaleProvider.notifier).setLocale(value);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
                 // ── Sezione Notifiche ───────────────────────────────────
-                _SectionHeader(title: 'Notifiche', theme: theme),
+                _SectionHeader(
+                  title: l10n.settingsSectionNotifications,
+                  theme: theme,
+                ),
                 const SizedBox(height: AppSpacing.sm),
 
                 // Permesso notifiche
@@ -61,15 +105,14 @@ class SettingsScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Permesso Notifiche',
+                          l10n.settingsNotifPermissionTitle,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xs),
                         Text(
-                          'Concedi il permesso per ricevere avvisi '
-                          'sulle piante che necessitano attenzione.',
+                          l10n.settingsNotifPermissionSubtitle,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -84,8 +127,8 @@ class SettingsScreen extends ConsumerWidget {
                                 SnackBar(
                                   content: Text(
                                     granted
-                                        ? '✅ Permesso concesso!'
-                                        : '❌ Permesso negato.',
+                                        ? l10n.settingsNotifPermissionGranted
+                                        : l10n.settingsNotifPermissionDenied,
                                   ),
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -123,9 +166,9 @@ class SettingsScreen extends ConsumerWidget {
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    title: const Text('Orario promemoria mattutino'),
+                    title: Text(l10n.settingsReminderTitle),
                     subtitle: Text(
-                      'Ogni mattina alle $timeStr',
+                      l10n.settingsReminderSubtitle(timeStr),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -141,7 +184,7 @@ class SettingsScreen extends ConsumerWidget {
                       final picked = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay(hour: hour, minute: minute),
-                        helpText: 'Scegli orario promemoria',
+                        helpText: l10n.settingsReminderPickerHelpText,
                       );
                       if (picked != null && context.mounted) {
                         await ref
@@ -160,9 +203,10 @@ class SettingsScreen extends ConsumerWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                '⏰ Promemoria aggiornato: '
-                                '${picked.hour.toString().padLeft(2, '0')}:'
-                                '${picked.minute.toString().padLeft(2, '0')}',
+                                l10n.settingsReminderUpdated(
+                                  '${picked.hour.toString().padLeft(2, '0')}:'
+                                  '${picked.minute.toString().padLeft(2, '0')}',
+                                ),
                               ),
                               behavior: SnackBarBehavior.floating,
                               backgroundColor: AppColors.success,
@@ -177,7 +221,7 @@ class SettingsScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.xl),
 
                 // ── Sezione About ───────────────────────────────────────
-                _SectionHeader(title: 'Informazioni', theme: theme),
+                _SectionHeader(title: l10n.settingsSectionAbout, theme: theme),
                 const SizedBox(height: AppSpacing.sm),
                 Card(
                   elevation: 0,
@@ -187,24 +231,22 @@ class SettingsScreen extends ConsumerWidget {
                       color: theme.dividerColor.withAlpha(20),
                     ),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(AppSpacing.md),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
                     child: Column(
                       children: [
                         ListTile(
                           contentPadding: EdgeInsets.zero,
                           leading: Icon(Icons.info_outline),
-                          title: Text('Versione'),
+                          title: Text(l10n.settingsAboutVersion),
                           trailing: Text('0.1.0'),
                         ),
                         Divider(height: 1),
                         ListTile(
                           contentPadding: EdgeInsets.zero,
                           leading: Icon(Icons.eco),
-                          title: Text('Dati specie'),
-                          subtitle: Text(
-                            'Forniti da Perenual API (piano gratuito)',
-                          ),
+                          title: Text(l10n.settingsAboutDataSource),
+                          subtitle: Text(l10n.settingsAboutDataSourceSubtitle),
                         ),
                       ],
                     ),

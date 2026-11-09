@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
+import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final user = ref.watch(currentUserProvider);
     final plantsAsync = ref.watch(plantsProvider);
     final roomsAsync = ref.watch(roomsProvider);
+    final l10n = AppLocalizations.of(context);
 
     return MainScaffold(
       child: Column(
@@ -49,7 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => Center(
                 child: Text(
-                  'Errore: $error',
+                  l10n?.homeErrorLoading(error.toString()) ?? 'Errore: $error',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.error,
                   ),
@@ -64,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       : PlantShelfView(plants: plants),
                   data: (rooms) {
                     // Tutte le stanze + eventuale "Senza stanza"
-                    final pages = _buildPages(rooms, plants);
+                    final pages = _buildPages(rooms, plants, l10n);
 
                     if (pages.isEmpty) {
                       return const _EmptyShelfPlaceholder();
@@ -118,6 +120,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<_ShelfPageData> _buildPages(
     List<RoomEntity> rooms,
     List<PlantEntity> plants,
+    AppLocalizations? l10n,
   ) {
     final pages = <_ShelfPageData>[];
 
@@ -129,13 +132,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // Piante non assegnate a nessuna stanza
+    // Piante non assegnate o con una stanza non ancora presente nella cache.
+    // Restano visibili anche durante la sincronizzazione iniziale delle stanze.
+    final knownRoomIds = rooms.map((room) => room.id).toSet();
     final unassigned = plants
-        .where((p) => p.roomId == 'unassigned' || p.roomId.isEmpty)
+        .where(
+          (p) =>
+              p.roomId == 'unassigned' ||
+              p.roomId.isEmpty ||
+              !knownRoomIds.contains(p.roomId),
+        )
         .toList();
     if (unassigned.isNotEmpty) {
       pages.add(
-        _ShelfPageData(label: 'Senza stanza', plants: unassigned, room: null),
+        _ShelfPageData(
+          label: l10n?.homeLabelUnassigned ?? 'Senza stanza',
+          plants: unassigned,
+          room: null,
+        ),
       );
     }
 
@@ -143,7 +157,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // mostra tutte le piante su un'unica pagina generica
     if (pages.isEmpty && plants.isNotEmpty) {
       pages.add(
-        _ShelfPageData(label: 'Tutte le piante', plants: plants, room: null),
+        _ShelfPageData(
+          label: l10n?.homeLabelAllPlants ?? 'Tutte le piante',
+          plants: plants,
+          room: null,
+        ),
       );
     }
 
@@ -185,7 +203,7 @@ class _HomeHeader extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.person_outline),
               onPressed: onProfileTap,
-              tooltip: 'Logout',
+              tooltip: AppLocalizations.of(context)?.homeTooltipLogout ?? 'Logout',
             ),
           ],
         ),
@@ -301,6 +319,8 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -312,7 +332,7 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            '$roomName è vuota',
+            l10n?.homeEmptyRoomTitle(roomName) ?? '$roomName è vuota',
             style: theme.textTheme.titleMedium?.copyWith(
               fontFamily: 'DMSerifDisplay',
               color: theme.colorScheme.onSurface.withAlpha(180),
@@ -320,7 +340,8 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Aggiungi una pianta e assegnala\na questa stanza',
+            l10n?.homeEmptyRoomSubtitle ??
+                'Aggiungi una pianta e assegnala\na questa stanza',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurface.withAlpha(120),
@@ -330,7 +351,7 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: () => context.go('/plants/add'),
             icon: const Icon(Icons.add, size: 18),
-            label: const Text('Aggiungi pianta'),
+            label: Text(l10n?.homeButtonAddPlant ?? 'Aggiungi pianta'),
           ),
         ],
       ),
@@ -347,6 +368,8 @@ class _EmptyShelfPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -356,7 +379,7 @@ class _EmptyShelfPlaceholder extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               color: theme.colorScheme.primary.withAlpha(20),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(AppRadius.xl),
             ),
             child: Icon(
               Icons.local_florist_outlined,
@@ -366,14 +389,15 @@ class _EmptyShelfPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'La tua mensola è vuota',
+            l10n?.homeEmptyShelfTitle ?? 'La tua mensola è vuota',
             style: theme.textTheme.titleMedium?.copyWith(
               fontFamily: 'DMSerifDisplay',
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Aggiungi la tua prima pianta\ncon il bottone +',
+            l10n?.homeEmptyShelfSubtitle ??
+                'Aggiungi la tua prima pianta\ncon il bottone +',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withAlpha(153),
@@ -383,7 +407,7 @@ class _EmptyShelfPlaceholder extends StatelessWidget {
           FilledButton.icon(
             onPressed: () => context.go('/plants/add'),
             icon: const Icon(Icons.add),
-            label: const Text('Aggiungi pianta'),
+            label: Text(l10n?.homeButtonAddPlant ?? 'Aggiungi pianta'),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,

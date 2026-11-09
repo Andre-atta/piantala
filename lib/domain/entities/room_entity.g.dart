@@ -15,7 +15,6 @@ _$RoomEntityImpl _$$RoomEntityImplFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       exposureConfirmedByUser:
           json['exposureConfirmedByUser'] as bool? ?? false,
-      floor: (json['floor'] as num?)?.toInt(),
       notes: json['notes'] as String?,
     );
 
@@ -27,6 +26,5 @@ Map<String, dynamic> _$$RoomEntityImplToJson(_$RoomEntityImpl instance) =>
       'exposure': instance.exposure,
       'createdAt': instance.createdAt.toIso8601String(),
       'exposureConfirmedByUser': instance.exposureConfirmedByUser,
-      'floor': instance.floor,
       'notes': instance.notes,
     };

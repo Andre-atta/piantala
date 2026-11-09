@@ -1,0 +1,183 @@
+{
+  "@@locale": "it",
+  "@@last_modified": "2026-11-01",
+
+  "appName": "Piantala",
+  "@appName": { "description": "Nome dell'applicazione" },
+
+  "appTagline": "Il tuo giardino tascabile",
+  "@appTagline": { "description": "Sottotitolo nella schermata di login" },
+
+  "appTosNotice": "Accedendo accetti i Termini di servizio",
+  "@appTosNotice": { "description": "Avviso ToS nella login" },
+
+  "authSignInWithGoogle": "Continua con Google",
+  "authSignInWithEmail": "Accedi con email",
+
+  "authSheetTitleLogin": "Accedi con email",
+  "authSheetTitleRegister": "Crea account",
+  "authSheetTitleReset": "Recupera password",
+
+  "authSheetSubtitleReset": "Inserisci la tua email. Se è associata a un account, riceverai le istruzioni.",
+  "authSheetSubtitleLogin": "Usa un indirizzo email valido e una password sicura.",
+
+  "authFieldName": "Nome",
+  "authFieldEmail": "Email",
+  "authFieldPassword": "Password",
+  "authFieldConfirmPassword": "Conferma password",
+
+  "authButtonLogin": "Accedi",
+  "authButtonRegister": "Crea account",
+  "authButtonSendReset": "Invia istruzioni",
+  "authButtonForgotPassword": "Password dimenticata?",
+  "authButtonGoToRegister": "Non hai un account? Registrati",
+  "authButtonGoToLogin": "Hai già un account? Accedi",
+  "authButtonBackToLogin": "Torna all'accesso",
+
+  "authValidationNameEmpty": "Inserisci il tuo nome",
+  "authValidationEmailInvalid": "Inserisci un indirizzo email valido",
+  "authValidationPasswordTooShort": "Usa almeno 6 caratteri",
+  "authValidationPasswordMismatch": "Le password non coincidono",
+
+  "authResetEmailSent": "Se l'indirizzo è associata a un account, riceverai le istruzioni.",
+
+  "homeEmptyShelfTitle": "La tua mensola è vuota",
+  "homeEmptyShelfSubtitle": "Aggiungi la tua prima pianta\ncon il bottone +",
+
+  "homeEmptyRoomTitle": "{roomName} è vuota",
+  "@homeEmptyRoomTitle": {
+    "placeholders": {
+      "roomName": { "type": "String", "example": "Soggiorno" }
+    }
+  },
+  "homeEmptyRoomSubtitle": "Aggiungi una pianta e assegnala\na questa stanza",
+
+  "homeButtonAddPlant": "Aggiungi pianta",
+  "homeLabelUnassigned": "Senza stanza",
+  "homeLabelAllPlants": "Tutte le piante",
+  "homeTooltipLogout": "Logout",
+
+  "homeErrorLoading": "Errore: {error}",
+  "@homeErrorLoading": {
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+
+  "greetingNight": "Buonanotte",
+  "greetingDawn": "Buongiorno",
+  "greetingDay": "Ciao",
+  "greetingDusk": "Buon pomeriggio",
+  "greetingEvening": "Buonasera",
+
+  "greetingSubtitleNight": "Anche di notte le tue piante crescono 🌙",
+  "greetingSubtitleDawn": "Buon inizio giornata con le tue piante",
+  "greetingSubtitleDay": "Come stanno le tue piante oggi?",
+  "greetingSubtitleDusk": "Ottimo momento per controllare le tue piante",
+  "greetingSubtitleEvening": "Pianifica la cura di domani",
+
+  "roomsTitle": "Stanze",
+  "roomsEmptyTitle": "Nessuna stanza creata.",
+  "roomsAddButton": "Aggiungi Stanza",
+  "roomsSubtitle": "Esposizione: {exposure} • Piante: {count}",
+  "@roomsSubtitle": {
+    "placeholders": {
+      "exposure": { "type": "String", "example": "Sud" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "roomsDeleteDialogTitle": "Elimina Stanza",
+  "roomsDeleteWarning": "Questa stanza contiene {count} piante! Eliminandola, le piante diventeranno \"Senza Stanza\". Vuoi procedere?",
+  "@roomsDeleteWarning": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "roomsDeleteConfirm": "Sei sicuro di voler eliminare la stanza \"{roomName}\"?",
+  "@roomsDeleteConfirm": {
+    "placeholders": {
+      "roomName": { "type": "String", "example": "Soggiorno" }
+    }
+  },
+
+  "roomDialogNewTitle": "Nuova Stanza",
+  "roomDialogEditTitle": "Modifica Stanza",
+  "roomDialogNameLabel": "Nome della stanza",
+  "roomDialogNameValidation": "Inserisci un nome",
+  "roomDialogNotesLabel": "Note (opzionali)",
+  "roomDialogExposureLabel": "Esposizione",
+  "roomDialogCompassHint": "Tocca per misurare con la bussola",
+
+  "encyclopediaTitle": "Enciclopedia",
+  "encyclopediaSearchHint": "Cerca per nome comune o scientifico...",
+  "encyclopediaEmptyTitle": "Esplora migliaia di piante",
+  "encyclopediaEmptySubtitle": "Cerca una specie per visualizzarne i dettagli",
+  "encyclopediaNoResults": "Nessuna specie trovata.",
+  "encyclopediaError": "Errore: {error}",
+  "@encyclopediaError": {
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+
+  "settingsScreenTitle": "Impostazioni",
+  "settingsSectionGeneral": "Generale",
+  "settingsLanguageTitle": "Lingua",
+  "settingsLanguageSubtitle": "Scegli la lingua dell'app",
+  "settingsLanguageItalian": "Italiano",
+  "settingsLanguageEnglish": "Inglese",
+  "settingsSectionNotifications": "Notifiche",
+  "settingsSectionAbout": "Informazioni",
+
+  "settingsNotifPermissionTitle": "Permesso Notifiche",
+  "settingsNotifPermissionSubtitle": "Concedi il permesso per ricevere avvisi sulle piante che necessitano attenzione.",
+  "settingsNotifPermissionButton": "Richiedi Permesso",
+  "settingsNotifPermissionGranted": "✅ Permesso concesso!",
+  "settingsNotifPermissionDenied": "❌ Permesso negato.",
+
+  "settingsReminderTitle": "Orario promemoria mattutino",
+  "settingsReminderSubtitle": "Ogni mattina alle {time}",
+  "@settingsReminderSubtitle": {
+    "placeholders": {
+      "time": { "type": "String", "example": "08:00" }
+    }
+  },
+  "settingsReminderUpdated": "⏰ Promemoria aggiornato: {time}",
+  "@settingsReminderUpdated": {
+    "placeholders": {
+      "time": { "type": "String", "example": "08:00" }
+    }
+  },
+  "settingsReminderPickerHelpText": "Scegli orario promemoria",
+
+  "settingsAboutVersion": "Versione",
+  "settingsAboutVersionNumber": "0.1.0",
+  "settingsAboutDataSource": "Dati specie",
+  "settingsAboutDataSourceSubtitle": "Forniti da Perenual API (piano gratuito)",
+
+  "navHome": "Mensola",
+  "navRooms": "Stanze",
+  "navEncyclopedia": "Enciclopedia",
+  "navSettings": "Impostazioni",
+
+  "errPageNotFound": "Pagina non trovata",
+  "errPageNotFoundBody": "Oops, questa pagina non esiste",
+  "errNetworkUnavailable": "Nessuna connessione disponibile. I dati saranno sincronizzati al ritorno online.",
+
+  "commonButtonConfirm": "Conferma",
+  "commonButtonClose": "Chiudi",
+  "commonButtonRetry": "Riprova",
+  "commonButtonAdd": "Aggiungi",
+  "commonEdit": "Modifica",
+  "commonDelete": "Elimina",
+  "commonCancel": "Annulla",
+  "commonSave": "Salva",
+  "commonUnknown": "Sconosciuto",
+  "commonLoading": "Caricamento...",
+
+  "exposureNorth": "Nord",
+  "exposureSouth": "Sud",
+  "exposureEast": "Est",
+  "exposureWest": "Ovest",
+  "exposureUnknown": "Sconosciuta"
+}

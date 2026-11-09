@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:piantala/data/services/notification_service.dart';
@@ -32,7 +33,7 @@ GoRouter router(RouterRef ref) {
 
   final router = GoRouter(
     initialLocation: AppRoute.home,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: kDebugMode, // FIX C-02: disabilitato in release build
 
     // ── Auth Guard ──────────────────────────────────────────────
     redirect: (context, state) {

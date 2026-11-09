@@ -1,0 +1,178 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2026-11-01",
+
+  "appName": "Piantala",
+  "appTagline": "Your pocket garden",
+  "appTosNotice": "By signing in you accept the Terms of Service",
+
+  "authSignInWithGoogle": "Continue with Google",
+  "authSignInWithEmail": "Sign in with email",
+
+  "authSheetTitleLogin": "Sign in with email",
+  "authSheetTitleRegister": "Create account",
+  "authSheetTitleReset": "Reset password",
+
+  "authSheetSubtitleReset": "Enter your email. If it's linked to an account, you'll receive instructions.",
+  "authSheetSubtitleLogin": "Use a valid email address and a secure password.",
+
+  "authFieldName": "Name",
+  "authFieldEmail": "Email",
+  "authFieldPassword": "Password",
+  "authFieldConfirmPassword": "Confirm password",
+
+  "authButtonLogin": "Sign in",
+  "authButtonRegister": "Create account",
+  "authButtonSendReset": "Send instructions",
+  "authButtonForgotPassword": "Forgot password?",
+  "authButtonGoToRegister": "Don't have an account? Sign up",
+  "authButtonGoToLogin": "Already have an account? Sign in",
+  "authButtonBackToLogin": "Back to sign in",
+
+  "authValidationNameEmpty": "Enter your name",
+  "authValidationEmailInvalid": "Enter a valid email address",
+  "authValidationPasswordTooShort": "Use at least 6 characters",
+  "authValidationPasswordMismatch": "Passwords do not match",
+
+  "authResetEmailSent": "If the address is linked to an account, you'll receive instructions.",
+
+  "homeEmptyShelfTitle": "Your shelf is empty",
+  "homeEmptyShelfSubtitle": "Add your first plant\nusing the + button",
+
+  "homeEmptyRoomTitle": "{roomName} is empty",
+  "@homeEmptyRoomTitle": {
+    "placeholders": {
+      "roomName": { "type": "String", "example": "Living room" }
+    }
+  },
+  "homeEmptyRoomSubtitle": "Add a plant and assign it\nto this room",
+
+  "homeButtonAddPlant": "Add plant",
+  "homeLabelUnassigned": "Unassigned",
+  "homeLabelAllPlants": "All plants",
+  "homeTooltipLogout": "Logout",
+
+  "homeErrorLoading": "Error: {error}",
+  "@homeErrorLoading": {
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+
+  "greetingNight": "Good night",
+  "greetingDawn": "Good morning",
+  "greetingDay": "Hello",
+  "greetingDusk": "Good afternoon",
+  "greetingEvening": "Good evening",
+
+  "greetingSubtitleNight": "Even at night your plants keep growing 🌙",
+  "greetingSubtitleDawn": "A great start to the day with your plants",
+  "greetingSubtitleDay": "How are your plants doing today?",
+  "greetingSubtitleDusk": "Great time to check on your plants",
+  "greetingSubtitleEvening": "Plan tomorrow's plant care",
+
+  "roomsTitle": "Rooms",
+  "roomsEmptyTitle": "No rooms created yet.",
+  "roomsAddButton": "Add Room",
+  "roomsSubtitle": "Exposure: {exposure} • Plants: {count}",
+  "@roomsSubtitle": {
+    "placeholders": {
+      "exposure": { "type": "String", "example": "South" },
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "roomsDeleteDialogTitle": "Delete Room",
+  "roomsDeleteWarning": "This room contains {count} plants! Deleting it will make the plants \"Unassigned\". Do you want to proceed?",
+  "@roomsDeleteWarning": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
+  "roomsDeleteConfirm": "Are you sure you want to delete the room \"{roomName}\"?",
+  "@roomsDeleteConfirm": {
+    "placeholders": {
+      "roomName": { "type": "String", "example": "Living room" }
+    }
+  },
+
+  "roomDialogNewTitle": "New Room",
+  "roomDialogEditTitle": "Edit Room",
+  "roomDialogNameLabel": "Room name",
+  "roomDialogNameValidation": "Please enter a name",
+  "roomDialogNotesLabel": "Notes (optional)",
+  "roomDialogExposureLabel": "Exposure",
+  "roomDialogCompassHint": "Tap to measure with compass",
+
+  "encyclopediaTitle": "Encyclopedia",
+  "encyclopediaSearchHint": "Search by common or scientific name...",
+  "encyclopediaEmptyTitle": "Explore thousands of plants",
+  "encyclopediaEmptySubtitle": "Search for a species to view its details",
+  "encyclopediaNoResults": "No species found.",
+  "encyclopediaError": "Error: {error}",
+  "@encyclopediaError": {
+    "placeholders": {
+      "error": { "type": "Object" }
+    }
+  },
+
+  "settingsScreenTitle": "Settings",
+  "settingsSectionGeneral": "General",
+  "settingsLanguageTitle": "Language",
+  "settingsLanguageSubtitle": "Choose the app language",
+  "settingsLanguageItalian": "Italian",
+  "settingsLanguageEnglish": "English",
+  "settingsSectionNotifications": "Notifications",
+  "settingsSectionAbout": "About",
+
+  "settingsNotifPermissionTitle": "Notification Permission",
+  "settingsNotifPermissionSubtitle": "Grant permission to receive alerts about plants that need attention.",
+  "settingsNotifPermissionButton": "Request Permission",
+  "settingsNotifPermissionGranted": "✅ Permission granted!",
+  "settingsNotifPermissionDenied": "❌ Permission denied.",
+
+  "settingsReminderTitle": "Morning reminder time",
+  "settingsReminderSubtitle": "Every morning at {time}",
+  "@settingsReminderSubtitle": {
+    "placeholders": {
+      "time": { "type": "String", "example": "08:00" }
+    }
+  },
+  "settingsReminderUpdated": "⏰ Reminder updated: {time}",
+  "@settingsReminderUpdated": {
+    "placeholders": {
+      "time": { "type": "String", "example": "08:00" }
+    }
+  },
+  "settingsReminderPickerHelpText": "Choose reminder time",
+
+  "settingsAboutVersion": "Version",
+  "settingsAboutVersionNumber": "0.1.0",
+  "settingsAboutDataSource": "Species data",
+  "settingsAboutDataSourceSubtitle": "Provided by Perenual API (free plan)",
+
+  "navHome": "Shelf",
+  "navRooms": "Rooms",
+  "navEncyclopedia": "Encyclopedia",
+  "navSettings": "Settings",
+
+  "errPageNotFound": "Page not found",
+  "errPageNotFoundBody": "Oops, this page doesn't exist",
+  "errNetworkUnavailable": "No connection available. Data will sync when you're back online.",
+
+  "commonButtonConfirm": "Confirm",
+  "commonButtonClose": "Close",
+  "commonButtonRetry": "Retry",
+  "commonButtonAdd": "Add",
+  "commonEdit": "Edit",
+  "commonDelete": "Delete",
+  "commonCancel": "Cancel",
+  "commonSave": "Save",
+  "commonUnknown": "Unknown",
+  "commonLoading": "Loading...",
+
+  "exposureNorth": "North",
+  "exposureSouth": "South",
+  "exposureEast": "East",
+  "exposureWest": "West",
+  "exposureUnknown": "Unknown"
+}

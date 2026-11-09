@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/species_search_providers.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
@@ -26,6 +27,7 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final searchState = ref.watch(speciesSearchProvider);
+    final l10n = AppLocalizations.of(context);
 
     return MainScaffold(
       child: CustomScrollView(
@@ -36,7 +38,7 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
             elevation: 0,
             scrolledUnderElevation: 0,
             title: Text(
-              'Enciclopedia',
+              l10n?.encyclopediaTitle ?? 'Enciclopedia',
               style: theme.textTheme.titleLarge?.copyWith(
                 fontFamily: 'DMSerifDisplay',
               ),
@@ -53,7 +55,8 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                   onChanged: (v) =>
                       ref.read(speciesSearchProvider.notifier).search(v),
                   decoration: InputDecoration(
-                    hintText: 'Cerca per nome comune o scientifico...',
+                    hintText: l10n?.encyclopediaSearchHint ??
+                        'Cerca per nome comune o scientifico...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.clear),
@@ -78,12 +81,20 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
               child: Center(child: CircularProgressIndicator()),
             ),
             error: (err, stack) => SliverFillRemaining(
-              child: Center(child: Text('Errore: $err')),
+              child: Center(
+                child: Text(
+                  l10n?.encyclopediaError(err.toString()) ?? 'Errore: $err',
+                ),
+              ),
             ),
             data: (results) {
               if (results.isEmpty && _searchController.text.isNotEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(child: Text('Nessuna specie trovata.')),
+                return SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      l10n?.encyclopediaNoResults ?? 'Nessuna specie trovata.',
+                    ),
+                  ),
                 );
               }
 
@@ -98,14 +109,16 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                           size: 64,
                           color: theme.colorScheme.primary.withAlpha(100),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.md),
                         Text(
-                          'Esplora migliaia di piante',
+                          l10n?.encyclopediaEmptyTitle ??
+                              'Esplora migliaia di piante',
                           style: theme.textTheme.titleMedium,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
                         Text(
-                          'Cerca una specie per visualizzarne i dettagli',
+                          l10n?.encyclopediaEmptySubtitle ??
+                              'Cerca una specie per visualizzarne i dettagli',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -122,8 +135,8 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final item = results[index];
-                      final commonName =
-                          (item['common_name'] as String?) ?? 'Sconosciuto';
+                      final commonName = (item['common_name'] as String?) ??
+                          (l10n?.commonUnknown ?? 'Sconosciuto');
                       final scientificName =
                           (item['scientific_name'] as String?) ?? '';
                       final imageUrl = (item['default_image']

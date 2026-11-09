@@ -101,6 +101,7 @@ class SyncService {
       await _applyFirestoreSnapshot(
         snapshot: snapshot,
         collectionType: _CollectionType.plants,
+        userId: uid,
       );
     });
 
@@ -112,6 +113,7 @@ class SyncService {
       await _applyFirestoreSnapshot(
         snapshot: snapshot,
         collectionType: _CollectionType.rooms,
+        userId: uid,
       );
     });
 
@@ -138,7 +140,8 @@ class SyncService {
   /// debba intervenire.
   Future<void> _migrateLegacyPlants(String uid) async {
     try {
-      final plants = await _isar.plantCollections.where().findAll();
+      final plants =
+          await _isar.plantCollections.where().userIdEqualTo(uid).findAll();
       final now = DateTime.now();
 
       for (final plant in plants) {
@@ -147,7 +150,7 @@ class SyncService {
         if (method == null || method == 'soil') continue;
 
         // Salta se c'è già una pending op per questo documento
-        final hasPending = await _hasPendingOp(plant.firestoreId);
+        final hasPending = await _hasPendingOp(plant.firestoreId, uid);
         if (hasPending) continue;
 
         // Crea il payload JSON letto direttamente da Isar.
@@ -206,6 +209,7 @@ class SyncService {
   Future<void> _applyFirestoreSnapshot({
     required QuerySnapshot<Map<String, dynamic>> snapshot,
     required _CollectionType collectionType,
+    required String userId,
   }) async {
     for (final change in snapshot.docChanges) {
       final docId = change.doc.id;
@@ -220,12 +224,14 @@ class SyncService {
               docId: docId,
               data: data,
               collectionType: collectionType,
+              userId: userId,
             );
 
           case DocumentChangeType.removed:
             await _removeFromIsar(
               docId: docId,
               collectionType: collectionType,
+              userId: userId,
             );
         }
       } catch (e) {
@@ -240,40 +246,50 @@ class SyncService {
     required String docId,
     required Map<String, dynamic> data,
     required _CollectionType collectionType,
+    required String userId,
   }) async {
+    // FIX B-04: non bypassare se userId e' null; rifiuta esplicitamente i doc non appartenenti all'utente.
+    final docUserId = data['userId'] as String?;
+    if (docUserId != null && docUserId != userId) return;
     await _isar.writeTxn(() async {
       switch (collectionType) {
         case _CollectionType.plants:
           // Controlla se abbiamo una pending op locale per questo doc
           // (se sì, Isar è la fonte di verità → non sovrascrivere)
-          final hasPending = await _hasPendingOp(docId);
+          final hasPending = await _hasPendingOp(docId, userId);
           if (hasPending) return;
 
           final existing = await _isar.plantCollections
-              .where()
-              .firestoreIdEqualTo(docId)
+              .filter()
+              .group(
+                (q) => q.firestoreIdEqualTo(docId).and().userIdEqualTo(userId),
+              )
               .findFirst();
 
           final collection = _plantFromFirestore(
             data: data,
             firestoreId: docId,
+            userId: userId,
             existingIsarId: existing?.id,
             existingLocal: existing,
           );
           await _isar.plantCollections.put(collection);
 
         case _CollectionType.rooms:
-          final hasPending = await _hasPendingOp(docId);
+          final hasPending = await _hasPendingOp(docId, userId);
           if (hasPending) return;
 
           final existing = await _isar.roomCollections
-              .where()
-              .firestoreIdEqualTo(docId)
+              .filter()
+              .group(
+                (q) => q.firestoreIdEqualTo(docId).and().userIdEqualTo(userId),
+              )
               .findFirst();
 
           final collection = _roomFromFirestore(
             data: data,
             firestoreId: docId,
+            userId: userId,
             existingIsarId: existing?.id,
           );
           await _isar.roomCollections.put(collection);
@@ -284,27 +300,34 @@ class SyncService {
   Future<void> _removeFromIsar({
     required String docId,
     required _CollectionType collectionType,
+    required String userId,
   }) async {
     await _isar.writeTxn(() async {
       switch (collectionType) {
         case _CollectionType.plants:
           await _isar.plantCollections
-              .where()
-              .firestoreIdEqualTo(docId)
+              .filter()
+              .group(
+                (q) => q.firestoreIdEqualTo(docId).and().userIdEqualTo(userId),
+              )
               .deleteAll();
         case _CollectionType.rooms:
           await _isar.roomCollections
-              .where()
-              .firestoreIdEqualTo(docId)
+              .filter()
+              .group(
+                (q) => q.firestoreIdEqualTo(docId).and().userIdEqualTo(userId),
+              )
               .deleteAll();
       }
     });
   }
 
-  Future<bool> _hasPendingOp(String docId) async {
+  Future<bool> _hasPendingOp(String docId, String userId) async {
     final op = await _isar.pendingOperationCollections
         .filter()
         .documentIdEqualTo(docId)
+        .and()
+        .userIdEqualTo(userId)
         .findFirst();
     return op != null;
   }
@@ -316,10 +339,18 @@ class SyncService {
     _isSyncing = true;
 
     try {
-      final operations = await _isar.pendingOperationCollections
-          .where()
-          .sortByCreatedAt()
-          .findAll();
+      final auth = _auth;
+      final uid = auth?.currentUser?.uid;
+      final operations = uid == null
+          ? await _isar.pendingOperationCollections
+              .where()
+              .sortByCreatedAt()
+              .findAll()
+          : await _isar.pendingOperationCollections
+              .where()
+              .userIdEqualTo(uid)
+              .sortByCreatedAt()
+              .findAll();
 
       for (final op in operations) {
         final success = await _processOperation(op);
@@ -340,6 +371,9 @@ class SyncService {
   }
 
   Future<bool> _processOperation(PendingOperationCollection op) async {
+    final auth = _auth;
+    final uid = auth?.currentUser?.uid;
+    if (uid != null && op.userId != uid) return true;
     // ── Handler OPB (non usano Firestore, chiamano le callable) ──────────────
     if (op.operation == 'opb_contribute' || op.operation == 'opb_update') {
       return _processOpbOperation(op);
@@ -533,6 +567,7 @@ class SyncService {
   PlantCollection _plantFromFirestore({
     required Map<String, dynamic> data,
     required String firestoreId,
+    required String userId,
     int? existingIsarId,
     // Record Isar esistente: usato come fallback per campi assenti su Firestore
     // (es. cultivationMethod su piante create prima del fix).
@@ -576,7 +611,7 @@ class SyncService {
     final col = PlantCollection()
       ..id = existingIsarId ?? Isar.autoIncrement
       ..firestoreId = firestoreId
-      ..userId = data['userId'] as String? ?? ''
+      ..userId = userId
       ..roomId = data['roomId'] as String? ?? 'unassigned'
       ..customName = data['customName'] as String? ?? ''
       ..speciesApiId = data['speciesApiId'] as String?
@@ -605,17 +640,17 @@ class SyncService {
   RoomCollection _roomFromFirestore({
     required Map<String, dynamic> data,
     required String firestoreId,
+    required String userId,
     int? existingIsarId,
   }) {
     return RoomCollection()
       ..id = existingIsarId ?? Isar.autoIncrement
       ..firestoreId = firestoreId
-      ..userId = data['userId'] as String? ?? ''
+      ..userId = userId
       ..name = data['name'] as String? ?? ''
       ..exposure = data['exposure'] as String? ?? 'UNKNOWN'
       ..exposureConfirmedByUser =
           data['exposureConfirmedByUser'] as bool? ?? false
-      ..floor = (data['floor'] as num?)?.toInt()
       ..notes = data['notes'] as String?
       ..createdAt = _parseDateTime(data['createdAt']) ?? DateTime.now()
       ..localUpdatedAt = DateTime.now()

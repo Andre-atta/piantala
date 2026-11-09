@@ -1,9 +1,9 @@
 /// Resolver per gli asset illustrativi delle piante e delle stanze.
 ///
 /// Centralizza la logica di risoluzione del path — i widget non conoscono
-/// mai direttamente il path dell'asset (.AGENT.md §1.2).
+/// mai direttamente il path dell'asset (AGENT.md §1.2).
 ///
-/// Naming convention asset (.AGENT.md §8.4):
+/// Naming convention asset (AGENT.md §8.4):
 ///   plants/  → `<species_slug>_<substrate>.png|jpg`  (substrate: soil | water)
 ///   rooms/   → `<room_slug>.png`
 abstract class PlantAssetResolver {

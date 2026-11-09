@@ -4,7 +4,17 @@ import 'package:flutter/material.dart';
 /// REGOLA: nessun widget usa Color() o Colors.* direttamente.
 /// Usare sempre queste costanti o Theme.of(context).colorScheme.*
 abstract class AppColors {
-  // ── Brand / Plant greens ──────────────────────────────────────
+  // ── Alias semantici del brief design system ───────────────────
+  /// Colore primario brand (brief: Primary — verde botanico).
+  static const primary = Color(0xFF588157);
+
+  /// Colore secondario (brief: Secondary — verde pastello chiaro).
+  static const secondary = Color(0xFFCDE7B0);
+
+  /// Colore accent (brief: Accent — terracotta caldo).
+  static const accent = Color(0xFFBE6E46);
+
+  // ── Brand / Plant greens (palette interna estesa) ─────────────
   static const plantGreen = Color(0xFF3A6B4A);
   static const plantGreenLight = Color(0xFF6B9E7A);
   static const plantGreenPale = Color(0xFFEBF3ED);
@@ -65,7 +75,7 @@ abstract class AppColors {
 }
 
 /// Costanti di spaziatura. Usare SEMPRE queste invece di valori numerici
-/// hardcodati.
+/// hardcodati. Basato su griglia a multipli di 4.
 abstract class AppSpacing {
   static const double xs = 4;
   static const double sm = 8;
@@ -75,8 +85,27 @@ abstract class AppSpacing {
   static const double xxl = 48;
 }
 
+/// Dimensioni standard per icone, avatar, contenitori.
+abstract class AppSizes {
+  static const double iconSm = 18;
+  static const double iconMd = 24;
+  static const double iconLg = 32;
+  static const double iconXl = 40;
+
+  static const double avatarSm = 32;
+  static const double avatarMd = 48;
+  static const double avatarLg = 88;
+
+  static const double buttonHeightSm = 40;
+  static const double buttonHeightMd = 52;
+  static const double buttonHeightLg = 56;
+
+  static const double cardMinHeight = 80;
+}
+
 /// Border radius standard.
 abstract class AppRadius {
+  static const double xs = 4;
   static const double sm = 8;
   static const double md = 12;
   static const double lg = 16;

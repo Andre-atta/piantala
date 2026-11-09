@@ -28,7 +28,6 @@ mixin _$RoomEntity {
   String get exposure => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   bool get exposureConfirmedByUser => throw _privateConstructorUsedError;
-  int? get floor => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,7 +49,6 @@ abstract class $RoomEntityCopyWith<$Res> {
       String exposure,
       DateTime createdAt,
       bool exposureConfirmedByUser,
-      int? floor,
       String? notes});
 }
 
@@ -73,7 +71,6 @@ class _$RoomEntityCopyWithImpl<$Res, $Val extends RoomEntity>
     Object? exposure = null,
     Object? createdAt = null,
     Object? exposureConfirmedByUser = null,
-    Object? floor = freezed,
     Object? notes = freezed,
   }) {
     return _then(_value.copyWith(
@@ -101,10 +98,6 @@ class _$RoomEntityCopyWithImpl<$Res, $Val extends RoomEntity>
           ? _value.exposureConfirmedByUser
           : exposureConfirmedByUser // ignore: cast_nullable_to_non_nullable
               as bool,
-      floor: freezed == floor
-          ? _value.floor
-          : floor // ignore: cast_nullable_to_non_nullable
-              as int?,
       notes: freezed == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -128,7 +121,6 @@ abstract class _$$RoomEntityImplCopyWith<$Res>
       String exposure,
       DateTime createdAt,
       bool exposureConfirmedByUser,
-      int? floor,
       String? notes});
 }
 
@@ -149,7 +141,6 @@ class __$$RoomEntityImplCopyWithImpl<$Res>
     Object? exposure = null,
     Object? createdAt = null,
     Object? exposureConfirmedByUser = null,
-    Object? floor = freezed,
     Object? notes = freezed,
   }) {
     return _then(_$RoomEntityImpl(
@@ -177,10 +168,6 @@ class __$$RoomEntityImplCopyWithImpl<$Res>
           ? _value.exposureConfirmedByUser
           : exposureConfirmedByUser // ignore: cast_nullable_to_non_nullable
               as bool,
-      floor: freezed == floor
-          ? _value.floor
-          : floor // ignore: cast_nullable_to_non_nullable
-              as int?,
       notes: freezed == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
@@ -199,7 +186,6 @@ class _$RoomEntityImpl implements _RoomEntity {
       required this.exposure,
       required this.createdAt,
       this.exposureConfirmedByUser = false,
-      this.floor,
       this.notes});
 
   factory _$RoomEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -221,13 +207,11 @@ class _$RoomEntityImpl implements _RoomEntity {
   @JsonKey()
   final bool exposureConfirmedByUser;
   @override
-  final int? floor;
-  @override
   final String? notes;
 
   @override
   String toString() {
-    return 'RoomEntity(id: $id, userId: $userId, name: $name, exposure: $exposure, createdAt: $createdAt, exposureConfirmedByUser: $exposureConfirmedByUser, floor: $floor, notes: $notes)';
+    return 'RoomEntity(id: $id, userId: $userId, name: $name, exposure: $exposure, createdAt: $createdAt, exposureConfirmedByUser: $exposureConfirmedByUser, notes: $notes)';
   }
 
   @override
@@ -245,14 +229,13 @@ class _$RoomEntityImpl implements _RoomEntity {
             (identical(
                     other.exposureConfirmedByUser, exposureConfirmedByUser) ||
                 other.exposureConfirmedByUser == exposureConfirmedByUser) &&
-            (identical(other.floor, floor) || other.floor == floor) &&
             (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, userId, name, exposure,
-      createdAt, exposureConfirmedByUser, floor, notes);
+      createdAt, exposureConfirmedByUser, notes);
 
   @JsonKey(ignore: true)
   @override
@@ -276,7 +259,6 @@ abstract class _RoomEntity implements RoomEntity {
       required final String exposure,
       required final DateTime createdAt,
       final bool exposureConfirmedByUser,
-      final int? floor,
       final String? notes}) = _$RoomEntityImpl;
 
   factory _RoomEntity.fromJson(Map<String, dynamic> json) =
@@ -296,8 +278,6 @@ abstract class _RoomEntity implements RoomEntity {
   DateTime get createdAt;
   @override
   bool get exposureConfirmedByUser;
-  @override
-  int? get floor;
   @override
   String? get notes;
   @override

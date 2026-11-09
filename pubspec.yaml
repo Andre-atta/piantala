@@ -85,7 +85,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  generate: true  # Abilita flutter_localizations
+  generate: true
 
   assets:
     - .env

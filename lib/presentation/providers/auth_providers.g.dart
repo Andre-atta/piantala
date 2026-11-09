@@ -6,7 +6,7 @@ part of 'auth_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRepositoryHash() => r'5f4473da7e0891a4bf17ffa130dd348db23d288f';
+String _$authRepositoryHash() => r'75c4030f04148936ee7388e4cfc16022b3571a55';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
@@ -49,7 +49,7 @@ final currentUserProvider = Provider<UserEntity?>.internal(
 );
 
 typedef CurrentUserRef = ProviderRef<UserEntity?>;
-String _$authControllerHash() => r'f9b88afe9468ee4728cb4e59873aa8f2bab1eaa5';
+String _$authControllerHash() => r'd1d75ec1b3194daf9b631d2cf0647e239f1c0718';
 
 /// See also [AuthController].
 @ProviderFor(AuthController)

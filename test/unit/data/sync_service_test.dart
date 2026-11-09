@@ -69,11 +69,19 @@ void main() {
       await Future<void>.delayed(const Duration(milliseconds: 100));
     }
 
-    // Verifichiamo Firestore
-    final doc = await fakeFirestore
+    // Verifichiamo Firestore. Il fake può pubblicare la cancellazione della
+    // pending operation prima che il documento sia osservabile dal test.
+    var doc = await fakeFirestore
         .collection('users/user1/plants')
         .doc('doc123')
         .get();
+    for (var i = 0; i < 10 && (!doc.exists || doc.data() == null); i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      doc = await fakeFirestore
+          .collection('users/user1/plants')
+          .doc('doc123')
+          .get();
+    }
     expect(doc.exists, isTrue);
     expect(doc.data()!['customName'], equals('Ficus'));
     expect(doc.data()!['updatedAt'], isNotNull);

@@ -37,33 +37,28 @@ const RoomCollectionSchema = CollectionSchema(
       name: r'firestoreId',
       type: IsarType.string,
     ),
-    r'floor': PropertySchema(
-      id: 4,
-      name: r'floor',
-      type: IsarType.long,
-    ),
     r'localUpdatedAt': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'localUpdatedAt',
       type: IsarType.dateTime,
     ),
     r'name': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'notes': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'notes',
       type: IsarType.string,
     ),
     r'syncStatusIndex': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'syncStatusIndex',
       type: IsarType.long,
     ),
     r'userId': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'userId',
       type: IsarType.string,
     )
@@ -138,12 +133,11 @@ void _roomCollectionSerialize(
   writer.writeString(offsets[1], object.exposure);
   writer.writeBool(offsets[2], object.exposureConfirmedByUser);
   writer.writeString(offsets[3], object.firestoreId);
-  writer.writeLong(offsets[4], object.floor);
-  writer.writeDateTime(offsets[5], object.localUpdatedAt);
-  writer.writeString(offsets[6], object.name);
-  writer.writeString(offsets[7], object.notes);
-  writer.writeLong(offsets[8], object.syncStatusIndex);
-  writer.writeString(offsets[9], object.userId);
+  writer.writeDateTime(offsets[4], object.localUpdatedAt);
+  writer.writeString(offsets[5], object.name);
+  writer.writeString(offsets[6], object.notes);
+  writer.writeLong(offsets[7], object.syncStatusIndex);
+  writer.writeString(offsets[8], object.userId);
 }
 
 RoomCollection _roomCollectionDeserialize(
@@ -157,13 +151,12 @@ RoomCollection _roomCollectionDeserialize(
   object.exposure = reader.readString(offsets[1]);
   object.exposureConfirmedByUser = reader.readBool(offsets[2]);
   object.firestoreId = reader.readString(offsets[3]);
-  object.floor = reader.readLongOrNull(offsets[4]);
   object.id = id;
-  object.localUpdatedAt = reader.readDateTime(offsets[5]);
-  object.name = reader.readString(offsets[6]);
-  object.notes = reader.readStringOrNull(offsets[7]);
-  object.syncStatusIndex = reader.readLong(offsets[8]);
-  object.userId = reader.readString(offsets[9]);
+  object.localUpdatedAt = reader.readDateTime(offsets[4]);
+  object.name = reader.readString(offsets[5]);
+  object.notes = reader.readStringOrNull(offsets[6]);
+  object.syncStatusIndex = reader.readLong(offsets[7]);
+  object.userId = reader.readString(offsets[8]);
   return object;
 }
 
@@ -183,16 +176,14 @@ P _roomCollectionDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readLongOrNull(offset)) as P;
-    case 5:
       return (reader.readDateTime(offset)) as P;
-    case 6:
+    case 5:
       return (reader.readString(offset)) as P;
-    case 7:
+    case 6:
       return (reader.readStringOrNull(offset)) as P;
-    case 8:
+    case 7:
       return (reader.readLong(offset)) as P;
-    case 9:
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -776,80 +767,6 @@ extension RoomCollectionQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'firestoreId',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterFilterCondition>
-      floorIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'floor',
-      ));
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterFilterCondition>
-      floorIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'floor',
-      ));
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterFilterCondition>
-      floorEqualTo(int? value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'floor',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterFilterCondition>
-      floorGreaterThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'floor',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterFilterCondition>
-      floorLessThan(
-    int? value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'floor',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterFilterCondition>
-      floorBetween(
-    int? lower,
-    int? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'floor',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
       ));
     });
   }
@@ -1510,18 +1427,6 @@ extension RoomCollectionQuerySortBy
     });
   }
 
-  QueryBuilder<RoomCollection, RoomCollection, QAfterSortBy> sortByFloor() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'floor', Sort.asc);
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterSortBy> sortByFloorDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'floor', Sort.desc);
-    });
-  }
-
   QueryBuilder<RoomCollection, RoomCollection, QAfterSortBy>
       sortByLocalUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
@@ -1644,18 +1549,6 @@ extension RoomCollectionQuerySortThenBy
     });
   }
 
-  QueryBuilder<RoomCollection, RoomCollection, QAfterSortBy> thenByFloor() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'floor', Sort.asc);
-    });
-  }
-
-  QueryBuilder<RoomCollection, RoomCollection, QAfterSortBy> thenByFloorDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'floor', Sort.desc);
-    });
-  }
-
   QueryBuilder<RoomCollection, RoomCollection, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1764,12 +1657,6 @@ extension RoomCollectionQueryWhereDistinct
     });
   }
 
-  QueryBuilder<RoomCollection, RoomCollection, QDistinct> distinctByFloor() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'floor');
-    });
-  }
-
   QueryBuilder<RoomCollection, RoomCollection, QDistinct>
       distinctByLocalUpdatedAt() {
     return QueryBuilder.apply(this, (query) {
@@ -1836,12 +1723,6 @@ extension RoomCollectionQueryProperty
   QueryBuilder<RoomCollection, String, QQueryOperations> firestoreIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'firestoreId');
-    });
-  }
-
-  QueryBuilder<RoomCollection, int?, QQueryOperations> floorProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'floor');
     });
   }
 

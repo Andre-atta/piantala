@@ -14,7 +14,6 @@ class RoomEntity with _$RoomEntity {
     required String exposure,
     required DateTime createdAt,
     @Default(false) bool exposureConfirmedByUser,
-    int? floor,
     String? notes,
   }) = _RoomEntity;
 

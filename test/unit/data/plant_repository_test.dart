@@ -105,4 +105,40 @@ void main() {
       reason: 'La pianta eliminata non viene duplicata',
     );
   });
+
+  test('watchPlants isola le piante per utente', () async {
+    final userARepository = PlantRepositoryImpl(isar: isar);
+    await userARepository.addPlant(
+      PlantEntity(
+        id: 'plant-a',
+        userId: 'user-a',
+        roomId: 'room-a',
+        customName: 'Pianta A',
+        shelfPosition: 0,
+        createdAt: DateTime.now(),
+      ),
+    );
+    await userARepository.addPlant(
+      PlantEntity(
+        id: 'plant-b',
+        userId: 'user-b',
+        roomId: 'room-b',
+        customName: 'Pianta B',
+        shelfPosition: 0,
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    final plantsA =
+        await PlantRepositoryImpl(isar: isar, userId: 'user-a')
+            .watchPlants()
+            .first;
+    final plantsB =
+        await PlantRepositoryImpl(isar: isar, userId: 'user-b')
+            .watchPlants()
+            .first;
+
+    expect(plantsA.map((plant) => plant.id), ['plant-a']);
+    expect(plantsB.map((plant) => plant.id), ['plant-b']);
+  });
 }
