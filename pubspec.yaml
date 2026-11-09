@@ -51,6 +51,7 @@ dependencies:
 
   # ── UI ────────────────────────────────────────────────────────
   flutter_reorderable_grid_view: ^4.0.0
+  flutter_svg: ^2.3.2
   lottie: ^3.1.2
 
   # ── Data / Utils ──────────────────────────────────────────────
@@ -95,3 +96,16 @@ flutter:
     - assets/data/
     - assets/illustrations/plants/
     - assets/illustrations/rooms/
+    - assets/svg/nav/
+    - assets/svg/home/
+
+  fonts:
+    - family: Sue Ellen Francisco
+      fonts:
+        - asset: assets/fonts/SueEllenFrancisco-Regular.ttf
+    - family: Barriecito
+      fonts:
+        - asset: assets/fonts/Barriecito-Regular.ttf
+    - family: Delius
+      fonts:
+        - asset: assets/fonts/Delius-Regular.ttf

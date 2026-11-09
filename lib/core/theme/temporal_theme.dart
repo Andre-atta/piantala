@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/app_typography.dart';
+import 'package:piantala/core/theme/piantala_theme.dart';
 
 /// I cinque periodi temporali della giornata.
 enum TemporalPeriod {
@@ -65,6 +66,7 @@ abstract class TemporalTheme {
     scaffoldBackgroundColor: AppColors.dayBackground,
     textTheme: AppTypography.textTheme(AppColors.dayText),
     appBarTheme: _appBarTheme(AppColors.dayBackground, AppColors.dayText),
+    extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
   );
 
   // ── DAWN ────────────────────────────────────────────────────
@@ -80,6 +82,7 @@ abstract class TemporalTheme {
     scaffoldBackgroundColor: AppColors.dawnBackground,
     textTheme: AppTypography.textTheme(AppColors.dawnText),
     appBarTheme: _appBarTheme(AppColors.dawnBackground, AppColors.dawnText),
+    extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
   );
 
   // ── DUSK ────────────────────────────────────────────────────
@@ -95,6 +98,7 @@ abstract class TemporalTheme {
     scaffoldBackgroundColor: AppColors.duskBackground,
     textTheme: AppTypography.textTheme(AppColors.duskText),
     appBarTheme: _appBarTheme(AppColors.duskBackground, AppColors.duskText),
+    extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
   );
 
   // ── EVENING ─────────────────────────────────────────────────
@@ -112,6 +116,7 @@ abstract class TemporalTheme {
     textTheme: AppTypography.textTheme(AppColors.eveningText),
     appBarTheme:
         _appBarTheme(AppColors.eveningBackground, AppColors.eveningText),
+    extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
   );
 
   // ── NIGHT ───────────────────────────────────────────────────
@@ -128,6 +133,7 @@ abstract class TemporalTheme {
     scaffoldBackgroundColor: AppColors.nightBackground,
     textTheme: AppTypography.textTheme(AppColors.nightText),
     appBarTheme: _appBarTheme(AppColors.nightBackground, AppColors.nightText),
+    extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
   );
 
   // ── Helpers ─────────────────────────────────────────────────

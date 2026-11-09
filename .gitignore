@@ -80,3 +80,10 @@ functions/.runtimeconfig.json
 # Local development environments
 venv/
 .venv/
+
+#skills
+.claude/
+.agents/
+.gemini/
+.impeccable/
+
