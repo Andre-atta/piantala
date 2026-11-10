@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
+import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/screens/home/widgets/plant_shelf_view.dart';
+import 'package:piantala/presentation/screens/home/widgets/watering_stick.dart';
 
-// ── Helper ────────────────────────────────────────────────────────────────
-
-PlantEntity _fakePlant({
+PlantEntity _plant({
   String id = 'plant-1',
   String customName = 'Pothos',
   String? speciesScientificName = 'Epipremnum aureum',
-  String? photoUrl,
+  DateTime? lastWateredAt,
 }) {
   return PlantEntity(
     id: id,
@@ -21,84 +24,131 @@ PlantEntity _fakePlant({
     speciesCommonName: null,
     roomId: 'unassigned',
     shelfPosition: 0,
-    photoUrl: photoUrl,
+    photoUrl: null,
     thumbnailUrl: null,
-    wateringConfig: null,
+    wateringConfig: lastWateredAt == null
+        ? null
+        : WateringConfigEntity(
+            lastWateredAt: lastWateredAt,
+            frequencyDays: 7,
+          ),
     createdAt: DateTime(2024),
   );
 }
 
-Widget _buildUnderTest(List<PlantEntity> plants) {
+Widget _buildUnderTest(
+  List<PlantEntity> plants, {
+  double textScale = 1,
+}) {
   return ProviderScope(
     child: MaterialApp(
-      home: Scaffold(
-        body: PlantShelfView(plants: plants),
+      locale: const Locale('it'),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      theme: ThemeData(
+        extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
+      ),
+      home: Builder(
+        builder: (context) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: Scaffold(
+            body: PlantShelfView(plants: plants),
+          ),
+        ),
       ),
     ),
   );
 }
 
-// ── Tests ─────────────────────────────────────────────────────────────────
-
 void main() {
-  group('PlantShelfView', () {
-    testWidgets('renders without crash with a single plant', (tester) async {
-      final plant = _fakePlant();
+  testWidgets('renders wall, shelf, and a single plant without errors',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
 
-      await tester.pumpWidget(_buildUnderTest([plant]));
-      // Senza errori di frame = ✅
-      expect(tester.takeException(), isNull);
-    });
+    await tester.pumpWidget(_buildUnderTest([_plant()]));
+    await tester.pumpAndSettle();
 
-    testWidgets('renders the wall background (Image.asset widget present)',
-        (tester) async {
-      // Questo test verifica che lo Stack contenga un Image.asset
-      // per lo sfondo parete — non verifica il contenuto del PNG.
-      await tester.pumpWidget(_buildUnderTest([_fakePlant()]));
+    expect(find.byType(Image), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
 
-      // Image.asset è presente come layer base dello Stack
-      expect(find.byType(Image), findsWidgets);
-    });
+  testWidgets('renders plant artwork even when the plant has no photo',
+      (tester) async {
+    await tester.pumpWidget(_buildUnderTest([_plant()]));
+    await tester.pumpAndSettle();
 
-    testWidgets('renders pothos illustration asset even if photoUrl is present',
-        (tester) async {
-      // Nella shelf view, l'illustrazione locale ha la priorità e la foto reale
-      // non viene usata (art-direction.md §2).
-      final pothos = _fakePlant(
-        speciesScientificName: 'Epipremnum aureum',
-        photoUrl: 'http://example.com/photo.jpg', // Questa deve essere ignorata
-      ).copyWith(cultivationMethod: 'hydro');
+    expect(find.byType(Image), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
 
-      await tester.pumpWidget(_buildUnderTest([pothos]));
-      expect(tester.takeException(), isNull);
+  testWidgets('shows the generic artwork for an unknown species',
+      (tester) async {
+    await tester.pumpWidget(
+      _buildUnderTest([
+        _plant(speciesScientificName: 'Unknown species'),
+      ]),
+    );
+    await tester.pumpAndSettle();
 
-      // Almeno un Image.asset presente (sfondo + eventuale illustrazione)
-      expect(find.byType(Image), findsWidgets);
-    });
+    expect(find.byIcon(Icons.local_florist_outlined), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
-    testWidgets('shows generic placeholder for unknown species',
-        (tester) async {
-      final unknown = _fakePlant(
-        speciesScientificName: 'Unknown species',
-        photoUrl:
-            'http://example.com/photo.jpg', // Anche qui, deve essere ignorata
-      );
+  testWidgets('shows the date stick for a plant due for watering',
+      (tester) async {
+    final semantics = tester.ensureSemantics();
 
-      await tester.pumpWidget(_buildUnderTest([unknown]));
-      expect(tester.takeException(), isNull);
+    await tester.pumpWidget(
+      _buildUnderTest([
+        _plant(lastWateredAt: DateTime.now().subtract(const Duration(days: 8))),
+      ]),
+    );
+    await tester.pumpAndSettle();
 
-      // Icona placeholder generica presente (nessun CachedNetworkImage usato)
-      expect(find.byIcon(Icons.local_florist_outlined), findsWidgets);
-    });
+    expect(find.byType(WateringStick), findsOneWidget);
+    final plantSemantics = tester.getSemantics(
+      find.byKey(const ValueKey('plant-plant-1')),
+    );
+    expect(plantSemantics.label, 'Pothos');
+    expect(plantSemantics.value, startsWith('Da annaffiare il '));
+    expect(tester.takeException(), isNull);
+    semantics.dispose();
+  });
 
-    testWidgets('renders multiple plants without crash', (tester) async {
-      final plants = List.generate(
-        5,
-        (i) => _fakePlant(id: 'plant-$i', customName: 'Pianta $i'),
-      );
+  testWidgets('keeps the plant touch target and text valid at scale 1.5',
+      (tester) async {
+    await tester.pumpWidget(
+      _buildUnderTest(
+        [_plant(customName: 'Una pianta dal nome molto lungo')],
+        textScale: 1.5,
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      await tester.pumpWidget(_buildUnderTest(plants));
-      expect(tester.takeException(), isNull);
-    });
+    final size = tester.getSize(
+      find.byKey(const ValueKey('plant-plant-1')),
+    );
+    expect(size.width, greaterThanOrEqualTo(48));
+    expect(size.height, greaterThanOrEqualTo(48));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders empty shelf decorations without intercepting taps',
+      (tester) async {
+    await tester.pumpWidget(_buildUnderTest([_plant()]));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SvgPicture), findsWidgets);
+    expect(tester.takeException(), isNull);
   });
 }

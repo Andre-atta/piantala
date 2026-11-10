@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/core/utils/exposure_localization.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
@@ -10,17 +11,6 @@ import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
 class RoomsScreen extends ConsumerWidget {
   const RoomsScreen({super.key});
-
-  String _localizedExposure(String exposure, AppLocalizations? l10n) {
-    if (l10n == null) return exposure;
-    return switch (exposure.toUpperCase()) {
-      'NORTH' || 'NORD' => l10n.exposureNorth,
-      'SOUTH' || 'SUD' => l10n.exposureSouth,
-      'EAST' || 'EST' => l10n.exposureEast,
-      'WEST' || 'OVEST' => l10n.exposureWest,
-      _ => l10n.exposureUnknown,
-    };
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,7 +82,8 @@ class RoomsScreen extends ConsumerWidget {
                             );
                           },
                           icon: const Icon(Icons.add),
-                          label: Text(l10n?.roomsAddButton ?? 'Aggiungi Stanza'),
+                          label:
+                              Text(l10n?.roomsAddButton ?? 'Aggiungi Stanza'),
                         ),
                       ],
                     ),
@@ -107,7 +98,8 @@ class RoomsScreen extends ConsumerWidget {
                     (context, index) {
                       final room = rooms[index];
                       final plantCount = counts[room.id] ?? 0;
-                      final exposureStr = _localizedExposure(room.exposure, l10n);
+                      final exposureStr =
+                          localizedExposure(room.exposure, l10n);
 
                       return Card(
                         elevation: 0,
@@ -143,7 +135,7 @@ class RoomsScreen extends ConsumerWidget {
                             onSelected: (value) async {
                               if (value == 'edit') {
                                 await showDialog<void>(
-                                   context: context,
+                                  context: context,
                                   builder: (context) => RoomDialog(room: room),
                                 );
                               } else if (value == 'delete') {
@@ -164,7 +156,8 @@ class RoomsScreen extends ConsumerWidget {
                                 value: 'delete',
                                 child: Text(
                                   l10n?.commonDelete ?? 'Elimina',
-                                  style: const TextStyle(color: AppColors.error),
+                                  style:
+                                      const TextStyle(color: AppColors.error),
                                 ),
                               ),
                             ],
@@ -199,7 +192,7 @@ class RoomsScreen extends ConsumerWidget {
             plantCount > 0
                 ? (l10n?.roomsDeleteWarning(plantCount) ??
                     'Questa stanza contiene $plantCount piante! Eliminandola, '
-                    'le piante diventeranno "Senza Stanza". Vuoi procedere?')
+                        'le piante diventeranno "Senza Stanza". Vuoi procedere?')
                 : (l10n?.roomsDeleteConfirm(room.name) ??
                     'Sei sicuro di voler eliminare la stanza "${room.name}"?'),
           ),

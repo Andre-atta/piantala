@@ -302,6 +302,36 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get homeTooltipLogout;
 
+  /// No description provided for @homeRoomMeta.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{1 pianta} other{{count} piante}} · Esposizione {exposure}'**
+  String homeRoomMeta(int count, String exposure);
+
+  /// No description provided for @homeRoomPageSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Stanza {current} di {total}'**
+  String homeRoomPageSemantics(int current, int total);
+
+  /// No description provided for @homeWindowAccessibility.
+  ///
+  /// In it, this message translates to:
+  /// **'Indicatore del momento della giornata'**
+  String get homeWindowAccessibility;
+
+  /// No description provided for @homePlantNameFallback.
+  ///
+  /// In it, this message translates to:
+  /// **'Pianta'**
+  String get homePlantNameFallback;
+
+  /// No description provided for @homeWateringDueSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Da annaffiare il {date}'**
+  String homeWateringDueSemantics(String date);
+
   /// No description provided for @homeErrorLoading.
   ///
   /// In it, this message translates to:
@@ -494,6 +524,12 @@ abstract class AppLocalizations {
   /// **'Impostazioni'**
   String get settingsScreenTitle;
 
+  /// No description provided for @settingsLogout.
+  ///
+  /// In it, this message translates to:
+  /// **'Esci dall\'account'**
+  String get settingsLogout;
+
   /// No description provided for @settingsSectionGeneral.
   ///
   /// In it, this message translates to:
@@ -637,6 +673,24 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Impostazioni'**
   String get navSettings;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In it, this message translates to:
+  /// **'Profilo'**
+  String get navProfile;
+
+  /// No description provided for @navNewPlant.
+  ///
+  /// In it, this message translates to:
+  /// **'nuova pianta'**
+  String get navNewPlant;
+
+  /// No description provided for @navNewRoom.
+  ///
+  /// In it, this message translates to:
+  /// **'nuova stanza'**
+  String get navNewRoom;
 
   /// No description provided for @errPageNotFound.
   ///

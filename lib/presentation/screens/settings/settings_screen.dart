@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/data/services/notification_service.dart';
 import 'package:piantala/l10n/app_localizations.dart';
+import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/locale_providers.dart';
 import 'package:piantala/presentation/providers/notification_providers.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
@@ -253,6 +255,21 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
 
+                const SizedBox(height: AppSpacing.lg),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: () async {
+                      await ref.read(authControllerProvider.notifier).signOut();
+                    },
+                    child: Text(
+                      l10n.settingsLogout,
+                      style: context.piantala.body.copyWith(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.xxl),
               ]),
             ),

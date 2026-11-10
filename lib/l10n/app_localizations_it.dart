@@ -119,6 +119,33 @@ class AppLocalizationsIt extends AppLocalizations {
   String get homeTooltipLogout => 'Logout';
 
   @override
+  String homeRoomMeta(int count, String exposure) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count piante',
+      one: '1 pianta',
+    );
+    return '$_temp0 · Esposizione $exposure';
+  }
+
+  @override
+  String homeRoomPageSemantics(int current, int total) {
+    return 'Stanza $current di $total';
+  }
+
+  @override
+  String get homeWindowAccessibility => 'Indicatore del momento della giornata';
+
+  @override
+  String get homePlantNameFallback => 'Pianta';
+
+  @override
+  String homeWateringDueSemantics(String date) {
+    return 'Da annaffiare il $date';
+  }
+
+  @override
   String homeErrorLoading(Object error) {
     return 'Errore: $error';
   }
@@ -228,6 +255,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsScreenTitle => 'Impostazioni';
 
   @override
+  String get settingsLogout => 'Esci dall\'account';
+
+  @override
   String get settingsSectionGeneral => 'Generale';
 
   @override
@@ -304,6 +334,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get navSettings => 'Impostazioni';
+
+  @override
+  String get navProfile => 'Profilo';
+
+  @override
+  String get navNewPlant => 'nuova pianta';
+
+  @override
+  String get navNewRoom => 'nuova stanza';
 
   @override
   String get errPageNotFound => 'Pagina non trovata';

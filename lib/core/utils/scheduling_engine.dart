@@ -18,6 +18,26 @@ abstract class SchedulingEngine {
     return (lastWateredAt ?? DateTime.now()).add(Duration(days: frequencyDays));
   }
 
+  static DateTime? wateringDateIfDue({
+    required DateTime? lastWateredAt,
+    required int? frequencyDays,
+    required DateTime now,
+  }) {
+    if (lastWateredAt == null || frequencyDays == null) return null;
+
+    final nextWateringAt = nextWatering(
+      lastWateredAt: lastWateredAt,
+      frequencyDays: frequencyDays,
+    );
+    final dueDate = DateTime(
+      nextWateringAt.year,
+      nextWateringAt.month,
+      nextWateringAt.day,
+    );
+    final today = DateTime(now.year, now.month, now.day);
+    return dueDate.isAfter(today) ? null : nextWateringAt;
+  }
+
   static DateTime nextFertilizing({
     required DateTime? lastFertilizedAt,
     required int frequencyDays,

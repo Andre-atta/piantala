@@ -1,0 +1,153 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
+import 'package:piantala/core/theme/piantala_theme.dart';
+import 'package:piantala/core/theme/temporal_theme.dart';
+import 'package:piantala/domain/entities/plant_entity.dart';
+import 'package:piantala/domain/entities/room_entity.dart';
+import 'package:piantala/l10n/app_localizations.dart';
+import 'package:piantala/presentation/providers/plant_providers.dart';
+import 'package:piantala/presentation/providers/room_providers.dart';
+import 'package:piantala/presentation/providers/theme_providers.dart';
+import 'package:piantala/presentation/screens/home/home_screen.dart';
+import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
+import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
+
+RoomEntity _room(String id, String name, String exposure) => RoomEntity(
+      id: id,
+      userId: 'user-1',
+      name: name,
+      exposure: exposure,
+      createdAt: DateTime(2026),
+    );
+
+PlantEntity _plant(String id, String roomId) => PlantEntity(
+      id: id,
+      userId: 'user-1',
+      roomId: roomId,
+      customName: 'Pianta $id',
+      shelfPosition: 0,
+      createdAt: DateTime(2026),
+    );
+
+({Widget widget, GoRouter router}) _app({
+  required List<PlantEntity> plants,
+  required List<RoomEntity> rooms,
+}) {
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeScreen(),
+      ),
+    ],
+  );
+  return (
+    router: router,
+    widget: ProviderScope(
+      overrides: [
+        plantsProvider.overrideWith((ref) => Stream.value(plants)),
+        roomsProvider.overrideWith((ref) => Stream.value(rooms)),
+        temporalPeriodProvider
+            .overrideWith((ref) => Stream.value(TemporalPeriod.day)),
+      ],
+      child: MaterialApp.router(
+        routerConfig: router,
+        locale: const Locale('it'),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: ThemeData(
+          extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
+        ),
+      ),
+    ),
+  );
+}
+
+void main() {
+  testWidgets('renders room metadata, window, cabinet, floor, and navigation',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final app = _app(
+      plants: List.generate(4, (index) => _plant('plant-$index', 'room-1')),
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+    );
+    addTearDown(app.router.dispose);
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Soggiorno'), findsOneWidget);
+    expect(find.text('4 piante · Esposizione Sud'), findsOneWidget);
+    expect(find.byType(HomeFloor), findsOneWidget);
+    expect(find.byType(PiantalaNavigationBar), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('keeps the header and floor fixed while scrolling the cabinet',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final app = _app(
+      plants: List.generate(15, (index) => _plant('plant-$index', 'room-1')),
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+    );
+    addTearDown(app.router.dispose);
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+    final headerTop = tester.getTopLeft(find.text('Soggiorno'));
+    final floorTop = tester.getTopLeft(find.byType(HomeFloor));
+
+    await tester.drag(
+      find.byType(SingleChildScrollView).first,
+      const Offset(0, -500),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.getTopLeft(find.text('Soggiorno')), headerTop);
+    expect(tester.getTopLeft(find.byType(HomeFloor)), floorTop);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('advances to the next room from its accessible header target',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final app = _app(
+      plants: [
+        _plant('plant-1', 'room-1'),
+        _plant('plant-2', 'room-2'),
+      ],
+      rooms: [
+        _room('room-1', 'Soggiorno', 'S'),
+        _room('room-2', 'Cucina', 'E'),
+      ],
+    );
+    addTearDown(app.router.dispose);
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Cucina'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Cucina'), findsOneWidget);
+    expect(find.text('1 pianta · Esposizione Est'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+}

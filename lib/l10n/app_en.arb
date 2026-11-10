@@ -51,6 +51,28 @@
   "homeLabelUnassigned": "Unassigned",
   "homeLabelAllPlants": "All plants",
   "homeTooltipLogout": "Logout",
+  "homeRoomMeta": "{count, plural, one{1 plant} other{{count} plants}} · Exposure {exposure}",
+  "@homeRoomMeta": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" },
+      "exposure": { "type": "String", "example": "South" }
+    }
+  },
+  "homeRoomPageSemantics": "Room {current} of {total}",
+  "@homeRoomPageSemantics": {
+    "placeholders": {
+      "current": { "type": "int", "example": "1" },
+      "total": { "type": "int", "example": "3" }
+    }
+  },
+  "homeWindowAccessibility": "Time of day indicator",
+  "homePlantNameFallback": "Plant",
+  "homeWateringDueSemantics": "Water on {date}",
+  "@homeWateringDueSemantics": {
+    "placeholders": {
+      "date": { "type": "String", "example": "Nov 9" }
+    }
+  },
 
   "homeErrorLoading": "Error: {error}",
   "@homeErrorLoading": {
@@ -116,6 +138,7 @@
   },
 
   "settingsScreenTitle": "Settings",
+  "settingsLogout": "Sign out",
   "settingsSectionGeneral": "General",
   "settingsLanguageTitle": "Language",
   "settingsLanguageSubtitle": "Choose the app language",
@@ -154,6 +177,9 @@
   "navRooms": "Rooms",
   "navEncyclopedia": "Encyclopedia",
   "navSettings": "Settings",
+  "navProfile": "Profile",
+  "navNewPlant": "new plant",
+  "navNewRoom": "new room",
 
   "errPageNotFound": "Page not found",
   "errPageNotFoundBody": "Oops, this page doesn't exist",

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/core/theme/build_context_extensions.dart';
+import 'package:piantala/core/utils/exposure_localization.dart';
+import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
-import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
-import 'package:piantala/presentation/screens/home/widgets/plant_shelf_view.dart';
+import 'package:piantala/presentation/screens/home/home_metrics.dart';
+import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
+import 'package:piantala/presentation/screens/home/widgets/home_header.dart';
+import 'package:piantala/presentation/screens/home/widgets/shelf_cabinet.dart';
+import 'package:piantala/presentation/screens/home/widgets/window_indicator.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -30,189 +37,203 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(currentUserProvider);
     final plantsAsync = ref.watch(plantsProvider);
     final roomsAsync = ref.watch(roomsProvider);
-    final l10n = AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context)!;
+    final plants = plantsAsync.valueOrNull ?? <PlantEntity>[];
+    final rooms = roomsAsync.valueOrNull ?? <RoomEntity>[];
+    final pages = _buildPages(rooms, plants, localizations);
+    if (pages.isEmpty) {
+      pages.add(
+        _ShelfPageData(
+          label: localizations.homeLabelAllPlants,
+          plants: const [],
+          room: null,
+        ),
+      );
+    }
+    final currentPage = _currentPage.clamp(0, pages.length - 1);
+    final activePage = pages[currentPage];
+    final nextPage =
+        pages.length > 1 ? pages[(currentPage + 1) % pages.length] : null;
+    final isLoading = plantsAsync.isLoading || roomsAsync.isLoading;
+    final plantsFailedWithoutData =
+        plantsAsync.hasError && plantsAsync.valueOrNull == null;
 
     return MainScaffold(
-      child: Column(
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          // ── Header: saluto temporale + badge meteo + pulsante profilo ──
-          _HomeHeader(
-            userName: user?.displayName,
-            onProfileTap: () =>
-                ref.read(authControllerProvider.notifier).signOut(),
+          Image.asset(
+            PlantAssetResolver.wallBackground(),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => ColoredBox(
+              color: context.piantala.stickWoodAndReserveWall,
+            ),
           ),
-
-          // ── Contenuto: stanze con swipe ─────────────────────────────────
-          Expanded(
-            child: plantsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(
-                child: Text(
-                  l10n?.homeErrorLoading(error.toString()) ?? 'Errore: $error',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
+          Column(
+            children: [
+              HomeHeader(
+                roomName: activePage.label,
+                nextRoomName: nextPage?.label,
+                plantCount: activePage.plants.length,
+                exposure: localizedExposure(
+                  activePage.room?.exposure ?? 'UNKNOWN',
+                  localizations,
+                ),
+                currentPage: currentPage,
+                pageCount: pages.length,
+                onNextRoomTap: () => _selectPage(
+                  context,
+                  (currentPage + 1) % pages.length,
+                ),
+                onPageSelected: (index) => _selectPage(context, index),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: HomeMetrics.floorHeight,
+                  ),
+                  child: _buildPageContent(
+                    context: context,
+                    pages: pages,
+                    isLoading: isLoading,
+                    plantsFailedWithoutData: plantsFailedWithoutData,
+                    plantsError: plantsAsync.error,
                   ),
                 ),
               ),
-              data: (plants) {
-                return roomsAsync.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (_, __) => plants.isEmpty
-                      ? const _EmptyShelfPlaceholder()
-                      : PlantShelfView(plants: plants),
-                  data: (rooms) {
-                    // Tutte le stanze + eventuale "Senza stanza"
-                    final pages = _buildPages(rooms, plants, l10n);
-
-                    if (pages.isEmpty) {
-                      return const _EmptyShelfPlaceholder();
-                    }
-
-                    if (pages.length == 1) {
-                      return _ShelfPage(page: pages.first);
-                    }
-
-                    return Column(
-                      children: [
-                        // PageView swipeable
-                        Expanded(
-                          child: PageView.builder(
-                            controller: _pageController,
-                            itemCount: pages.length,
-                            onPageChanged: (i) =>
-                                setState(() => _currentPage = i),
-                            itemBuilder: (context, index) =>
-                                _ShelfPage(page: pages[index]),
-                          ),
-                        ),
-
-                        // Indicatore pallini + nome stanza corrente
-                        _RoomIndicator(
-                          pages: pages,
-                          current: _currentPage,
-                          onDotTap: (i) {
-                            _pageController.animateToPage(
-                              i,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
+            ],
+          ),
+          const Positioned(
+            top: HomeMetrics.windowTop,
+            right: HomeMetrics.windowRight,
+            child: WindowIndicator(),
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: HomeFloor(),
           ),
         ],
       ),
     );
   }
 
-  /// Costruisce una pagina per OGNI stanza (anche vuota) + eventuale
-  /// pagina "Senza stanza" se esistono piante non assegnate.
-  List<_ShelfPageData> _buildPages(
-    List<RoomEntity> rooms,
-    List<PlantEntity> plants,
-    AppLocalizations? l10n,
-  ) {
-    final pages = <_ShelfPageData>[];
-
-    // Una pagina per ogni stanza — anche se non ha piante
-    for (final room in rooms) {
-      final roomPlants = plants.where((p) => p.roomId == room.id).toList();
-      pages.add(
-        _ShelfPageData(label: room.name, plants: roomPlants, room: room),
+  Widget _buildPageContent({
+    required BuildContext context,
+    required List<_ShelfPageData> pages,
+    required bool isLoading,
+    required bool plantsFailedWithoutData,
+    required Object? plantsError,
+  }) {
+    if (isLoading) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(context.piantala.leafGreen),
+        ),
       );
     }
 
-    // Piante non assegnate o con una stanza non ancora presente nella cache.
-    // Restano visibili anche durante la sincronizzazione iniziale delle stanze.
+    if (plantsFailedWithoutData) {
+      return Center(
+        child: Text(
+          AppLocalizations.of(context)!.homeErrorLoading(
+            plantsError.toString(),
+          ),
+          style: context.piantala.body.copyWith(
+            color: context.piantala.ink,
+          ),
+        ),
+      );
+    }
+
+    if (pages.length == 1) {
+      return _ShelfPage(
+        page: pages.first,
+        onPlantTap: _openPlant,
+      );
+    }
+
+    return PageView.builder(
+      controller: _pageController,
+      itemCount: pages.length,
+      onPageChanged: (index) => setState(() => _currentPage = index),
+      itemBuilder: (context, index) => _ShelfPage(
+        page: pages[index],
+        onPlantTap: _openPlant,
+      ),
+    );
+  }
+
+  void _selectPage(BuildContext context, int page) {
+    if (page == _currentPage) return;
+    final duration = MediaQuery.of(context).disableAnimations
+        ? Duration.zero
+        : const Duration(
+            milliseconds: HomeMetrics.pageTransitionMilliseconds,
+          );
+    if (_pageController.hasClients) {
+      _pageController.animateToPage(
+        page,
+        duration: duration,
+        curve: Curves.easeInOut,
+      );
+    } else {
+      setState(() => _currentPage = page);
+    }
+  }
+
+  void _openPlant(PlantEntity plant) => context.go('/plants/${plant.id}');
+
+  List<_ShelfPageData> _buildPages(
+    List<RoomEntity> rooms,
+    List<PlantEntity> plants,
+    AppLocalizations localizations,
+  ) {
+    final pages = <_ShelfPageData>[];
+    for (final room in rooms) {
+      pages.add(
+        _ShelfPageData(
+          label: room.name,
+          plants: plants.where((plant) => plant.roomId == room.id).toList(),
+          room: room,
+        ),
+      );
+    }
+
     final knownRoomIds = rooms.map((room) => room.id).toSet();
     final unassigned = plants
         .where(
-          (p) =>
-              p.roomId == 'unassigned' ||
-              p.roomId.isEmpty ||
-              !knownRoomIds.contains(p.roomId),
+          (plant) =>
+              plant.roomId == 'unassigned' ||
+              plant.roomId.isEmpty ||
+              !knownRoomIds.contains(plant.roomId),
         )
         .toList();
     if (unassigned.isNotEmpty) {
       pages.add(
         _ShelfPageData(
-          label: l10n?.homeLabelUnassigned ?? 'Senza stanza',
+          label: localizations.homeLabelUnassigned,
           plants: unassigned,
           room: null,
         ),
       );
     }
 
-    // Nessuna stanza e nessuna pianta non assegnata:
-    // mostra tutte le piante su un'unica pagina generica
     if (pages.isEmpty && plants.isNotEmpty) {
       pages.add(
         _ShelfPageData(
-          label: l10n?.homeLabelAllPlants ?? 'Tutte le piante',
+          label: localizations.homeLabelAllPlants,
           plants: plants,
           room: null,
         ),
       );
     }
-
     return pages;
   }
 }
-
-// ── _HomeHeader ────────────────────────────────────────────────────────────
-// Gestisce correttamente la status bar con SafeArea.
-
-class _HomeHeader extends StatelessWidget {
-  const _HomeHeader({
-    required this.userName,
-    required this.onProfileTap,
-  });
-
-  final String? userName;
-  final VoidCallback onProfileTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
-          AppSpacing.sm,
-          AppSpacing.sm, // ridotto per far spazio al pulsante profilo
-          AppSpacing.sm,
-        ),
-        child: Row(
-          children: [
-            // Testo saluto
-            Expanded(
-              child: TimeGreetingBanner(userName: userName),
-            ),
-
-            // Pulsante profilo/logout
-            IconButton(
-              icon: const Icon(Icons.person_outline),
-              onPressed: onProfileTap,
-              tooltip: AppLocalizations.of(context)?.homeTooltipLogout ?? 'Logout',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── _ShelfPageData ─────────────────────────────────────────────────────────
 
 class _ShelfPageData {
   const _ShelfPageData({
@@ -226,91 +247,30 @@ class _ShelfPageData {
   final RoomEntity? room;
 }
 
-// ── _ShelfPage ─────────────────────────────────────────────────────────────
-
-class _ShelfPage extends ConsumerWidget {
-  const _ShelfPage({required this.page});
-  final _ShelfPageData page;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // Alert esposizione S.04
-        if (page.room != null && page.room!.exposure != 'UNKNOWN')
-
-          // Mensola
-          if (page.plants.isEmpty)
-            Expanded(child: _EmptyRoomPlaceholder(roomName: page.label))
-          else
-            Expanded(child: PlantShelfView(plants: page.plants)),
-      ],
-    );
-  }
-}
-
-// ── _RoomIndicator ─────────────────────────────────────────────────────────
-// Pallini + label del nome stanza corrente con tappabili.
-
-class _RoomIndicator extends StatelessWidget {
-  const _RoomIndicator({
-    required this.pages,
-    required this.current,
-    required this.onDotTap,
+class _ShelfPage extends StatelessWidget {
+  const _ShelfPage({
+    required this.page,
+    required this.onPlantTap,
   });
 
-  final List<_ShelfPageData> pages;
-  final int current;
-  final ValueChanged<int> onDotTap;
+  final _ShelfPageData page;
+  final ValueChanged<PlantEntity> onPlantTap;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final activeColor = theme.colorScheme.primary;
-    final inactiveColor = theme.colorScheme.onSurface.withAlpha(60);
+    if (page.plants.isEmpty) {
+      return page.room == null
+          ? const _EmptyShelfPlaceholder()
+          : _EmptyRoomPlaceholder(roomName: page.label);
+    }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Nome della stanza corrente
-        Text(
-          pages[current].label,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withAlpha(180),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 6),
-
-        // Pallini
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(pages.length, (i) {
-            final isActive = i == current;
-            return GestureDetector(
-              onTap: () => onDotTap(i),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeInOut,
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: isActive ? 20 : 7,
-                height: 7,
-                decoration: BoxDecoration(
-                  color: isActive ? activeColor : inactiveColor,
-                  borderRadius: BorderRadius.circular(AppRadius.full),
-                ),
-              ),
-            );
-          }),
-        ),
-      ],
+    return ShelfCabinet(
+      plants: page.plants,
+      now: DateTime.now(),
+      onPlantTap: onPlantTap,
     );
   }
 }
-
-// ── _EmptyRoomPlaceholder ─────────────────────────────────────────────────
-// Mostrato quando una stanza esiste ma non ha piante.
 
 class _EmptyRoomPlaceholder extends StatelessWidget {
   const _EmptyRoomPlaceholder({required this.roomName});
@@ -319,7 +279,7 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context);
 
     return Center(
       child: Column(
@@ -332,7 +292,7 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            l10n?.homeEmptyRoomTitle(roomName) ?? '$roomName è vuota',
+            localizations?.homeEmptyRoomTitle(roomName) ?? '$roomName è vuota',
             style: theme.textTheme.titleMedium?.copyWith(
               fontFamily: 'DMSerifDisplay',
               color: theme.colorScheme.onSurface.withAlpha(180),
@@ -340,7 +300,7 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            l10n?.homeEmptyRoomSubtitle ??
+            localizations?.homeEmptyRoomSubtitle ??
                 'Aggiungi una pianta e assegnala\na questa stanza',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
@@ -351,7 +311,7 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: () => context.go('/plants/add'),
             icon: const Icon(Icons.add, size: 18),
-            label: Text(l10n?.homeButtonAddPlant ?? 'Aggiungi pianta'),
+            label: Text(localizations?.homeButtonAddPlant ?? 'Aggiungi pianta'),
           ),
         ],
       ),
@@ -359,16 +319,13 @@ class _EmptyRoomPlaceholder extends StatelessWidget {
   }
 }
 
-// ── _EmptyShelfPlaceholder ────────────────────────────────────────────────
-// Mostrato quando non ci sono piante in tutta l'app.
-
 class _EmptyShelfPlaceholder extends StatelessWidget {
   const _EmptyShelfPlaceholder();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context);
 
     return Center(
       child: Column(
@@ -389,14 +346,14 @@ class _EmptyShelfPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            l10n?.homeEmptyShelfTitle ?? 'La tua mensola è vuota',
+            localizations?.homeEmptyShelfTitle ?? 'La tua mensola è vuota',
             style: theme.textTheme.titleMedium?.copyWith(
               fontFamily: 'DMSerifDisplay',
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            l10n?.homeEmptyShelfSubtitle ??
+            localizations?.homeEmptyShelfSubtitle ??
                 'Aggiungi la tua prima pianta\ncon il bottone +',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -407,7 +364,7 @@ class _EmptyShelfPlaceholder extends StatelessWidget {
           FilledButton.icon(
             onPressed: () => context.go('/plants/add'),
             icon: const Icon(Icons.add),
-            label: Text(l10n?.homeButtonAddPlant ?? 'Aggiungi pianta'),
+            label: Text(localizations?.homeButtonAddPlant ?? 'Aggiungi pianta'),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.lg,

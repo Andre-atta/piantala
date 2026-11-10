@@ -56,6 +56,28 @@
   "homeLabelUnassigned": "Senza stanza",
   "homeLabelAllPlants": "Tutte le piante",
   "homeTooltipLogout": "Logout",
+  "homeRoomMeta": "{count, plural, one{1 pianta} other{{count} piante}} · Esposizione {exposure}",
+  "@homeRoomMeta": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" },
+      "exposure": { "type": "String", "example": "Sud" }
+    }
+  },
+  "homeRoomPageSemantics": "Stanza {current} di {total}",
+  "@homeRoomPageSemantics": {
+    "placeholders": {
+      "current": { "type": "int", "example": "1" },
+      "total": { "type": "int", "example": "3" }
+    }
+  },
+  "homeWindowAccessibility": "Indicatore del momento della giornata",
+  "homePlantNameFallback": "Pianta",
+  "homeWateringDueSemantics": "Da annaffiare il {date}",
+  "@homeWateringDueSemantics": {
+    "placeholders": {
+      "date": { "type": "String", "example": "9 nov" }
+    }
+  },
 
   "homeErrorLoading": "Errore: {error}",
   "@homeErrorLoading": {
@@ -121,6 +143,7 @@
   },
 
   "settingsScreenTitle": "Impostazioni",
+  "settingsLogout": "Esci dall'account",
   "settingsSectionGeneral": "Generale",
   "settingsLanguageTitle": "Lingua",
   "settingsLanguageSubtitle": "Scegli la lingua dell'app",
@@ -159,6 +182,9 @@
   "navRooms": "Stanze",
   "navEncyclopedia": "Enciclopedia",
   "navSettings": "Impostazioni",
+  "navProfile": "Profilo",
+  "navNewPlant": "nuova pianta",
+  "navNewRoom": "nuova stanza",
 
   "errPageNotFound": "Pagina non trovata",
   "errPageNotFoundBody": "Oops, questa pagina non esiste",
