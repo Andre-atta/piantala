@@ -1,4 +1,10 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
   "functions": [
     {
       "source": "functions",
@@ -11,5 +17,16 @@
         "*.local"
       ]
     }
-  ]
+  ],
+  "emulators": {
+    "firestore": {
+      "port": 8180
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": false
+    }
+  }
 }

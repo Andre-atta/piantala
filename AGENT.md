@@ -469,6 +469,59 @@ Prima di consegnare, controllare:
 
 ---
 
+## 11. Sicurezza, Privacy e Permessi
+
+> Regola madre: quando una modifica tocca fotocamera, galleria, posizione, foto utente, account,
+> notifiche o qualsiasi dato personale, FERMATI. Descrivi cosa raccoglie, dove lo salva e chi può leggerlo,
+> aspetta conferma, poi implementa. Nel dubbio: nega per default (§13.4).
+
+### 11.1 Permessi di sistema
+- Si chiede un permesso SOLO nel momento in cui l'utente attiva la funzione che lo richiede. Mai all'avvio, mai in blocco.
+- Prima del popup nativo mostra una scheda dell'app (testi in l10n) che spiega a cosa serve in una frase.
+- Se il permesso è negato l'app NON si blocca: ogni funzione ha un piano B (vedi sotto). Un permesso negato non si richiede in loop;
+  si offre un link alle impostazioni di sistema solo se l'utente ripete l'azione.
+- Si dichiarano solo i permessi in uso (Info.plist / AndroidManifest). Ogni nuovo permesso va motivato nel commit.
+- Ora e fuso orario del dispositivo non richiedono permessi. Si salva sempre `DateTime.now().toUtc()` e si converte in locale solo per mostrarlo.
+
+### 11.2 Fotocamera e foto
+- Per scegliere una foto esistente usare il picker di sistema di `image_picker` (nessun accesso all'intera galleria).
+- La fotocamera si apre solo da un gesto esplicito. Piano B se negata: scelta dalla galleria.
+- Si ridimensiona e comprime sul dispositivo prima di qualsiasi upload (§6). Si eliminano i metadati EXIF (in particolare le coordinate GPS)
+  prima dell'upload.
+- Le foto dell'utente stanno in `users/{uid}/...` su Firebase Storage. Sono private: leggibili e scrivibili solo dal proprietario.
+- Non si salvano foto in chiaro nei log, nella cache pubblica o nei file temporanei oltre il necessario: cancella il file temporaneo dopo l'upload.
+- Crittografia: Firebase cifra già i dati in transito (TLS) e a riposo. Non aggiungere cifratura applicativa personalizzata
+  senza una decisione esplicita (rompe cache, miniature e regole). La difesa vera sono le Security Rules e App Check.
+
+### 11.3 Posizione
+- Per l'esposizione si usa già la bussola (nessun permesso di posizione). Per il meteo serve solo la CITTÀ.
+- Se in futuro serve la posizione: solo "approssimativa" (coarse), mai GPS preciso, e solo su richiesta esplicita.
+- Piano B obbligatorio: campo "In che città vivi?" a mano (nome del comune, niente via o numero civico).
+- Si salva solo il nome del comune (o un codice zona), MAI latitudine e longitudine esatte.
+
+### 11.4 Foto profilo e dati dell'account
+- Percorso: `users/{uid}/avatar.jpg`. Lettura e scrittura solo per `request.auth.uid == uid`
+  (un avatar condiviso con altri utenti richiede una decisione esplicita).
+- Eliminazione account: una Cloud Function (`onDelete` su Auth o funzione richiamabile) cancella documenti Firestore dell'utente,
+  tutti i file sotto `users/{uid}/` su Storage, i dati Isar locali e il token FCM. L'app deve poterla avviare dalle impostazioni.
+- Esportazione dei dati (diritto di portabilità): predisporre il punto d'ingresso nelle impostazioni, anche se all'inizio manda una email.
+
+### 11.5 Regole Firebase (vincolanti)
+- `firestore.rules` e `storage.rules` stanno nel repository, sono in `firebase.json` e hanno test con l'emulatore.
+- Default: `allow read, write: if false;` e si apre solo ciò che serve.
+- Storage: limite di dimensione (es. 5 MB) e `contentType` ammesso (`image/jpeg`, `image/webp`) nella regola di scrittura.
+- App Check attivo per Firestore, Storage e Functions (Play Integrity / App Attest).
+- Nessuna chiave o segreto nel codice client; i segreti stanno in Functions (come per OpenPlantBook) o in Secret Manager.
+
+### 11.6 GDPR
+- Informativa privacy raggiungibile dalle impostazioni e dalla schermata di registrazione, in italiano e in inglese.
+- Dati raccolti documentati in `docs/legal/privacy_data_inventory.md` (cosa, perché, dove, per quanto tempo, chi vi accede).
+  Ogni nuova funzione che raccoglie dati aggiorna questo file nello stesso commit.
+- Analytics e Crashlytics (se aggiunti) solo dopo consenso, disattivabili dalle impostazioni.
+- Minimizzazione: se un dato non serve a una funzione esistente, non si raccoglie.
+
+---
+
 ## 12. Gestione degli Errori — Standard
 
 ```dart

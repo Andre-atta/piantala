@@ -75,6 +75,7 @@ class _AddPlantScreenState extends ConsumerState<AddPlantScreen> {
       final repo = ref.read(plantRepositoryProvider);
       final plants = await repo.watchPlants().first;
       final newPosition = plants.length;
+      final plantId = const Uuid().v4();
 
       var customName = _manualNameController.text.trim();
       String? speciesApiId;
@@ -83,14 +84,15 @@ class _AddPlantScreenState extends ConsumerState<AddPlantScreen> {
       String? photoUrl;
 
       if (_selectedImage != null) {
-        final fileName = '${const Uuid().v4()}.jpg';
         final storageRef = FirebaseStorage.instance
             .ref()
-            .child('plants_images')
-            .child(user.uid)
-            .child(fileName);
+            .child('users/${user.uid}/plants/$plantId/'
+                '${DateTime.now().toUtc().millisecondsSinceEpoch}.jpg');
 
-        await storageRef.putFile(_selectedImage!);
+        await storageRef.putFile(
+          _selectedImage!,
+          SettableMetadata(contentType: 'image/jpeg'),
+        );
         photoUrl = await storageRef.getDownloadURL();
       }
 
@@ -154,7 +156,7 @@ class _AddPlantScreenState extends ConsumerState<AddPlantScreen> {
       );
 
       final newPlant = PlantEntity(
-        id: const Uuid().v4(),
+        id: plantId,
         userId: user.uid,
         roomId: _selectedRoomId ?? 'unassigned',
         customName: customName,
