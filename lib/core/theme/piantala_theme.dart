@@ -19,9 +19,6 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     required this.floorBorder,
     required this.windowWood,
     required this.darkWood,
-    required this.dayGlass,
-    required this.dawnGlass,
-    required this.sun,
     required this.stickWoodAndReserveWall,
     required this.skyDay,
     required this.skyDawn,
@@ -50,9 +47,6 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     floorBorder: Color(0xFFA67C52),
     windowWood: Color(0xFF8A5535),
     darkWood: Color(0xFF5E3820),
-    dayGlass: Color(0xFFFBF1D3),
-    dawnGlass: Color(0xFFFDDDA0),
-    sun: Color(0xFFF6C67A),
     stickWoodAndReserveWall: Color(0xFFE8DABB),
     skyDay: Color(0xFFFBF1D3),
     skyDawn: Color(0xFFFDDDA0),
@@ -101,9 +95,6 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
   final Color floorBorder;
   final Color windowWood;
   final Color darkWood;
-  final Color dayGlass;
-  final Color dawnGlass;
-  final Color sun;
   final Color stickWoodAndReserveWall;
   final Color skyDay;
   final Color skyDawn;
@@ -132,9 +123,6 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     Color? floorBorder,
     Color? windowWood,
     Color? darkWood,
-    Color? dayGlass,
-    Color? dawnGlass,
-    Color? sun,
     Color? stickWoodAndReserveWall,
     Color? skyDay,
     Color? skyDawn,
@@ -162,9 +150,6 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       floorBorder: floorBorder ?? this.floorBorder,
       windowWood: windowWood ?? this.windowWood,
       darkWood: darkWood ?? this.darkWood,
-      dayGlass: dayGlass ?? this.dayGlass,
-      dawnGlass: dawnGlass ?? this.dawnGlass,
-      sun: sun ?? this.sun,
       stickWoodAndReserveWall:
           stickWoodAndReserveWall ?? this.stickWoodAndReserveWall,
       skyDay: skyDay ?? this.skyDay,
@@ -197,9 +182,6 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       floorBorder: Color.lerp(floorBorder, other.floorBorder, t)!,
       windowWood: Color.lerp(windowWood, other.windowWood, t)!,
       darkWood: Color.lerp(darkWood, other.darkWood, t)!,
-      dayGlass: Color.lerp(dayGlass, other.dayGlass, t)!,
-      dawnGlass: Color.lerp(dawnGlass, other.dawnGlass, t)!,
-      sun: Color.lerp(sun, other.sun, t)!,
       stickWoodAndReserveWall: Color.lerp(
         stickWoodAndReserveWall,
         other.stickWoodAndReserveWall,

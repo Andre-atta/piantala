@@ -30,7 +30,7 @@ class IsarService {
     );
   }
 
-  Future<void> initializeForTesting() async {
+  Future<void> initializeForTesting({required String directory}) async {
     await Isar.initializeIsarCore(download: true);
     _db = await Isar.open(
       [
@@ -39,7 +39,7 @@ class IsarService {
         SpeciesCacheCollectionSchema,
         PendingOperationCollectionSchema,
       ],
-      directory: '',
+      directory: directory,
       name: 'test_db',
     );
   }

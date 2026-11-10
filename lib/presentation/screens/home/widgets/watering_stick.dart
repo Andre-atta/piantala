@@ -28,10 +28,15 @@ class WateringStick extends StatelessWidget {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            SvgPicture.asset(
-              _asset,
-              width: HomeMetrics.wateringStickWidth,
-              height: HomeMetrics.wateringStickHeight,
+            Transform.rotate(
+              angle: HomeMetrics.wateringStickRotationDegrees *
+                  HomeMetrics.degreesToRadians,
+              alignment: Alignment.bottomCenter,
+              child: SvgPicture.asset(
+                _asset,
+                width: HomeMetrics.wateringStickWidth,
+                height: HomeMetrics.wateringStickHeight,
+              ),
             ),
             Positioned(
               top: HomeMetrics.wateringStickDateTop,

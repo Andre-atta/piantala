@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
@@ -9,11 +11,14 @@ import 'package:piantala/data/services/sync_service.dart';
 
 void main() {
   late Isar isar;
+  late Directory tempDirectory;
   late FakeFirebaseFirestore fakeFirestore;
   late SyncService syncService;
 
   setUpAll(() async {
-    await IsarService.instance.initializeForTesting();
+    tempDirectory = Directory.systemTemp.createTempSync('piantala-sync-test-');
+    await IsarService.instance
+        .initializeForTesting(directory: tempDirectory.path);
   });
 
   setUp(() async {
@@ -28,6 +33,7 @@ void main() {
 
   tearDownAll(() async {
     await IsarService.instance.close();
+    tempDirectory.deleteSync(recursive: true);
   });
 
   test('SyncService processa pending_create e lo manda a Firestore', () async {
@@ -138,6 +144,5 @@ void main() {
     expect(doc.exists, isTrue);
     // Deve finire col payload di op2, perché FIFO processerà prima op1 poi op2
     expect(doc.data()!['name'], equals('Pianta Modificata'));
-
   });
 }

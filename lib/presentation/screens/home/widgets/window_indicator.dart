@@ -41,12 +41,6 @@ class WindowIndicator extends ConsumerWidget {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Positioned.fill(
-              child: SvgPicture.asset(
-                _frameAsset,
-                fit: BoxFit.fill,
-              ),
-            ),
             Positioned(
               left: HomeMetrics.windowWidth *
                   HomeMetrics.windowGlassLeft /

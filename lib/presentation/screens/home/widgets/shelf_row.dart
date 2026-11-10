@@ -191,12 +191,7 @@ class _PlantOnShelf extends StatelessWidget {
                       Positioned(
                         right: HomeMetrics.wateringStickRight,
                         bottom: HomeMetrics.wateringStickBottom,
-                        child: Transform.rotate(
-                          angle: HomeMetrics.wateringStickRotationDegrees *
-                              HomeMetrics.degreesToRadians,
-                          alignment: Alignment.bottomCenter,
-                          child: WateringStick(dueDate: dueDate),
-                        ),
+                        child: WateringStick(dueDate: dueDate),
                       ),
                   ],
                 ),

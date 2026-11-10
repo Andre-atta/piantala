@@ -28,8 +28,8 @@ abstract class HomeMetrics {
   static const pageIndicatorHeight = 5.0;
   static const pageIndicatorTouchSize = 48.0;
   static const pageIndicatorGap = 6.0;
-  static const pageIndicatorOverflow = 22.0;
-  static const pageTransitionMilliseconds = 250;
+  static const pageIndicatorOverflow = 16.0;
+  static const pageTransitionMilliseconds = 180;
 
   static const floorHeight = 72.0;
   static const floorBorderHeight = 8.0;
@@ -49,9 +49,9 @@ abstract class HomeMetrics {
   static const shelfOverlap = 3.0;
   static const shelfBoardBorderWidth = 1.5;
   static const plantsPerRow = 3;
-  static const plantImageWidth = 108.0;
-  static const plantImageHeight = 112.0;
-  static const plantTagBottomGap = 9.0;
+  static const plantImageWidth = 96.0;
+  static const plantImageHeight = 100.0;
+  static const plantTagBottomGap = 5.0;
   static const plantTagHeight = 17.0;
   static const plantTagHorizontalPadding = 8.0;
   static const plantTagMaxWidth = 100.0;

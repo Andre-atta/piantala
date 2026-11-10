@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
-import 'package:piantala/core/utils/exposure_localization.dart';
 import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
@@ -16,6 +15,8 @@ import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
 import 'package:piantala/presentation/screens/home/widgets/home_header.dart';
 import 'package:piantala/presentation/screens/home/widgets/shelf_cabinet.dart';
 import 'package:piantala/presentation/screens/home/widgets/window_indicator.dart';
+import 'package:piantala/presentation/utils/exposure_localization.dart';
+import 'package:piantala/presentation/widgets/common/paper_action_button.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -61,6 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         plantsAsync.hasError && plantsAsync.valueOrNull == null;
 
     return MainScaffold(
+      waveBackdrop: context.piantala.floor,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -259,9 +261,17 @@ class _ShelfPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (page.plants.isEmpty) {
-      return page.room == null
-          ? const _EmptyShelfPlaceholder()
-          : _EmptyRoomPlaceholder(roomName: page.label);
+      final localizations = AppLocalizations.of(context)!;
+      return _HomeEmptyState(
+        title: page.room == null
+            ? localizations.homeEmptyShelfTitle
+            : localizations.homeEmptyRoomTitle(page.label),
+        subtitle: page.room == null
+            ? localizations.homeEmptyShelfSubtitle
+            : localizations.homeEmptyRoomSubtitle,
+        actionLabel: localizations.homeButtonAddPlant,
+        onAction: () => context.go('/plants/add'),
+      );
     }
 
     return ShelfCabinet(
@@ -272,110 +282,55 @@ class _ShelfPage extends StatelessWidget {
   }
 }
 
-class _EmptyRoomPlaceholder extends StatelessWidget {
-  const _EmptyRoomPlaceholder({required this.roomName});
-  final String roomName;
+class _HomeEmptyState extends StatelessWidget {
+  const _HomeEmptyState({
+    required this.title,
+    required this.actionLabel,
+    required this.onAction,
+    this.subtitle,
+  });
+
+  final String title;
+  final String? subtitle;
+  final String actionLabel;
+  final VoidCallback onAction;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(context);
+    final theme = context.piantala;
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.door_front_door_outlined,
-            size: 56,
-            color: theme.colorScheme.onSurface.withAlpha(60),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            localizations?.homeEmptyRoomTitle(roomName) ?? '$roomName è vuota',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontFamily: 'DMSerifDisplay',
-              color: theme.colorScheme.onSurface.withAlpha(180),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            localizations?.homeEmptyRoomSubtitle ??
-                'Aggiungi una pianta e assegnala\na questa stanza',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withAlpha(120),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          OutlinedButton.icon(
-            onPressed: () => context.go('/plants/add'),
-            icon: const Icon(Icons.add, size: 18),
-            label: Text(localizations?.homeButtonAddPlant ?? 'Aggiungi pianta'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyShelfPlaceholder extends StatelessWidget {
-  const _EmptyShelfPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(context);
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withAlpha(20),
-              borderRadius: BorderRadius.circular(AppRadius.xl),
-            ),
-            child: Icon(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
               Icons.local_florist_outlined,
-              size: 40,
-              color: theme.colorScheme.primary,
+              size: AppSpacing.xxl,
+              color: theme.leafGreen,
             ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            localizations?.homeEmptyShelfTitle ?? 'La tua mensola è vuota',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontFamily: 'DMSerifDisplay',
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: theme.body.copyWith(color: theme.ink),
             ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            localizations?.homeEmptyShelfSubtitle ??
-                'Aggiungi la tua prima pianta\ncon il bottone +',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withAlpha(153),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-          FilledButton.icon(
-            onPressed: () => context.go('/plants/add'),
-            icon: const Icon(Icons.add),
-            label: Text(localizations?.homeButtonAddPlant ?? 'Aggiungi pianta'),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.md,
+            if (subtitle != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                subtitle!,
+                textAlign: TextAlign.center,
+                style: theme.body.copyWith(color: theme.softInk),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppRadius.md),
-              ),
+            ],
+            const SizedBox(height: AppSpacing.md),
+            PaperActionButton(
+              label: actionLabel,
+              onPressed: onAction,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

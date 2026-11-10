@@ -3,8 +3,61 @@ import 'package:piantala/core/utils/scheduling_constants.dart';
 import 'package:piantala/core/utils/scheduling_engine.dart';
 
 void main() {
+  group('SchedulingEngine.wateringDateIfDue', () {
+    final now = DateTime(2026, 11, 9, 12);
+
+    test('returns null if no last watering date or frequency is available', () {
+      expect(
+        SchedulingEngine.wateringDateIfDue(
+          lastWateredAt: null,
+          frequencyDays: 7,
+          now: now,
+        ),
+        isNull,
+      );
+      expect(
+        SchedulingEngine.wateringDateIfDue(
+          lastWateredAt: DateTime(2026, 11),
+          frequencyDays: null,
+          now: now,
+        ),
+        isNull,
+      );
+    });
+
+    test('returns the next watering date when overdue or due today', () {
+      expect(
+        SchedulingEngine.wateringDateIfDue(
+          lastWateredAt: DateTime(2026, 11),
+          frequencyDays: 7,
+          now: now,
+        ),
+        DateTime(2026, 11, 8),
+      );
+      expect(
+        SchedulingEngine.wateringDateIfDue(
+          lastWateredAt: DateTime(2026, 11, 2),
+          frequencyDays: 7,
+          now: now,
+        ),
+        DateTime(2026, 11, 9),
+      );
+    });
+
+    test('returns null when the due date is in the future', () {
+      expect(
+        SchedulingEngine.wateringDateIfDue(
+          lastWateredAt: DateTime(2026, 11, 3),
+          frequencyDays: 7,
+          now: now,
+        ),
+        isNull,
+      );
+    });
+  });
+
   test('calcola il prossimo evento di irrigazione', () {
-    final date = DateTime(2026, 6, 1);
+    final date = DateTime(2026, 6);
     expect(
       SchedulingEngine.nextWatering(
         lastWateredAt: date,

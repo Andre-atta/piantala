@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:piantala/data/local/collections/pending_operation_collection.dart';
@@ -8,31 +10,35 @@ import 'package:piantala/data/local/sync_status.dart';
 
 void main() {
   late Isar isar;
+  late Directory tempDirectory;
 
   setUpAll(() async {
     await Isar.initializeIsarCore(download: true);
   });
 
   setUp(() async {
+    tempDirectory = Directory.systemTemp.createTempSync('piantala-isar-test-');
     isar = await Isar.open(
       [
         PlantCollectionSchema,
         RoomCollectionSchema,
         PendingOperationCollectionSchema,
       ],
-      directory: '',
+      directory: tempDirectory.path,
       name: 'test_${DateTime.now().millisecondsSinceEpoch}',
     );
   });
 
   tearDown(() async {
     await isar.close(deleteFromDisk: true);
+    await IsarService.instance.close();
+    tempDirectory.deleteSync(recursive: true);
   });
 
   group('IsarService', () {
     test('initializeForTesting apre il DB senza crash', () async {
       final svc = IsarService.instance;
-      await svc.initializeForTesting();
+      await svc.initializeForTesting(directory: tempDirectory.path);
       expect(svc.db, isNotNull);
       await svc.close();
     });

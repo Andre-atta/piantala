@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:piantala/presentation/screens/rooms/widgets/room_dialog.dart';
 import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
 
 class MainScaffold extends StatelessWidget {
   const MainScaffold({
     required this.child,
+    this.waveBackdrop,
+    this.onCreateRoom,
     super.key,
   });
 
   final Widget child;
+  final Color? waveBackdrop;
+  final VoidCallback? onCreateRoom;
 
   @override
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     final isRoomsRoute = location == '/rooms';
+    assert(
+      !isRoomsRoute || onCreateRoom != null,
+      'RoomsScreen must provide its room creation callback.',
+    );
     final selectedIndex = switch (true) {
       _ when location.startsWith('/rooms') => 1,
       _ when location.startsWith('/encyclopedia') => 2,
@@ -28,6 +35,7 @@ class MainScaffold extends StatelessWidget {
       bottomNavigationBar: PiantalaNavigationBar(
         selectedIndex: selectedIndex,
         isRoomsRoute: isRoomsRoute,
+        waveBackdrop: waveBackdrop,
         onDestinationSelected: (index) {
           final route = switch (index) {
             0 => '/',
@@ -39,10 +47,7 @@ class MainScaffold extends StatelessWidget {
         },
         onCreatePressed: () {
           if (isRoomsRoute) {
-            showDialog<void>(
-              context: context,
-              builder: (context) => const RoomDialog(),
-            );
+            onCreateRoom?.call();
           } else {
             context.go('/plants/add');
           }

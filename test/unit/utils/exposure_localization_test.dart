@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:piantala/core/utils/exposure_localization.dart';
 import 'package:piantala/l10n/app_localizations.dart';
+import 'package:piantala/presentation/utils/exposure_localization.dart';
 
 void main() {
   test('uses the same localized compass mapping as the rooms list', () async {

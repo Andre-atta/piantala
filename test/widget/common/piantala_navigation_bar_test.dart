@@ -8,6 +8,7 @@ import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dar
 Widget _app({
   required int selectedIndex,
   required VoidCallback onCreate,
+  Color? waveBackdrop,
   double textScale = 1,
   bool disableAnimations = false,
 }) {
@@ -40,6 +41,7 @@ Widget _app({
                 child: PiantalaNavigationBar(
                   selectedIndex: selectedIndex,
                   isRoomsRoute: false,
+                  waveBackdrop: waveBackdrop,
                   onDestinationSelected: (_) {},
                   onCreatePressed: onCreate,
                 ),
@@ -90,6 +92,24 @@ void main() {
 
     await gesture.up();
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('uses the supplied color behind the transparent wave',
+      (tester) async {
+    await tester.pumpWidget(
+      _app(
+        selectedIndex: 0,
+        onCreate: () {},
+        waveBackdrop: PiantalaTheme.standard.floor,
+      ),
+    );
+
+    final waveBackdrop = find.byWidgetPredicate(
+      (widget) =>
+          widget is ColoredBox && widget.color == PiantalaTheme.standard.floor,
+    );
+    expect(waveBackdrop, findsOneWidget);
+    expect(tester.getSize(waveBackdrop), const Size(390, 14));
   });
 
   testWidgets('shows the localized room action and avoids text overflow',

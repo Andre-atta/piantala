@@ -20,6 +20,11 @@ class RoomPageIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.piantala;
     final localizations = AppLocalizations.of(context)!;
+    final animationDuration = MediaQuery.of(context).disableAnimations
+        ? Duration.zero
+        : const Duration(
+            milliseconds: HomeMetrics.pageTransitionMilliseconds,
+          );
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -34,12 +39,13 @@ class RoomPageIndicator extends StatelessWidget {
             child: SizedBox(
               width: HomeMetrics.pageIndicatorTouchSize,
               height: HomeMetrics.pageIndicatorTouchSize,
-              child: InkWell(
+              child: GestureDetector(
                 key: ValueKey('room-page-$index'),
+                behavior: HitTestBehavior.opaque,
                 onTap: () => onPageSelected(index),
                 child: Center(
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
+                    duration: animationDuration,
                     width: isActive
                         ? HomeMetrics.pageIndicatorActiveWidth
                         : HomeMetrics.pageIndicatorInactiveWidth,

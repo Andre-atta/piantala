@@ -14,6 +14,7 @@ class PiantalaNavigationBar extends StatelessWidget {
     required this.onDestinationSelected,
     required this.onCreatePressed,
     required this.isRoomsRoute,
+    this.waveBackdrop,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class PiantalaNavigationBar extends StatelessWidget {
   final ValueChanged<int> onDestinationSelected;
   final VoidCallback onCreatePressed;
   final bool isRoomsRoute;
+  final Color? waveBackdrop;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,21 @@ class PiantalaNavigationBar extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   Positioned.fill(
-                    child: ColoredBox(color: theme.paper),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: NavigationMetrics.waveHeight,
+                          width: double.infinity,
+                          child: ColoredBox(
+                            color: waveBackdrop ??
+                                Theme.of(context).scaffoldBackgroundColor,
+                          ),
+                        ),
+                        Expanded(
+                          child: ColoredBox(color: theme.paper),
+                        ),
+                      ],
+                    ),
                   ),
                   Positioned(
                     top: 0,

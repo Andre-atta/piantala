@@ -2,6 +2,8 @@
 *.class
 *.log
 *.pyc
+*.isar
+*.isar-lck
 *.swp
 .DS_Store
 .env
@@ -86,4 +88,3 @@ venv/
 .agents/
 .gemini/
 .impeccable/
-

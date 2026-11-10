@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
-import 'package:piantala/core/utils/exposure_localization.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/room_dialog.dart';
+import 'package:piantala/presentation/utils/exposure_localization.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
 class RoomsScreen extends ConsumerWidget {
@@ -20,6 +20,10 @@ class RoomsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
 
     return MainScaffold(
+      onCreateRoom: () => showDialog<void>(
+        context: context,
+        builder: (context) => const RoomDialog(),
+      ),
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -129,14 +133,15 @@ class RoomsScreen extends ConsumerWidget {
                           ),
                           subtitle: Text(
                             l10n?.roomsSubtitle(exposureStr, plantCount) ??
-                                'Esposizione: $exposureStr • Piante: $plantCount',
+                                'Esposizione: $exposureStr • '
+                                    'Piante: $plantCount',
                           ),
                           trailing: PopupMenuButton<String>(
                             onSelected: (value) async {
                               if (value == 'edit') {
                                 await showDialog<void>(
                                   context: context,
-                                  builder: (context) => RoomDialog(room: room),
+                                  builder: (_) => RoomDialog(room: room),
                                 );
                               } else if (value == 'delete') {
                                 await _confirmDelete(
@@ -191,10 +196,13 @@ class RoomsScreen extends ConsumerWidget {
           content: Text(
             plantCount > 0
                 ? (l10n?.roomsDeleteWarning(plantCount) ??
-                    'Questa stanza contiene $plantCount piante! Eliminandola, '
-                        'le piante diventeranno "Senza Stanza". Vuoi procedere?')
+                    'Questa stanza contiene $plantCount piante! '
+                        'Eliminandola, '
+                        'le piante diventeranno "Senza Stanza". '
+                        'Vuoi procedere?')
                 : (l10n?.roomsDeleteConfirm(room.name) ??
-                    'Sei sicuro di voler eliminare la stanza "${room.name}"?'),
+                    'Sei sicuro di voler eliminare '
+                        'la stanza "${room.name}"?'),
           ),
           actions: [
             TextButton(

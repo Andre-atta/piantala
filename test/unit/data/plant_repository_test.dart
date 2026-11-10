@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
 import 'package:piantala/data/local/collections/pending_operation_collection.dart';
@@ -10,9 +12,12 @@ import 'package:piantala/domain/entities/plant_entity.dart';
 void main() {
   late Isar isar;
   late PlantRepositoryImpl repository;
+  late Directory tempDirectory;
 
   setUpAll(() async {
-    await IsarService.instance.initializeForTesting();
+    tempDirectory = Directory.systemTemp.createTempSync('piantala-plant-test-');
+    await IsarService.instance
+        .initializeForTesting(directory: tempDirectory.path);
   });
 
   setUp(() async {
@@ -23,6 +28,7 @@ void main() {
 
   tearDownAll(() async {
     await IsarService.instance.close();
+    tempDirectory.deleteSync(recursive: true);
   });
 
   test('addPlant inserisce record in Isar con syncStatus pendingCreate',
@@ -129,14 +135,12 @@ void main() {
       ),
     );
 
-    final plantsA =
-        await PlantRepositoryImpl(isar: isar, userId: 'user-a')
-            .watchPlants()
-            .first;
-    final plantsB =
-        await PlantRepositoryImpl(isar: isar, userId: 'user-b')
-            .watchPlants()
-            .first;
+    final plantsA = await PlantRepositoryImpl(isar: isar, userId: 'user-a')
+        .watchPlants()
+        .first;
+    final plantsB = await PlantRepositoryImpl(isar: isar, userId: 'user-b')
+        .watchPlants()
+        .first;
 
     expect(plantsA.map((plant) => plant.id), ['plant-a']);
     expect(plantsB.map((plant) => plant.id), ['plant-b']);
