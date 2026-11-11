@@ -141,12 +141,15 @@
     }
   },
 
-  "roomDialogNewTitle": "Nuova Stanza",
-  "roomDialogEditTitle": "Modifica Stanza",
+  "roomDialogNewTitle": "Nuova stanza",
+  "roomDialogEditTitle": "Modifica stanza",
   "roomDialogNameLabel": "Nome della stanza",
   "roomDialogNameValidation": "Inserisci un nome",
+  "roomDialogNameHint": "Scrivi il nome",
   "roomDialogNotesLabel": "Note (opzionali)",
+  "roomDialogNotesHint": "Aggiungi una nota",
   "roomDialogExposureLabel": "Esposizione",
+  "roomDialogCompassSemantics": "Rileva l'esposizione con la bussola",
   "roomDialogCompassHint": "Tocca per misurare con la bussola",
 
   "encyclopediaTitle": "Enciclopedia",

@@ -226,10 +226,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get roomDialogNewTitle => 'New Room';
+  String get roomDialogNewTitle => 'New room';
 
   @override
-  String get roomDialogEditTitle => 'Edit Room';
+  String get roomDialogEditTitle => 'Edit room';
 
   @override
   String get roomDialogNameLabel => 'Room name';
@@ -238,10 +238,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomDialogNameValidation => 'Please enter a name';
 
   @override
+  String get roomDialogNameHint => 'Write the name';
+
+  @override
   String get roomDialogNotesLabel => 'Notes (optional)';
 
   @override
+  String get roomDialogNotesHint => 'Add a note';
+
+  @override
   String get roomDialogExposureLabel => 'Exposure';
+
+  @override
+  String get roomDialogCompassSemantics => 'Detect exposure with the compass';
 
   @override
   String get roomDialogCompassHint => 'Tap to measure with compass';

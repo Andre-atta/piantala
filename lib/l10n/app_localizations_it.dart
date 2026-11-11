@@ -228,10 +228,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get roomDialogNewTitle => 'Nuova Stanza';
+  String get roomDialogNewTitle => 'Nuova stanza';
 
   @override
-  String get roomDialogEditTitle => 'Modifica Stanza';
+  String get roomDialogEditTitle => 'Modifica stanza';
 
   @override
   String get roomDialogNameLabel => 'Nome della stanza';
@@ -240,10 +240,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get roomDialogNameValidation => 'Inserisci un nome';
 
   @override
+  String get roomDialogNameHint => 'Scrivi il nome';
+
+  @override
   String get roomDialogNotesLabel => 'Note (opzionali)';
 
   @override
+  String get roomDialogNotesHint => 'Aggiungi una nota';
+
+  @override
   String get roomDialogExposureLabel => 'Esposizione';
+
+  @override
+  String get roomDialogCompassSemantics =>
+      'Rileva l\'esposizione con la bussola';
 
   @override
   String get roomDialogCompassHint => 'Tocca per misurare con la bussola';

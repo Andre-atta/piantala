@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/compass_scanner_dialog.dart';
+import 'package:piantala/presentation/screens/rooms/widgets/room_dialog_metrics.dart';
+import 'package:piantala/presentation/screens/rooms/widgets/room_pin_button.dart';
+import 'package:piantala/presentation/utils/exposure_localization.dart';
+import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
 import 'package:uuid/uuid.dart';
 
 class RoomDialog extends ConsumerStatefulWidget {
   const RoomDialog({this.room, super.key});
+
   final RoomEntity? room;
 
   @override
@@ -18,8 +25,8 @@ class RoomDialog extends ConsumerStatefulWidget {
 
 class _RoomDialogState extends ConsumerState<RoomDialog> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _nameController;
-  late TextEditingController _notesController;
+  late final TextEditingController _nameController;
+  late final TextEditingController _notesController;
   String _exposure = 'UNKNOWN';
   bool _isLoading = false;
 
@@ -28,9 +35,7 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
     super.initState();
     _nameController = TextEditingController(text: widget.room?.name);
     _notesController = TextEditingController(text: widget.room?.notes);
-    if (widget.room != null) {
-      _exposure = widget.room!.exposure;
-    }
+    _exposure = widget.room?.exposure ?? 'UNKNOWN';
   }
 
   @override
@@ -44,108 +49,249 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
 
-    final repo = ref.read(roomRepositoryProvider);
-    final user = ref.read(authStateProvider).valueOrNull;
+    try {
+      final repository = ref.read(roomRepositoryProvider);
+      final user = ref.read(authStateProvider).valueOrNull;
+      if (user == null) return;
 
-    if (user == null) {
-      setState(() => _isLoading = false);
-      return;
+      final room = RoomEntity(
+        id: widget.room?.id ?? const Uuid().v4(),
+        userId: user.uid,
+        name: _nameController.text.trim(),
+        exposure: _exposure,
+        createdAt: widget.room?.createdAt ?? DateTime.now(),
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+      );
+
+      if (widget.room == null) {
+        await repository.addRoom(room);
+      } else {
+        await repository.updateRoom(room);
+      }
+
+      if (mounted) Navigator.of(context).pop();
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
+  }
 
-    final entity = RoomEntity(
-      id: widget.room?.id ?? const Uuid().v4(),
-      userId: user.uid,
-      name: _nameController.text.trim(),
-      exposure: _exposure,
-      createdAt: widget.room?.createdAt ?? DateTime.now(),
-      notes: _notesController.text.trim().isEmpty
-          ? null
-          : _notesController.text.trim(),
+  Future<void> _detectExposure() async {
+    final direction = await showDialog<String>(
+      context: context,
+      builder: (context) => const CompassScannerDialog(),
     );
-
-    if (widget.room == null) {
-      await repo.addRoom(entity);
-    } else {
-      await repo.updateRoom(entity);
-    }
-
-    if (mounted) {
-      Navigator.of(context).pop();
+    if (direction != null && mounted) {
+      setState(() => _exposure = direction);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final theme = context.piantala;
+    final l10n = AppLocalizations.of(context)!;
+    final isEditing = widget.room != null;
 
-    return AlertDialog(
-      title: Text(
-        widget.room == null
-            ? (l10n?.roomDialogNewTitle ?? 'Nuova Stanza')
-            : (l10n?.roomDialogEditTitle ?? 'Modifica Stanza'),
-      ),
-      content: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: l10n?.roomDialogNameLabel ?? 'Nome della stanza',
-                ),
-                validator: (v) => v == null || v.isEmpty
-                    ? (l10n?.roomDialogNameValidation ?? 'Inserisci un nome')
-                    : null,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              InkWell(
-                onTap: () async {
-                  final direction = await showDialog<String>(
-                    context: context,
-                    builder: (context) => const CompassScannerDialog(),
-                  );
-                  if (direction != null) {
-                    setState(() => _exposure = direction);
-                  }
-                },
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                    labelText: l10n?.roomDialogExposureLabel ?? 'Esposizione',
-                    suffixIcon: const Icon(Icons.explore),
-                  ),
-                  child: Text(_exposure),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                controller: _notesController,
-                decoration: InputDecoration(
-                  labelText: l10n?.roomDialogNotesLabel ?? 'Note (opzionali)',
-                ),
-                maxLines: 3,
-              ),
-            ],
-          ),
-        ),
-      ),
+    return PaperDialogScaffold(
+      title: isEditing ? l10n.roomDialogEditTitle : l10n.roomDialogNewTitle,
       actions: [
-        TextButton(
+        HangingTag(
+          key: const ValueKey('room-dialog-cancel'),
+          label: l10n.commonCancel,
+          variant: HangingTagVariant.secondary,
+          mirrored: true,
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n?.commonCancel ?? 'Annulla'),
         ),
-        ElevatedButton(
+        HangingTag(
+          key: const ValueKey('room-dialog-save'),
+          label: l10n.commonSave,
           onPressed: _isLoading ? null : _save,
-          child: _isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text(l10n?.commonSave ?? 'Salva'),
         ),
       ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _FieldLabel(text: l10n.roomDialogNameLabel),
+            const SizedBox(height: RoomDialogMetrics.labelSpacing),
+            TextFormField(
+              key: const ValueKey('room-dialog-name-field'),
+              controller: _nameController,
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+              style: theme.body.copyWith(
+                color: theme.ink,
+                fontSize: RoomDialogMetrics.nameFieldFontSize,
+              ),
+              cursorColor: theme.deepGreen,
+              decoration: _underlineDecoration(
+                context,
+                hintText: l10n.roomDialogNameHint,
+              ).copyWith(
+                errorStyle: theme.body.copyWith(
+                  color: theme.terracotta,
+                  fontSize: RoomDialogMetrics.nameErrorFontSize,
+                ),
+              ),
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? l10n.roomDialogNameValidation
+                  : null,
+            ),
+            const SizedBox(height: RoomDialogMetrics.sectionSpacing),
+            _FieldLabel(text: l10n.roomDialogExposureLabel),
+            const SizedBox(height: RoomDialogMetrics.labelSpacing),
+            SizedBox(
+              height: RoomDialogMetrics.exposureRowHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.ink,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        localizedExposure(_exposure, l10n),
+                        style: theme.body.copyWith(
+                          color: theme.ink,
+                          fontSize: RoomDialogMetrics.nameFieldFontSize,
+                        ),
+                      ),
+                    ),
+                    RoomPinButton(
+                      label: l10n.roomDialogCompassSemantics,
+                      onPressed: _detectExposure,
+                      child: Icon(
+                        Icons.explore_outlined,
+                        color: theme.cream,
+                        size: RoomDialogMetrics.compassIconSize,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: RoomDialogMetrics.sectionSpacing),
+            _FieldLabel(text: l10n.roomDialogNotesLabel),
+            const SizedBox(height: RoomDialogMetrics.labelSpacing),
+            SizedBox(
+              height: RoomDialogMetrics.notesLineHeight *
+                  RoomDialogMetrics.notesLineCount,
+              child: CustomPaint(
+                painter: _NotesLinesPainter(
+                  color: theme.leafGreen.withValues(
+                    alpha: RoomDialogMetrics.notesLineOpacity,
+                  ),
+                ),
+                child: TextFormField(
+                  key: const ValueKey('room-dialog-notes-field'),
+                  controller: _notesController,
+                  minLines: RoomDialogMetrics.notesLineCount,
+                  maxLines: RoomDialogMetrics.notesLineCount,
+                  style: theme.body.copyWith(
+                    color: theme.ink,
+                    fontSize: RoomDialogMetrics.notesFontSize,
+                  ),
+                  cursorColor: theme.deepGreen,
+                  decoration: _underlineDecoration(
+                    context,
+                    hintText: l10n.roomDialogNotesHint,
+                    border: InputBorder.none,
+                  ).copyWith(
+                    contentPadding: const EdgeInsets.only(
+                      top: RoomDialogMetrics.ruledNotesTopPadding,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+}
+
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.piantala;
+    return Text(
+      text.toUpperCase(),
+      style: theme.label.copyWith(
+        color: theme.deepGreen,
+        letterSpacing: RoomDialogMetrics.fieldLabelLetterSpacing,
+      ),
+    );
+  }
+}
+
+InputDecoration _underlineDecoration(
+  BuildContext context, {
+  required String hintText,
+  double focusedStroke = RoomDialogMetrics.nameFieldFocusedStroke,
+  InputBorder? border,
+}) {
+  final theme = context.piantala;
+  final underline = UnderlineInputBorder(
+    borderSide: BorderSide(color: theme.ink),
+  );
+  return InputDecoration(
+    constraints: const BoxConstraints(
+      minHeight: RoomDialogMetrics.nameFieldHeight,
+    ),
+    hintText: hintText,
+    hintStyle: theme.body.copyWith(
+      color: theme.softInk,
+      fontSize: RoomDialogMetrics.nameFieldFontSize,
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+    border: border ?? underline,
+    enabledBorder: border ?? underline,
+    focusedBorder: border ??
+        UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: theme.deepGreen,
+            width: focusedStroke,
+          ),
+        ),
+    errorBorder: border ?? underline,
+    focusedErrorBorder: border ??
+        UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: theme.deepGreen,
+            width: focusedStroke,
+          ),
+        ),
+  );
+}
+
+class _NotesLinesPainter extends CustomPainter {
+  const _NotesLinesPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = AppStroke.hairline;
+    for (var index = 1; index <= RoomDialogMetrics.notesLineCount; index++) {
+      final y = index * RoomDialogMetrics.notesLineHeight;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_NotesLinesPainter oldDelegate) =>
+      color != oldDelegate.color;
 }

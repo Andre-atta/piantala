@@ -29,7 +29,7 @@ class RoomsScreen extends ConsumerWidget {
 
     return MainScaffold(
       backgroundColor: theme.cream,
-      onCreateRoom: () => showDialog<void>(
+      onCreateRoom: () => showPaperDialog<void>(
         context: context,
         builder: (context) => const RoomDialog(),
       ),
@@ -119,7 +119,7 @@ class RoomsScreen extends ConsumerWidget {
                     if (!context.mounted) return;
                     switch (action) {
                       case _RoomAction.edit:
-                        await showDialog<void>(
+                        await showPaperDialog<void>(
                           context: context,
                           builder: (context) => RoomDialog(room: room),
                         );

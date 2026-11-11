@@ -5,6 +5,7 @@ import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/room_paper_card_metrics.dart';
+import 'package:piantala/presentation/screens/rooms/widgets/room_pin_button.dart';
 import 'package:piantala/presentation/utils/exposure_localization.dart';
 import 'package:piantala/presentation/widgets/common/torn_paper_sheet.dart';
 
@@ -130,145 +131,14 @@ class RoomPaperCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: RoomPaperCardMetrics.contentGap),
-            _RoomOptionsButton(
+            RoomPinButton(
               label: l10n.roomsOptionsSemantics(room.name),
               onPressed: onOptionsPressed,
+              showOptionsDots: true,
             ),
           ],
         ),
       ),
     );
   }
-}
-
-class _RoomOptionsButton extends StatefulWidget {
-  const _RoomOptionsButton({
-    required this.label,
-    required this.onPressed,
-  });
-
-  final String label;
-  final VoidCallback onPressed;
-
-  @override
-  State<_RoomOptionsButton> createState() => _RoomOptionsButtonState();
-}
-
-class _RoomOptionsButtonState extends State<_RoomOptionsButton> {
-  bool _isPressed = false;
-
-  void _setPressed(bool value) {
-    if (_isPressed != value) setState(() => _isPressed = value);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = context.piantala;
-    final animationDuration = MediaQuery.of(context).disableAnimations
-        ? Duration.zero
-        : const Duration(
-            milliseconds: RoomPaperCardMetrics.optionsPressMilliseconds,
-          );
-
-    return Semantics(
-      container: true,
-      button: true,
-      label: widget.label,
-      onTap: widget.onPressed,
-      child: ExcludeSemantics(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: widget.onPressed,
-          onTapDown: (_) => _setPressed(true),
-          onTapUp: (_) => _setPressed(false),
-          onTapCancel: () => _setPressed(false),
-          child: AnimatedContainer(
-            duration: animationDuration,
-            transform: Matrix4.translationValues(
-              0,
-              _isPressed ? RoomPaperCardMetrics.optionsPressOffset : 0,
-              0,
-            ),
-            child: CustomPaint(
-              painter: _RoomOptionsPainter(
-                ink: theme.ink,
-                cream: theme.cream,
-                terracotta: theme.terracotta,
-              ),
-              child: const SizedBox(
-                width: RoomPaperCardMetrics.optionsWidth,
-                height: RoomPaperCardMetrics.optionsHeight,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RoomOptionsPainter extends CustomPainter {
-  const _RoomOptionsPainter({
-    required this.ink,
-    required this.cream,
-    required this.terracotta,
-  });
-
-  final Color ink;
-  final Color cream;
-  final Color terracotta;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    const radius = RoomPaperCardMetrics.optionsRadius;
-    canvas
-      ..drawCircle(
-        center.translate(0, RoomPaperCardMetrics.optionsShadowOffset),
-        radius,
-        Paint()..color = ink,
-      )
-      ..drawCircle(
-        center,
-        radius,
-        Paint()..color = terracotta,
-      )
-      ..drawCircle(
-        center,
-        radius,
-        Paint()
-          ..color = ink
-          ..strokeWidth = RoomPaperCardMetrics.optionsOutlineWidth
-          ..style = PaintingStyle.stroke,
-      )
-      ..drawCircle(
-        center.translate(-radius / 2, -radius / 2),
-        RoomPaperCardMetrics.optionsLightRadius,
-        Paint()
-          ..color = cream.withValues(
-            alpha: RoomPaperCardMetrics.optionsLightOpacity,
-          ),
-      );
-
-    final dotCenterX = center.dx;
-    for (var index = -1; index <= 1; index++) {
-      canvas.drawCircle(
-        Offset(
-          dotCenterX +
-              index *
-                  (RoomPaperCardMetrics.optionsDotRadius * 2 +
-                      RoomPaperCardMetrics.optionsDotSpacing),
-          center.dy,
-        ),
-        RoomPaperCardMetrics.optionsDotRadius,
-        Paint()..color = cream,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(_RoomOptionsPainter oldDelegate) =>
-      ink != oldDelegate.ink ||
-      cream != oldDelegate.cream ||
-      terracotta != oldDelegate.terracotta;
 }

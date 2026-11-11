@@ -136,12 +136,15 @@
     }
   },
 
-  "roomDialogNewTitle": "New Room",
-  "roomDialogEditTitle": "Edit Room",
+  "roomDialogNewTitle": "New room",
+  "roomDialogEditTitle": "Edit room",
   "roomDialogNameLabel": "Room name",
   "roomDialogNameValidation": "Please enter a name",
+  "roomDialogNameHint": "Write the name",
   "roomDialogNotesLabel": "Notes (optional)",
+  "roomDialogNotesHint": "Add a note",
   "roomDialogExposureLabel": "Exposure",
+  "roomDialogCompassSemantics": "Detect exposure with the compass",
   "roomDialogCompassHint": "Tap to measure with compass",
 
   "encyclopediaTitle": "Encyclopedia",

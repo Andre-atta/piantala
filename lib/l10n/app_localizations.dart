@@ -467,13 +467,13 @@ abstract class AppLocalizations {
   /// No description provided for @roomDialogNewTitle.
   ///
   /// In it, this message translates to:
-  /// **'Nuova Stanza'**
+  /// **'Nuova stanza'**
   String get roomDialogNewTitle;
 
   /// No description provided for @roomDialogEditTitle.
   ///
   /// In it, this message translates to:
-  /// **'Modifica Stanza'**
+  /// **'Modifica stanza'**
   String get roomDialogEditTitle;
 
   /// No description provided for @roomDialogNameLabel.
@@ -488,17 +488,35 @@ abstract class AppLocalizations {
   /// **'Inserisci un nome'**
   String get roomDialogNameValidation;
 
+  /// No description provided for @roomDialogNameHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi il nome'**
+  String get roomDialogNameHint;
+
   /// No description provided for @roomDialogNotesLabel.
   ///
   /// In it, this message translates to:
   /// **'Note (opzionali)'**
   String get roomDialogNotesLabel;
 
+  /// No description provided for @roomDialogNotesHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi una nota'**
+  String get roomDialogNotesHint;
+
   /// No description provided for @roomDialogExposureLabel.
   ///
   /// In it, this message translates to:
   /// **'Esposizione'**
   String get roomDialogExposureLabel;
+
+  /// No description provided for @roomDialogCompassSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Rileva l\'esposizione con la bussola'**
+  String get roomDialogCompassSemantics;
 
   /// No description provided for @roomDialogCompassHint.
   ///
