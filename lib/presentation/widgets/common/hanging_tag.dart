@@ -55,9 +55,9 @@ class _HangingTagState extends State<HangingTag> {
           : PaperComponentMetrics.tagLabelRight,
     );
     final colors = switch (widget.variant) {
-      HangingTagVariant.primary => (fill: theme.deepGreen, text: theme.paper),
+      HangingTagVariant.primary => (fill: theme.deepGreen, text: theme.cream),
       HangingTagVariant.secondary => (fill: theme.paperTan, text: theme.ink),
-      HangingTagVariant.danger => (fill: theme.terracotta, text: theme.paper),
+      HangingTagVariant.danger => (fill: theme.terracotta, text: theme.cream),
     };
 
     return Semantics(
@@ -91,7 +91,7 @@ class _HangingTagState extends State<HangingTag> {
                   child: CustomPaint(
                     painter: _HangingTagPainter(
                       ink: theme.ink,
-                      cream: theme.cream,
+                      cream: theme.paper,
                       terracotta: theme.terracotta,
                       fill: enabled ? colors.fill : theme.paperTan,
                       disabled: !enabled,
