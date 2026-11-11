@@ -18,10 +18,7 @@ Stream<TemporalPeriod> temporalPeriod(TemporalPeriodRef ref) async* {
   }
 }
 
-/// ThemeData calcolato dal periodo corrente.
+// Tema temporale sospeso fino al termine della nuova UI (vedi art-direction §Temi temporali).
 final appThemeDataProvider = Provider<ThemeData>((ref) {
-  final periodAsync = ref.watch(temporalPeriodProvider);
-  final period =
-      periodAsync.valueOrNull ?? TemporalPeriodX.fromHour(DateTime.now().hour);
-  return TemporalTheme.buildTheme(period);
+  return TemporalTheme.buildTheme(TemporalPeriod.day);
 });
