@@ -10,11 +10,13 @@ void main() {
       const replacementStyle = TextStyle(fontSize: 20);
       final copied = PiantalaTheme.standard.copyWith(
         leafGreen: replacementColor,
+        paperTan: replacementColor,
         h1: replacementStyle,
       );
 
       expect(copied.leafGreen, replacementColor);
       expect(copied.deepGreen, PiantalaTheme.standard.deepGreen);
+      expect(copied.paperTan, replacementColor);
       expect(copied.h1, replacementStyle);
       expect(copied.h2, PiantalaTheme.standard.h2);
       expect(copied.body, PiantalaTheme.standard.body);
@@ -34,6 +36,7 @@ void main() {
         sage: replacementColor,
         terracotta: replacementColor,
         paper: replacementColor,
+        paperTan: replacementColor,
         cream: replacementColor,
         ink: replacementColor,
         softInk: replacementColor,
@@ -63,6 +66,7 @@ void main() {
         start.sage,
         start.terracotta,
         start.paper,
+        start.paperTan,
         start.cream,
         start.ink,
         start.softInk,
@@ -86,6 +90,7 @@ void main() {
         halfway.sage,
         halfway.terracotta,
         halfway.paper,
+        halfway.paperTan,
         halfway.cream,
         halfway.ink,
         halfway.softInk,
