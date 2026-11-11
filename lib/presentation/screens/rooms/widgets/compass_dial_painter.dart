@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:piantala/core/theme/app_colors.dart';
 
 class CompassDialPainter extends CustomPainter {
   const CompassDialPainter({
@@ -52,7 +53,7 @@ class CompassDialPainter extends CustomPainter {
         radius - 0.75,
         Paint()
           ..color = ink
-          ..strokeWidth = 1.5
+          ..strokeWidth = AppStroke.line
           ..style = PaintingStyle.stroke,
       );
 
@@ -68,7 +69,7 @@ class CompassDialPainter extends CustomPainter {
     final circumference = 2 * math.pi * radius;
     final paint = Paint()
       ..color = sage
-      ..strokeWidth = 1.5
+      ..strokeWidth = AppStroke.line
       ..style = PaintingStyle.stroke;
     for (var distance = 0.0; distance < circumference; distance += dash + gap) {
       final startAngle = distance / radius;
@@ -102,7 +103,7 @@ class CompassDialPainter extends CustomPainter {
         ),
         Paint()
           ..color = ink
-          ..strokeWidth = isLong ? 2 : 1.2,
+          ..strokeWidth = isLong ? AppStroke.heavy : AppStroke.fine,
       );
     }
   }
@@ -156,7 +157,7 @@ class CompassDialPainter extends CustomPainter {
       ..close();
     final outline = Paint()
       ..color = ink
-      ..strokeWidth = 1.5
+      ..strokeWidth = AppStroke.line
       ..strokeJoin = StrokeJoin.round
       ..style = PaintingStyle.stroke;
     canvas
@@ -170,7 +171,7 @@ class CompassDialPainter extends CustomPainter {
         5.5,
         Paint()
           ..color = ink
-          ..strokeWidth = 1.4
+          ..strokeWidth = AppStroke.medium
           ..style = PaintingStyle.stroke,
       );
   }

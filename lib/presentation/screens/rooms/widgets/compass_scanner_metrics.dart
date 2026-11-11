@@ -1,6 +1,6 @@
 abstract class CompassScannerMetrics {
   static const dialogRotationDegrees = 0.6;
-  static const dialRotationDegrees = 1.0;
+  static const dialRotationDegrees = 0.0;
   static const dialSize = 200.0;
   static const cardinalFontSize = 24.0;
   static const directionFontSize = 60.0;

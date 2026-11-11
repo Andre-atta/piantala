@@ -183,13 +183,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get greetingSubtitleEvening => 'Pianifica la cura di domani';
 
   @override
-  String get roomsTitle => 'Stanze';
-
-  @override
   String get roomsEmptyTitle => 'Nessuna stanza creata.';
-
-  @override
-  String get roomsAddButton => 'Aggiungi Stanza';
 
   @override
   String get roomsEmptyHint => 'Tocca \"nuova stanza\" per cominciare.';
@@ -207,11 +201,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String roomsPlants(int count) {
     return 'Piante: $count';
-  }
-
-  @override
-  String roomsSubtitle(String exposure, int count) {
-    return 'Esposizione: $exposure • Piante: $count';
   }
 
   @override
@@ -254,9 +243,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get roomDialogCompassSemantics =>
       'Rileva l\'esposizione con la bussola';
-
-  @override
-  String get roomDialogCompassHint => 'Tocca per misurare con la bussola';
 
   @override
   String get compassTitle => 'Rilevamento esposizione';

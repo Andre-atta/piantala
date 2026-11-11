@@ -11,6 +11,7 @@ import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/compass_providers.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/compass_dial_painter.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/compass_scanner_metrics.dart';
+import 'package:piantala/presentation/utils/exposure_localization.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
 
@@ -155,24 +156,10 @@ class _CompassScannerDialogState extends ConsumerState<CompassScannerDialog>
     _startUnavailableTimer();
   }
 
-  String _localizedDirection(AppLocalizations l10n, String code) =>
-      switch (code) {
-        'N' => l10n.exposureNorth,
-        'NE' => l10n.exposureNorthEast,
-        'E' => l10n.exposureEast,
-        'SE' => l10n.exposureSouthEast,
-        'S' => l10n.exposureSouth,
-        'SW' => l10n.exposureSouthWest,
-        'W' => l10n.exposureWest,
-        'NW' => l10n.exposureNorthWest,
-        _ => '--',
-      };
-
   @override
   Widget build(BuildContext context) {
     final theme = context.piantala;
     final l10n = AppLocalizations.of(context)!;
-    ref.watch(compassHeadingStreamProvider);
     ref.listen(compassHeadingStreamProvider, (previous, next) {
       next.when(
         data: _onHeading,
@@ -186,7 +173,7 @@ class _CompassScannerDialogState extends ConsumerState<CompassScannerDialog>
     final directionCode =
         _currentHeading == null ? null : exposureFromHeading(_currentHeading!);
     final directionName =
-        directionCode == null ? '--' : _localizedDirection(l10n, directionCode);
+        directionCode == null ? '--' : localizedExposure(directionCode, l10n);
     final progress = _isUnavailable
         ? 0.0
         : _isLocked

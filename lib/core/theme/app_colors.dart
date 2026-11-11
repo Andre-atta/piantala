@@ -115,5 +115,8 @@ abstract class AppRadius {
 
 abstract class AppStroke {
   static const double hairline = 1;
+  static const double fine = 1.2;
+  static const double medium = 1.4;
   static const double line = 1.5;
+  static const double heavy = 2;
 }

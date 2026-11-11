@@ -101,7 +101,7 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
                               right: 0,
                               height: sheetHeight,
                               child: TornPaperSheet(
-                                color: TornPaperColor.cream,
+                                color: TornPaperColor.warm,
                                 decoration: TornPaperDecoration.tape,
                                 rotationDegrees: widget.rotationDegrees,
                                 child: SingleChildScrollView(

@@ -398,23 +398,11 @@ abstract class AppLocalizations {
   /// **'Pianifica la cura di domani'**
   String get greetingSubtitleEvening;
 
-  /// No description provided for @roomsTitle.
-  ///
-  /// In it, this message translates to:
-  /// **'Stanze'**
-  String get roomsTitle;
-
   /// No description provided for @roomsEmptyTitle.
   ///
   /// In it, this message translates to:
   /// **'Nessuna stanza creata.'**
   String get roomsEmptyTitle;
-
-  /// No description provided for @roomsAddButton.
-  ///
-  /// In it, this message translates to:
-  /// **'Aggiungi Stanza'**
-  String get roomsAddButton;
 
   /// No description provided for @roomsEmptyHint.
   ///
@@ -439,12 +427,6 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Piante: {count}'**
   String roomsPlants(int count);
-
-  /// No description provided for @roomsSubtitle.
-  ///
-  /// In it, this message translates to:
-  /// **'Esposizione: {exposure} • Piante: {count}'**
-  String roomsSubtitle(String exposure, int count);
 
   /// No description provided for @roomsDeleteDialogTitle.
   ///
@@ -517,12 +499,6 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Rileva l\'esposizione con la bussola'**
   String get roomDialogCompassSemantics;
-
-  /// No description provided for @roomDialogCompassHint.
-  ///
-  /// In it, this message translates to:
-  /// **'Tocca per misurare con la bussola'**
-  String get roomDialogCompassHint;
 
   /// No description provided for @compassTitle.
   ///

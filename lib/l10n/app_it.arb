@@ -98,9 +98,7 @@
   "greetingSubtitleDusk": "Ottimo momento per controllare le tue piante",
   "greetingSubtitleEvening": "Pianifica la cura di domani",
 
-  "roomsTitle": "Stanze",
   "roomsEmptyTitle": "Nessuna stanza creata.",
-  "roomsAddButton": "Aggiungi Stanza",
   "roomsEmptyHint": "Tocca \"nuova stanza\" per cominciare.",
   "roomsOptionsSemantics": "Opzioni stanza {roomName}",
   "@roomsOptionsSemantics": {
@@ -117,13 +115,6 @@
   "roomsPlants": "Piante: {count}",
   "@roomsPlants": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" }
-    }
-  },
-  "roomsSubtitle": "Esposizione: {exposure} • Piante: {count}",
-  "@roomsSubtitle": {
-    "placeholders": {
-      "exposure": { "type": "String", "example": "Sud" },
       "count": { "type": "int", "example": "3" }
     }
   },
@@ -150,7 +141,6 @@
   "roomDialogNotesHint": "Aggiungi una nota",
   "roomDialogExposureLabel": "Esposizione",
   "roomDialogCompassSemantics": "Rileva l'esposizione con la bussola",
-  "roomDialogCompassHint": "Tocca per misurare con la bussola",
   "compassTitle": "Rilevamento esposizione",
   "compassPointHint": "Punta verso la finestra",
   "compassLocked": "Direzione rilevata",

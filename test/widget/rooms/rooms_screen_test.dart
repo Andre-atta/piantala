@@ -13,6 +13,8 @@ import 'package:piantala/presentation/providers/plant_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
 import 'package:piantala/presentation/screens/rooms/rooms_screen.dart';
 import 'package:piantala/presentation/screens/rooms/widgets/room_paper_card.dart';
+import 'package:piantala/presentation/screens/rooms/widgets/room_paper_card_metrics.dart';
+import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
 
 const _roomsGoldenKey = ValueKey('rooms-screen-golden');
 
@@ -174,6 +176,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(RoomPaperCard), findsNWidgets(3));
+    final navigationBar =
+        tester.widget<PiantalaNavigationBar>(find.byType(PiantalaNavigationBar));
+    expect(navigationBar.selectedIndex, 1);
+    expect(navigationBar.isRoomsRoute, isTrue);
     await expectLater(
       find.byKey(_roomsGoldenKey),
       matchesGoldenFile('goldens/rooms_screen_three_rooms.png'),
@@ -236,6 +242,34 @@ void main() {
     expect(find.text('Modifica'), findsOneWidget);
     expect(find.text('Elimina'), findsOneWidget);
     expect(find.byType(PopupMenuButton<Object>), findsNothing);
+    expect(find.byType(InkWell), findsNothing);
+
+    final editRow = find
+        .ancestor(
+          of: find.text('Modifica'),
+          matching: find.byType(GestureDetector),
+        )
+        .first;
+    expect(tester.getSize(editRow).height, greaterThanOrEqualTo(48));
+    final rowMovement = find
+        .descendant(
+          of: editRow,
+          matching: find.byType(AnimatedContainer),
+        )
+        .first;
+    final gesture = await tester.startGesture(tester.getCenter(editRow));
+    await tester.pump(
+      const Duration(
+        milliseconds: RoomPaperCardMetrics.optionsPressMilliseconds,
+      ),
+    );
+    final transform = tester.widget<AnimatedContainer>(rowMovement).transform!;
+    expect(
+      transform.getTranslation().y,
+      RoomPaperCardMetrics.optionsPressOffset,
+    );
+    await gesture.up();
+    await tester.pumpAndSettle();
   });
 
   testWidgets('deleting a room reassigns its plants to unassigned',

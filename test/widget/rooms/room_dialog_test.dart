@@ -136,6 +136,7 @@ void main() {
     expect(savedRoom.name, 'Studio');
     expect(savedRoom.notes, 'Vicino alla finestra');
     expect(savedRoom.exposure, 'UNKNOWN');
+    expect(savedRoom.createdAt.isUtc, isTrue);
     expect(find.byType(RoomDialog), findsNothing);
   });
 

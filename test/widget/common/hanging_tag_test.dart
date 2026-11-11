@@ -9,10 +9,17 @@ Widget _app({
   required HangingTagVariant variant,
   required _TagState state,
   String label = 'Salva',
+  double textScale = 1,
 }) {
   return MaterialApp(
     theme: ThemeData(
       extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
+    ),
+    builder: (context, child) => MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        textScaler: TextScaler.linear(textScale),
+      ),
+      child: child!,
     ),
     home: Scaffold(
       body: Center(
@@ -88,6 +95,19 @@ void main() {
         hasTapAction: true,
       ),
     );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('fits text at 1.5 scale without overflow', (tester) async {
+    await tester.pumpWidget(
+      _app(
+        variant: HangingTagVariant.primary,
+        state: _TagState.normal,
+        textScale: 1.5,
+      ),
+    );
+    await tester.pumpAndSettle();
+
     expect(tester.takeException(), isNull);
   });
 }

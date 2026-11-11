@@ -39,7 +39,7 @@ class RoomPaperCard extends StatelessWidget {
     final appearanceIndex = appearanceIndexForRoomId(room.id);
     final (paperColor, decoration, rotation) = switch (appearanceIndex) {
       0 => (
-          TornPaperColor.cream,
+          TornPaperColor.warm,
           TornPaperDecoration.tape,
           RoomPaperCardMetrics.cardRotationCream,
         ),
@@ -49,7 +49,7 @@ class RoomPaperCard extends StatelessWidget {
           RoomPaperCardMetrics.cardRotationPaperTan,
         ),
       _ => (
-          TornPaperColor.paper,
+          TornPaperColor.light,
           TornPaperDecoration.tape,
           RoomPaperCardMetrics.cardRotationPaper,
         ),

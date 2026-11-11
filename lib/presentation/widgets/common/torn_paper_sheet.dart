@@ -6,7 +6,7 @@ import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/presentation/widgets/common/paper_component_metrics.dart';
 
-enum TornPaperColor { cream, paperTan, paper }
+enum TornPaperColor { warm, paperTan, light }
 
 enum TornPaperDecoration { tape, pin, none }
 
@@ -35,11 +35,10 @@ class TornPaperSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.piantala;
-    // The existing app-wide `paper` and `cream` tokens have the inverse names.
     final paperColor = switch (color) {
-      TornPaperColor.cream => theme.paper,
+      TornPaperColor.warm => theme.paper,
       TornPaperColor.paperTan => theme.paperTan,
-      TornPaperColor.paper => theme.cream,
+      TornPaperColor.light => theme.cream,
     };
     final rotation = rotationDegrees * math.pi / 180;
     final resolvedPadding = padding.resolve(Directionality.of(context));

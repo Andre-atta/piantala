@@ -93,9 +93,7 @@
   "greetingSubtitleDusk": "Great time to check on your plants",
   "greetingSubtitleEvening": "Plan tomorrow's plant care",
 
-  "roomsTitle": "Rooms",
   "roomsEmptyTitle": "No rooms created yet.",
-  "roomsAddButton": "Add Room",
   "roomsEmptyHint": "Tap \"new room\" to get started.",
   "roomsOptionsSemantics": "Room options for {roomName}",
   "@roomsOptionsSemantics": {
@@ -112,13 +110,6 @@
   "roomsPlants": "Plants: {count}",
   "@roomsPlants": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" }
-    }
-  },
-  "roomsSubtitle": "Exposure: {exposure} • Plants: {count}",
-  "@roomsSubtitle": {
-    "placeholders": {
-      "exposure": { "type": "String", "example": "South" },
       "count": { "type": "int", "example": "3" }
     }
   },
@@ -145,7 +136,6 @@
   "roomDialogNotesHint": "Add a note",
   "roomDialogExposureLabel": "Exposure",
   "roomDialogCompassSemantics": "Detect exposure with the compass",
-  "roomDialogCompassHint": "Tap to measure with compass",
   "compassTitle": "Detect exposure",
   "compassPointHint": "Point toward the window",
   "compassLocked": "Direction detected",

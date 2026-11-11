@@ -42,10 +42,12 @@ class _HangingTagState extends State<HangingTag> {
         : const Duration(
             milliseconds: NavigationMetrics.pressAnimationMilliseconds,
           );
-    final rotation = (widget.mirrored ? -1 : 1) *
-        PaperComponentMetrics.tagPressedRotationDegrees *
-        math.pi /
-        180;
+    final rotation = _isPressed
+        ? 0.0
+        : (widget.mirrored ? -1 : 1) *
+            PaperComponentMetrics.tagPressedRotationDegrees *
+            math.pi /
+            180;
     final labelPadding = EdgeInsets.only(
       left: widget.mirrored
           ? PaperComponentMetrics.tagLabelMirroredLeft
@@ -66,9 +68,10 @@ class _HangingTagState extends State<HangingTag> {
       enabled: enabled,
       onTap: widget.onPressed,
       child: ExcludeSemantics(
-        child: Transform.rotate(
+        child: AnimatedRotation(
+          turns: rotation / (2 * math.pi),
+          duration: animationDuration,
           alignment: Alignment.topCenter,
-          angle: rotation,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: widget.onPressed,

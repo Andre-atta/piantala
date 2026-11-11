@@ -74,7 +74,7 @@ abstract class PaperComponentMetrics {
   static const tagOutlineWidth = 1.5;
   static const tagHoleRadius = 2.6;
   static const tagHoleStroke = 1.1;
-  static const tagPressedRotationDegrees = 1.2;
+  static const tagPressedRotationDegrees = 0.8;
   static const tagFontSize = 12.0;
   static const tagLetterSpacing = 1.2;
   static const disabledDashLength = 4.0;

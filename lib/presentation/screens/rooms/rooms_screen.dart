@@ -40,7 +40,7 @@ class RoomsScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: TornPaperSheet(
-                color: TornPaperColor.cream,
+                color: TornPaperColor.warm,
                 decoration: TornPaperDecoration.tape,
                 child: Text(
                   l10n.homeErrorLoading(error.toString()),
@@ -62,7 +62,7 @@ class RoomsScreen extends ConsumerWidget {
                       maxWidth: RoomPaperCardMetrics.emptySheetMaxWidth,
                     ),
                     child: TornPaperSheet(
-                      color: TornPaperColor.cream,
+                      color: TornPaperColor.warm,
                       decoration: TornPaperDecoration.tape,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -178,16 +178,11 @@ class RoomsScreen extends ConsumerWidget {
 
     if (confirm != true) return;
 
-    final roomRepo = ref.read(roomRepositoryProvider);
-    if (plantCount > 0) {
-      final plantRepo = ref.read(plantRepositoryProvider);
-      final plants = ref.read(plantsProvider).valueOrNull ?? [];
-      for (final plant in plants.where((plant) => plant.roomId == room.id)) {
-        await plantRepo.updatePlant(plant.copyWith(roomId: 'unassigned'));
-      }
-    }
-
-    await roomRepo.deleteRoom(room.id);
+    final plants = ref.read(plantsProvider).valueOrNull ?? [];
+    await ref.read(deleteRoomUseCaseProvider).call(
+          roomId: room.id,
+          plants: plants,
+        );
   }
 }
 
@@ -226,7 +221,7 @@ class _RoomOptionsDialog extends StatelessWidget {
                   maxWidth: RoomPaperCardMetrics.optionsDialogMaxWidth,
                 ),
                 child: TornPaperSheet(
-                  color: TornPaperColor.cream,
+                  color: TornPaperColor.warm,
                   decoration: TornPaperDecoration.tape,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -269,7 +264,7 @@ class _RoomOptionsDialog extends StatelessWidget {
   }
 }
 
-class _RoomOptionRow extends StatelessWidget {
+class _RoomOptionRow extends StatefulWidget {
   const _RoomOptionRow({
     required this.label,
     required this.onPressed,
@@ -281,22 +276,51 @@ class _RoomOptionRow extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
+  State<_RoomOptionRow> createState() => _RoomOptionRowState();
+}
+
+class _RoomOptionRowState extends State<_RoomOptionRow> {
+  bool _isPressed = false;
+
+  void _setPressed(bool value) {
+    if (_isPressed != value) setState(() => _isPressed = value);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final animationDuration = MediaQuery.of(context).disableAnimations
+        ? Duration.zero
+        : const Duration(
+            milliseconds: RoomPaperCardMetrics.optionsPressMilliseconds,
+          );
+
     return Semantics(
       button: true,
-      label: label,
-      onTap: onPressed,
+      label: widget.label,
+      onTap: widget.onPressed,
       child: ExcludeSemantics(
-        child: InkWell(
-          onTap: onPressed,
-          child: SizedBox(
-            height: RoomPaperCardMetrics.optionsDialogRowHeight,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                label,
-                style: context.piantala.body.copyWith(
-                  color: color ?? context.piantala.ink,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: widget.onPressed,
+          onTapDown: (_) => _setPressed(true),
+          onTapUp: (_) => _setPressed(false),
+          onTapCancel: () => _setPressed(false),
+          child: AnimatedContainer(
+            duration: animationDuration,
+            transform: Matrix4.translationValues(
+              0,
+              _isPressed ? RoomPaperCardMetrics.optionsPressOffset : 0,
+              0,
+            ),
+            child: SizedBox(
+              height: RoomPaperCardMetrics.optionsDialogRowHeight,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.label,
+                  style: context.piantala.body.copyWith(
+                    color: widget.color ?? context.piantala.ink,
+                  ),
                 ),
               ),
             ),

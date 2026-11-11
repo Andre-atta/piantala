@@ -60,7 +60,7 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
         userId: user.uid,
         name: _nameController.text.trim(),
         exposure: _exposure,
-        createdAt: widget.room?.createdAt ?? DateTime.now(),
+        createdAt: widget.room?.createdAt ?? DateTime.now().toUtc(),
         notes: _notesController.text.trim().isEmpty
             ? null
             : _notesController.text.trim(),
