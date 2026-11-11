@@ -256,6 +256,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String get roomDialogCompassHint => 'Tap to measure with compass';
 
   @override
+  String get compassTitle => 'Detect exposure';
+
+  @override
+  String get compassPointHint => 'Point toward the window';
+
+  @override
+  String get compassLocked => 'Direction detected';
+
+  @override
+  String compassHold(int seconds) {
+    return 'Hold steady for: $seconds s';
+  }
+
+  @override
+  String get compassDone => 'Exposure detected';
+
+  @override
+  String get compassRetry => 'Retry';
+
+  @override
+  String get compassUnavailable => 'Compass unavailable';
+
+  @override
+  String compassDialSemantics(String direction) {
+    return 'Compass, direction $direction';
+  }
+
+  @override
+  String get compassLetterNorth => 'N';
+
+  @override
+  String get compassLetterEast => 'E';
+
+  @override
+  String get compassLetterSouth => 'S';
+
+  @override
+  String get compassLetterWest => 'W';
+
+  @override
+  String get exposureNorthEast => 'Northeast';
+
+  @override
+  String get exposureSouthEast => 'Southeast';
+
+  @override
+  String get exposureSouthWest => 'Southwest';
+
+  @override
+  String get exposureNorthWest => 'Northwest';
+
+  @override
   String get encyclopediaTitle => 'Encyclopedia';
 
   @override

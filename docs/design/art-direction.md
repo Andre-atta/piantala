@@ -100,6 +100,9 @@ Un'unica famiglia di schede, usata in due modi:
   con disco verde e nome grande; la variante della carta è stabile per stanza. Le opzioni si aprono su un foglio
   crema con le righe Modifica ed Elimina; la conferma di eliminazione usa i cartellini appesi.
 - Senza stanze, un solo foglio crema centrato invita a usare il cartellino "nuova stanza" della barra in basso.
+- **Bussola delle stanze:** il rilevamento è un quadrante disegnato su carta, con Nord fisso, tacche sottili e ago
+  terracotta/crema. L'ago segue la direzione con il percorso più breve; la schermata conferma l'esposizione solo dopo
+  tre secondi di stabilità. In assenza del sensore mostra un avviso e permette di annullare, senza proporre una direzione manuale.
 
 ### 2.5 Interazione e accessibilità
 

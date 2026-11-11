@@ -170,7 +170,7 @@ void main() {
           .text,
       'Luce del mattino',
     );
-    expect(find.text('Nord'), findsOneWidget);
+    expect(find.text('Nord-Est'), findsOneWidget);
 
     await tester.enterText(
       find.byKey(const ValueKey('room-dialog-name-field')),

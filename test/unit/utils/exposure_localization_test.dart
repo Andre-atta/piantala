@@ -9,6 +9,8 @@ void main() {
     final english = await AppLocalizations.delegate.load(const Locale('en'));
 
     expect(localizedExposure('N', italian), italian.exposureNorth);
+    expect(localizedExposure('NE', italian), italian.exposureNorthEast);
+    expect(localizedExposure('SW', english), english.exposureSouthWest);
     expect(localizedExposure('SOUTH', italian), italian.exposureSouth);
     expect(localizedExposure('E', english), english.exposureEast);
     expect(localizedExposure('OVEST', italian), italian.exposureWest);

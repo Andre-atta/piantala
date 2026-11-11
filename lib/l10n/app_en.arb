@@ -146,6 +146,32 @@
   "roomDialogExposureLabel": "Exposure",
   "roomDialogCompassSemantics": "Detect exposure with the compass",
   "roomDialogCompassHint": "Tap to measure with compass",
+  "compassTitle": "Detect exposure",
+  "compassPointHint": "Point toward the window",
+  "compassLocked": "Direction detected",
+  "compassHold": "Hold steady for: {seconds} s",
+  "@compassHold": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "compassDone": "Exposure detected",
+  "compassRetry": "Retry",
+  "compassUnavailable": "Compass unavailable",
+  "compassDialSemantics": "Compass, direction {direction}",
+  "@compassDialSemantics": {
+    "placeholders": {
+      "direction": { "type": "String" }
+    }
+  },
+  "compassLetterNorth": "N",
+  "compassLetterEast": "E",
+  "compassLetterSouth": "S",
+  "compassLetterWest": "W",
+  "exposureNorthEast": "Northeast",
+  "exposureSouthEast": "Southeast",
+  "exposureSouthWest": "Southwest",
+  "exposureNorthWest": "Northwest",
 
   "encyclopediaTitle": "Encyclopedia",
   "encyclopediaSearchHint": "Search by common or scientific name...",

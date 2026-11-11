@@ -151,6 +151,32 @@
   "roomDialogExposureLabel": "Esposizione",
   "roomDialogCompassSemantics": "Rileva l'esposizione con la bussola",
   "roomDialogCompassHint": "Tocca per misurare con la bussola",
+  "compassTitle": "Rilevamento esposizione",
+  "compassPointHint": "Punta verso la finestra",
+  "compassLocked": "Direzione rilevata",
+  "compassHold": "Tieni fermo per: {seconds} s",
+  "@compassHold": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "compassDone": "Esposizione rilevata",
+  "compassRetry": "Riprova",
+  "compassUnavailable": "Bussola non disponibile",
+  "compassDialSemantics": "Bussola, direzione {direction}",
+  "@compassDialSemantics": {
+    "placeholders": {
+      "direction": { "type": "String" }
+    }
+  },
+  "compassLetterNorth": "N",
+  "compassLetterEast": "E",
+  "compassLetterSouth": "S",
+  "compassLetterWest": "O",
+  "exposureNorthEast": "Nord-Est",
+  "exposureSouthEast": "Sud-Est",
+  "exposureSouthWest": "Sud-Ovest",
+  "exposureNorthWest": "Nord-Ovest",
 
   "encyclopediaTitle": "Enciclopedia",
   "encyclopediaSearchHint": "Cerca per nome comune o scientifico...",

@@ -11,6 +11,7 @@ import 'package:piantala/presentation/screens/rooms/widgets/room_dialog_metrics.
 import 'package:piantala/presentation/screens/rooms/widgets/room_pin_button.dart';
 import 'package:piantala/presentation/utils/exposure_localization.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
 import 'package:uuid/uuid.dart';
 
@@ -78,7 +79,7 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
   }
 
   Future<void> _detectExposure() async {
-    final direction = await showDialog<String>(
+    final direction = await showPaperDialog<String>(
       context: context,
       builder: (context) => const CompassScannerDialog(),
     );

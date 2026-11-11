@@ -384,6 +384,7 @@ Metafore per schermata: Home = stanza con mensola; schede = erbario; risultati d
 | `TornPaperSheet` | Foglio con bordo inferiore strappato, colori carta, righe opzionali e nastro o puntina |
 | `HangingTag` | Azione appesa per dialoghi, con varianti primaria, secondaria e pericolo |
 | `PaperDialogScaffold` / `showPaperDialog` | Struttura, transizione e sfondo oscurato dei dialoghi cartacei |
+| `CompassDialPainter` | Quadrante della bussola delle Stanze, Nord fisso e ago direzionale |
 | Puntina | Menu, bussola, cancella testo |
 | Testo con sottolineatura a mano | Azioni secondarie (Annulla) |
 | Post-it con puntina | Origine, orario notifiche |

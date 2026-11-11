@@ -524,6 +524,102 @@ abstract class AppLocalizations {
   /// **'Tocca per misurare con la bussola'**
   String get roomDialogCompassHint;
 
+  /// No description provided for @compassTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Rilevamento esposizione'**
+  String get compassTitle;
+
+  /// No description provided for @compassPointHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Punta verso la finestra'**
+  String get compassPointHint;
+
+  /// No description provided for @compassLocked.
+  ///
+  /// In it, this message translates to:
+  /// **'Direzione rilevata'**
+  String get compassLocked;
+
+  /// No description provided for @compassHold.
+  ///
+  /// In it, this message translates to:
+  /// **'Tieni fermo per: {seconds} s'**
+  String compassHold(int seconds);
+
+  /// No description provided for @compassDone.
+  ///
+  /// In it, this message translates to:
+  /// **'Esposizione rilevata'**
+  String get compassDone;
+
+  /// No description provided for @compassRetry.
+  ///
+  /// In it, this message translates to:
+  /// **'Riprova'**
+  String get compassRetry;
+
+  /// No description provided for @compassUnavailable.
+  ///
+  /// In it, this message translates to:
+  /// **'Bussola non disponibile'**
+  String get compassUnavailable;
+
+  /// No description provided for @compassDialSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Bussola, direzione {direction}'**
+  String compassDialSemantics(String direction);
+
+  /// No description provided for @compassLetterNorth.
+  ///
+  /// In it, this message translates to:
+  /// **'N'**
+  String get compassLetterNorth;
+
+  /// No description provided for @compassLetterEast.
+  ///
+  /// In it, this message translates to:
+  /// **'E'**
+  String get compassLetterEast;
+
+  /// No description provided for @compassLetterSouth.
+  ///
+  /// In it, this message translates to:
+  /// **'S'**
+  String get compassLetterSouth;
+
+  /// No description provided for @compassLetterWest.
+  ///
+  /// In it, this message translates to:
+  /// **'O'**
+  String get compassLetterWest;
+
+  /// No description provided for @exposureNorthEast.
+  ///
+  /// In it, this message translates to:
+  /// **'Nord-Est'**
+  String get exposureNorthEast;
+
+  /// No description provided for @exposureSouthEast.
+  ///
+  /// In it, this message translates to:
+  /// **'Sud-Est'**
+  String get exposureSouthEast;
+
+  /// No description provided for @exposureSouthWest.
+  ///
+  /// In it, this message translates to:
+  /// **'Sud-Ovest'**
+  String get exposureSouthWest;
+
+  /// No description provided for @exposureNorthWest.
+  ///
+  /// In it, this message translates to:
+  /// **'Nord-Ovest'**
+  String get exposureNorthWest;
+
   /// No description provided for @encyclopediaTitle.
   ///
   /// In it, this message translates to:

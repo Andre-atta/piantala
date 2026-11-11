@@ -259,6 +259,58 @@ class AppLocalizationsIt extends AppLocalizations {
   String get roomDialogCompassHint => 'Tocca per misurare con la bussola';
 
   @override
+  String get compassTitle => 'Rilevamento esposizione';
+
+  @override
+  String get compassPointHint => 'Punta verso la finestra';
+
+  @override
+  String get compassLocked => 'Direzione rilevata';
+
+  @override
+  String compassHold(int seconds) {
+    return 'Tieni fermo per: $seconds s';
+  }
+
+  @override
+  String get compassDone => 'Esposizione rilevata';
+
+  @override
+  String get compassRetry => 'Riprova';
+
+  @override
+  String get compassUnavailable => 'Bussola non disponibile';
+
+  @override
+  String compassDialSemantics(String direction) {
+    return 'Bussola, direzione $direction';
+  }
+
+  @override
+  String get compassLetterNorth => 'N';
+
+  @override
+  String get compassLetterEast => 'E';
+
+  @override
+  String get compassLetterSouth => 'S';
+
+  @override
+  String get compassLetterWest => 'O';
+
+  @override
+  String get exposureNorthEast => 'Nord-Est';
+
+  @override
+  String get exposureSouthEast => 'Sud-Est';
+
+  @override
+  String get exposureSouthWest => 'Sud-Ovest';
+
+  @override
+  String get exposureNorthWest => 'Nord-Ovest';
+
+  @override
   String get encyclopediaTitle => 'Enciclopedia';
 
   @override
