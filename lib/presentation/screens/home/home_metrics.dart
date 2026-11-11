@@ -60,13 +60,12 @@ abstract class HomeMetrics {
   static const plantVariationMaxScale = 1.05;
   static const plantVariationMaxRotationDegrees = 1.5;
 
-  static const wateringStickWidth = 46.0;
-  static const wateringStickHeight = 92.0;
-  static const wateringStickRight = 12.0;
-  static const wateringStickBottom = 10.0;
+  static const wateringStickWidth = 34.0;
+  static const wateringStickHeight = 66.0;
+  static const wateringStickBottom = 14.0;
   static const wateringStickRotationDegrees = 8.0;
-  static const wateringStickDateTop = 8.0;
-  static const wateringStickDateFontSize = 13.0;
+  static const wateringStickDateTop = 6.0;
+  static const wateringStickDateFontSize = 11.0;
   static const degreesToRadians = math.pi / 180;
   static const vineWidth = 40.0;
   static const vineHeight = 200.0;

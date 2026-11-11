@@ -25,37 +25,37 @@ class WateringStick extends StatelessWidget {
       child: SizedBox(
         width: HomeMetrics.wateringStickWidth,
         height: HomeMetrics.wateringStickHeight,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Transform.rotate(
-              angle: HomeMetrics.wateringStickRotationDegrees *
-                  HomeMetrics.degreesToRadians,
-              alignment: Alignment.bottomCenter,
-              child: SvgPicture.asset(
+        child: Transform.rotate(
+          angle: HomeMetrics.wateringStickRotationDegrees *
+              HomeMetrics.degreesToRadians,
+          alignment: Alignment.bottomCenter,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              SvgPicture.asset(
                 _asset,
                 width: HomeMetrics.wateringStickWidth,
                 height: HomeMetrics.wateringStickHeight,
               ),
-            ),
-            Positioned(
-              top: HomeMetrics.wateringStickDateTop,
-              left: 0,
-              right: 0,
-              height: HomeMetrics.wateringStickDateFontSize,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  formattedDate,
-                  maxLines: 1,
-                  style: theme.body.copyWith(
-                    fontSize: HomeMetrics.wateringStickDateFontSize,
-                    color: theme.cream,
+              Positioned(
+                top: HomeMetrics.wateringStickDateTop,
+                left: 0,
+                right: 0,
+                height: HomeMetrics.wateringStickDateFontSize,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    formattedDate,
+                    maxLines: 1,
+                    style: theme.body.copyWith(
+                      fontSize: HomeMetrics.wateringStickDateFontSize,
+                      color: theme.cream,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
