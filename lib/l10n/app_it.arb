@@ -101,6 +101,25 @@
   "roomsTitle": "Stanze",
   "roomsEmptyTitle": "Nessuna stanza creata.",
   "roomsAddButton": "Aggiungi Stanza",
+  "roomsEmptyHint": "Tocca \"nuova stanza\" per cominciare.",
+  "roomsOptionsSemantics": "Opzioni stanza {roomName}",
+  "@roomsOptionsSemantics": {
+    "placeholders": {
+      "roomName": { "type": "String", "example": "Soggiorno" }
+    }
+  },
+  "roomsExposure": "Esposizione: {exposure}",
+  "@roomsExposure": {
+    "placeholders": {
+      "exposure": { "type": "String", "example": "Sud" }
+    }
+  },
+  "roomsPlants": "Piante: {count}",
+  "@roomsPlants": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
   "roomsSubtitle": "Esposizione: {exposure} • Piante: {count}",
   "@roomsSubtitle": {
     "placeholders": {

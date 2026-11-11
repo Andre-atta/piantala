@@ -192,6 +192,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get roomsAddButton => 'Aggiungi Stanza';
 
   @override
+  String get roomsEmptyHint => 'Tocca \"nuova stanza\" per cominciare.';
+
+  @override
+  String roomsOptionsSemantics(String roomName) {
+    return 'Opzioni stanza $roomName';
+  }
+
+  @override
+  String roomsExposure(String exposure) {
+    return 'Esposizione: $exposure';
+  }
+
+  @override
+  String roomsPlants(int count) {
+    return 'Piante: $count';
+  }
+
+  @override
   String roomsSubtitle(String exposure, int count) {
     return 'Esposizione: $exposure • Piante: $count';
   }

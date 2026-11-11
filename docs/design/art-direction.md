@@ -96,6 +96,10 @@ Un'unica famiglia di schede, usata in due modi:
 - La finestra è l'indicatore del ciclo della giornata (vedi sezione 5).
 - Barra di navigazione con un pulsante centrale a cartellino di carta che esce dal bordo della barra: è parte della barra, non è un "+" tondo e non è mai una sezione selezionabile. Il suo ruolo cambia solo nelle Stanze: "nuova stanza", con martello e assi. Altrove "nuova pianta", con il vaso.
 - Ultima voce della barra: "Profilo" (prima Impostazioni).
+- **Stanze:** nessun titolo o pulsante di aggiunta in alto. Le stanze sono una lista di targhe su fogli strappati,
+  con disco verde e nome grande; la variante della carta è stabile per stanza. Le opzioni si aprono su un foglio
+  crema con le righe Modifica ed Elimina; la conferma di eliminazione usa i cartellini appesi.
+- Senza stanze, un solo foglio crema centrato invita a usare il cartellino "nuova stanza" della barra in basso.
 
 ### 2.5 Interazione e accessibilità
 

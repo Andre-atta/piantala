@@ -416,6 +416,30 @@ abstract class AppLocalizations {
   /// **'Aggiungi Stanza'**
   String get roomsAddButton;
 
+  /// No description provided for @roomsEmptyHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca \"nuova stanza\" per cominciare.'**
+  String get roomsEmptyHint;
+
+  /// No description provided for @roomsOptionsSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Opzioni stanza {roomName}'**
+  String roomsOptionsSemantics(String roomName);
+
+  /// No description provided for @roomsExposure.
+  ///
+  /// In it, this message translates to:
+  /// **'Esposizione: {exposure}'**
+  String roomsExposure(String exposure);
+
+  /// No description provided for @roomsPlants.
+  ///
+  /// In it, this message translates to:
+  /// **'Piante: {count}'**
+  String roomsPlants(int count);
+
   /// No description provided for @roomsSubtitle.
   ///
   /// In it, this message translates to:

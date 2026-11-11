@@ -7,12 +7,14 @@ class MainScaffold extends StatelessWidget {
   const MainScaffold({
     required this.child,
     this.waveBackdrop,
+    this.backgroundColor,
     this.onCreateRoom,
     super.key,
   });
 
   final Widget child;
   final Color? waveBackdrop;
+  final Color? backgroundColor;
   final VoidCallback? onCreateRoom;
 
   @override
@@ -31,6 +33,7 @@ class MainScaffold extends StatelessWidget {
     };
 
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: child,
       bottomNavigationBar: PiantalaNavigationBar(
         selectedIndex: selectedIndex,

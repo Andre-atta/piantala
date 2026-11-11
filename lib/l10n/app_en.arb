@@ -96,6 +96,25 @@
   "roomsTitle": "Rooms",
   "roomsEmptyTitle": "No rooms created yet.",
   "roomsAddButton": "Add Room",
+  "roomsEmptyHint": "Tap \"new room\" to get started.",
+  "roomsOptionsSemantics": "Room options for {roomName}",
+  "@roomsOptionsSemantics": {
+    "placeholders": {
+      "roomName": { "type": "String", "example": "Living room" }
+    }
+  },
+  "roomsExposure": "Exposure: {exposure}",
+  "@roomsExposure": {
+    "placeholders": {
+      "exposure": { "type": "String", "example": "South" }
+    }
+  },
+  "roomsPlants": "Plants: {count}",
+  "@roomsPlants": {
+    "placeholders": {
+      "count": { "type": "int", "example": "3" }
+    }
+  },
   "roomsSubtitle": "Exposure: {exposure} • Plants: {count}",
   "@roomsSubtitle": {
     "placeholders": {
