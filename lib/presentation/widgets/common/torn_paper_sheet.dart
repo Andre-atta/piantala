@@ -35,10 +35,11 @@ class TornPaperSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.piantala;
+    // The existing app-wide `paper` and `cream` tokens have the inverse names.
     final paperColor = switch (color) {
-      TornPaperColor.cream => theme.cream,
+      TornPaperColor.cream => theme.paper,
       TornPaperColor.paperTan => theme.paperTan,
-      TornPaperColor.paper => theme.paper,
+      TornPaperColor.paper => theme.cream,
     };
     final rotation = rotationDegrees * math.pi / 180;
     final resolvedPadding = padding.resolve(Directionality.of(context));
@@ -131,7 +132,12 @@ class _TornPaperPainter extends CustomPainter {
       canvas
         ..save()
         ..clipRect(
-          Rect.fromLTRB(0, bodyTop, size.width, bodyBottom),
+          Rect.fromLTRB(
+            AppStroke.hairline,
+            bodyTop,
+            size.width - AppStroke.hairline,
+            bodyBottom,
+          ),
         );
       for (var y = bodyTop + PaperComponentMetrics.ruledSpacing;
           y < bodyBottom;

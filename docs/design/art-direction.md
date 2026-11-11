@@ -114,6 +114,17 @@ Un'unica famiglia di schede, usata in due modi:
 - Inclinazione del testo al massimo 1°. Nessuno spessore o ombra sotto i pulsanti.
 - Eccezione ancora aperta: il cartellino centrale della barra ha uno spessore scuro sotto; da decidere se toglierlo.
 
+#### Componenti condivisi per fogli e dialoghi
+- **TornPaperSheet:** foglio con bordo inferiore strappato, colori carta a token, righe opzionali e nastro o puntina.
+- **HangingTag:** cartellino con filo e puntina per le azioni dei dialoghi, con varianti primaria, secondaria e pericolo.
+- **PaperDialogScaffold:** contenitore dei dialoghi su foglio crema; `showPaperDialog` gestisce sfondo e transizione.
+
+Nei componenti carta, la variante crema usa Carta antica (`#F4EBD8`) e la variante paper usa Crema calda (`#FAF7EF`); i token globali esistenti restano invariati.
+
+I dialoghi sono un foglio crema appeso con nastro verde e bordo inferiore strappato, sopra la schermata oscurata al 68%.
+
+Le azioni dei dialoghi sono cartellini con filo appesi al bordo del foglio: Salva a destra (verde), Annulla a sinistra (carta, specchiato).
+
 ### 2.6 Asset pianta
 
 Le regole di formato, isolamento e varianti sono nella sezione 3 e non cambiano: PNG trasparente, solo pianta e vaso, nessun muro, nessuna mensola, nessuna ombra.

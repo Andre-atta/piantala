@@ -58,96 +58,100 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
     return Semantics(
       container: true,
       label: widget.title,
-      child: FocusTraversalGroup(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.viewInsetsOf(context).bottom,
-            ),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final topInset = math.min(
-                  PaperComponentMetrics.dialogTopInset,
-                  constraints.maxHeight,
-                );
-                final availableHeight =
-                    math.max(0, constraints.maxHeight - topInset).toDouble();
-                final actionsBelowSheet =
-                    availableHeight >= minimumOutsideHeight;
-                final sheetHeight = actionsBelowSheet
-                    ? availableHeight - actionReserve
-                    : availableHeight;
-                final actionsTop = actionsBelowSheet
-                    ? sheetHeight - PaperComponentMetrics.dialogActionOverlap
-                    : math.max(0, availableHeight - actionHeight).toDouble();
+      child: Material(
+        type: MaterialType.transparency,
+        child: FocusTraversalGroup(
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final topInset = math.min(
+                    PaperComponentMetrics.dialogTopInset,
+                    constraints.maxHeight,
+                  );
+                  final availableHeight =
+                      math.max(0, constraints.maxHeight - topInset).toDouble();
+                  final actionsBelowSheet =
+                      availableHeight >= minimumOutsideHeight;
+                  final sheetHeight = actionsBelowSheet
+                      ? availableHeight - actionReserve
+                      : availableHeight;
+                  final actionsTop = actionsBelowSheet
+                      ? sheetHeight - PaperComponentMetrics.dialogActionOverlap
+                      : math.max(0, availableHeight - actionHeight).toDouble();
 
-                return Padding(
-                  padding: EdgeInsets.only(top: topInset),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: PaperComponentMetrics.dialogHorizontalMargin,
-                    ),
-                    child: SizedBox(
-                      height: availableHeight,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            height: sheetHeight,
-                            child: TornPaperSheet(
-                              color: TornPaperColor.cream,
-                              decoration: TornPaperDecoration.tape,
-                              rotationDegrees: widget.rotationDegrees,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      widget.title,
-                                      style: theme.h1.copyWith(
-                                        color: theme.deepGreen,
-                                        fontSize: PaperComponentMetrics
-                                            .dialogTitleFontSize,
+                  return Padding(
+                    padding: EdgeInsets.only(top: topInset),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal:
+                            PaperComponentMetrics.dialogHorizontalMargin,
+                      ),
+                      child: SizedBox(
+                        height: availableHeight,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              height: sheetHeight,
+                              child: TornPaperSheet(
+                                color: TornPaperColor.cream,
+                                decoration: TornPaperDecoration.tape,
+                                rotationDegrees: widget.rotationDegrees,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Text(
+                                        widget.title,
+                                        style: theme.h1.copyWith(
+                                          color: theme.deepGreen,
+                                          fontSize: PaperComponentMetrics
+                                              .dialogTitleFontSize,
+                                        ),
                                       ),
-                                    ),
-                                    widget.child,
+                                      widget.child,
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: actionsTop,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    for (var index = 0;
+                                        index < widget.actions.length;
+                                        index++) ...[
+                                      if (index > 0)
+                                        const SizedBox(
+                                          width: PaperComponentMetrics
+                                              .dialogActionSpacing,
+                                        ),
+                                      widget.actions[index],
+                                    ],
                                   ],
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            top: actionsTop,
-                            left: 0,
-                            right: 0,
-                            child: Center(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  for (var index = 0;
-                                      index < widget.actions.length;
-                                      index++) ...[
-                                    if (index > 0)
-                                      const SizedBox(
-                                        width: PaperComponentMetrics
-                                            .dialogActionSpacing,
-                                      ),
-                                    widget.actions[index],
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
