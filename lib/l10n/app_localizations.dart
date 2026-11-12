@@ -110,6 +110,30 @@ abstract class AppLocalizations {
   /// **'Il tuo giardino tascabile'**
   String get appTagline;
 
+  /// No description provided for @loginTagline.
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue piante, una mensola alla volta.'**
+  String get loginTagline;
+
+  /// No description provided for @loginPrivacyNotice.
+  ///
+  /// In it, this message translates to:
+  /// **'Continuando accetti'**
+  String get loginPrivacyNotice;
+
+  /// No description provided for @loginPrivacyLink.
+  ///
+  /// In it, this message translates to:
+  /// **'l\'Informativa sulla privacy'**
+  String get loginPrivacyLink;
+
+  /// No description provided for @loginPrivacyOpenError.
+  ///
+  /// In it, this message translates to:
+  /// **'Impossibile aprire l\'informativa sulla privacy.'**
+  String get loginPrivacyOpenError;
+
   /// Avviso ToS nella login
   ///
   /// In it, this message translates to:

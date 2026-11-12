@@ -4,6 +4,10 @@
 
   "appName": "Piantala",
   "appTagline": "Your pocket garden",
+  "loginTagline": "Your plants, one shelf at a time.",
+  "loginPrivacyNotice": "By continuing, you accept",
+  "loginPrivacyLink": "the Privacy Policy",
+  "loginPrivacyOpenError": "Unable to open the privacy policy.",
   "appTosNotice": "By signing in you accept the Terms of Service",
 
   "authSignInWithGoogle": "Continue with Google",

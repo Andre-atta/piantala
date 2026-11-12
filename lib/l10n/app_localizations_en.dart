@@ -15,6 +15,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTagline => 'Your pocket garden';
 
   @override
+  String get loginTagline => 'Your plants, one shelf at a time.';
+
+  @override
+  String get loginPrivacyNotice => 'By continuing, you accept';
+
+  @override
+  String get loginPrivacyLink => 'the Privacy Policy';
+
+  @override
+  String get loginPrivacyOpenError => 'Unable to open the privacy policy.';
+
+  @override
   String get appTosNotice => 'By signing in you accept the Terms of Service';
 
   @override

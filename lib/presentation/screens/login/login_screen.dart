@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piantala/core/constants/app_links.dart';
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
+import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
+import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_text_link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -30,64 +37,28 @@ class LoginScreen extends ConsumerWidget {
     );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
+      value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: _iconBrightness(period),
+        statusBarIconBrightness: Brightness.dark,
       ),
-      child: Scaffold(
-        body: _LoginBody(period: period, isLoading: isLoading, ref: ref),
+      child: Theme(
+        data: TemporalTheme.buildTheme(period),
+        child: Scaffold(
+          body: _LoginBody(isLoading: isLoading, ref: ref),
+        ),
       ),
     );
   }
-
-  Brightness _iconBrightness(TemporalPeriod period) =>
-      (period == TemporalPeriod.night || period == TemporalPeriod.evening)
-          ? Brightness.light
-          : Brightness.dark;
 }
 
 class _LoginBody extends StatelessWidget {
   const _LoginBody({
-    required this.period,
     required this.isLoading,
     required this.ref,
   });
 
-  final TemporalPeriod period;
   final bool isLoading;
   final WidgetRef ref;
-
-  Color get _bgTop => switch (period) {
-        TemporalPeriod.night => AppColors.nightBackground,
-        TemporalPeriod.dawn => AppColors.dawnBackground,
-        TemporalPeriod.day => const Color(0xFFF0F7F2),
-        TemporalPeriod.dusk => AppColors.duskBackground,
-        TemporalPeriod.evening => AppColors.eveningBackground,
-      };
-
-  Color get _bgBottom => switch (period) {
-        TemporalPeriod.night => AppColors.nightSurface,
-        TemporalPeriod.dawn => AppColors.dawnSurface,
-        TemporalPeriod.day => AppColors.daySurface,
-        TemporalPeriod.dusk => AppColors.duskSurface,
-        TemporalPeriod.evening => AppColors.eveningSurface,
-      };
-
-  Color get _textColor => switch (period) {
-        TemporalPeriod.night => AppColors.nightText,
-        TemporalPeriod.dawn => AppColors.dawnText,
-        TemporalPeriod.day => AppColors.dayText,
-        TemporalPeriod.dusk => AppColors.duskText,
-        TemporalPeriod.evening => AppColors.eveningText,
-      };
-
-  Color get _accentColor => switch (period) {
-        TemporalPeriod.night => AppColors.nightAccent,
-        TemporalPeriod.dawn => AppColors.dawnAccent,
-        TemporalPeriod.day => AppColors.plantGreen,
-        TemporalPeriod.dusk => AppColors.duskAccent,
-        TemporalPeriod.evening => AppColors.eveningAccent,
-      };
 
   String _localizedGreeting(TemporalPeriod p, AppLocalizations? l10n) {
     if (l10n == null) return p.greeting;
@@ -103,144 +74,182 @@ class _LoginBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = context.piantala;
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [_bgTop, _bgBottom],
-          stops: const [0.0, 0.85],
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          PlantAssetResolver.wallBackground(),
+          fit: BoxFit.cover,
         ),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        SafeArea(
+          child: Stack(
             children: [
-              const Spacer(flex: 2),
-
-              // ── Logo & titolo ──────────────────────────────────────
-              Center(
-                child: Column(
-                  children: [
-                    Container(
-                      width: AppSizes.avatarLg,
-                      height: AppSizes.avatarLg,
-                      decoration: BoxDecoration(
-                        color: _accentColor.withAlpha(25),
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                        border: Border.all(
-                          color: _accentColor.withAlpha(50),
-                          width: 1.5,
-                        ),
+              ListView(
+                padding: const EdgeInsets.fromLTRB(20, 84, 20, 112),
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        _localizedGreeting(TemporalPeriod.day, l10n),
+                        style: theme.body.copyWith(fontSize: 14),
+                        textAlign: TextAlign.center,
                       ),
-                      child: const Center(
+                      const SizedBox(height: 4),
+                      Semantics(
+                        container: true,
+                        header: true,
                         child: Text(
-                          '🌿',
-                          style: TextStyle(fontSize: 42),
+                          l10n?.appName ?? 'Piantala',
+                          textAlign: TextAlign.center,
+                          style: theme.display,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
+                      Text(
+                        l10n?.loginTagline ??
+                            'Le tue piante, una mensola alla volta.',
+                        textAlign: TextAlign.center,
+                        style: theme.body,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const _LoginPlantShelf(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: HangingTag(
+                          key: const ValueKey('login-google'),
+                          label: l10n?.authSignInWithGoogle ??
+                              'Continua con Google',
+                          leading: SvgPicture.asset(
+                            'assets/svg/auth/google_g.svg',
+                            width: 18,
+                            height: 18,
+                          ),
+                          onPressed: isLoading
+                              ? null
+                              : () => ref
+                                  .read(authControllerProvider.notifier)
+                                  .signInWithGoogle(),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Flexible(
+                        child: HangingTag(
+                          key: const ValueKey('login-email'),
+                          label:
+                              l10n?.authSignInWithEmail ?? 'Accedi con email',
+                          variant: HangingTagVariant.secondary,
+                          onPressed: isLoading
+                              ? null
+                              : () => showModalBottomSheet<void>(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    showDragHandle: true,
+                                    builder: (_) => const _EmailAuthSheet(),
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: 32,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
                     Text(
-                      l10n?.appName ?? 'Piantala',
-                      style: TextStyle(
-                        fontFamily: 'DMSerifDisplay',
-                        fontSize: 42,
-                        fontWeight: FontWeight.w400,
-                        color: _textColor,
-                        height: 1.1,
+                      '${l10n?.loginPrivacyNotice ?? 'Continuando accetti'} ',
+                      textAlign: TextAlign.center,
+                      style: theme.body.copyWith(
+                        fontSize: 11,
+                        color: theme.softInk,
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      l10n?.appTagline ?? 'Il tuo giardino tascabile',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: _textColor.withAlpha(153),
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 0.3,
-                      ),
+                    PaperTextLink(
+                      label: l10n?.loginPrivacyLink ??
+                          "l'Informativa sulla privacy",
+                      onPressed: () => _openPrivacyPolicy(context, l10n),
                     ),
                   ],
                 ),
               ),
-
-              const Spacer(flex: 3),
-
-              // ── Greeting contestuale ──────────────────────────────
-              Center(
-                child: Text(
-                  '${period.icon}  ${_localizedGreeting(period, l10n)}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _textColor.withAlpha(178),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-
-              // ── Metodi di accesso ─────────────────────────────────
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child: isLoading
-                    ? Center(
-                        key: const ValueKey('loader'),
-                        child: CircularProgressIndicator(color: _accentColor),
-                      )
-                    : _GoogleSignInButton(
-                        key: const ValueKey('btn'),
-                        accentColor: _accentColor,
-                        textColor: _textColor,
-                        onPressed: () {
-                          ref
-                              .read(authControllerProvider.notifier)
-                              .signInWithGoogle();
-                        },
-                      ),
-              ),
-
-              const SizedBox(height: AppSpacing.md),
-              OutlinedButton(
-                onPressed: isLoading
-                    ? null
-                    : () => showModalBottomSheet<void>(
-                          context: context,
-                          isScrollControlled: true,
-                          showDragHandle: true,
-                          builder: (_) => const _EmailAuthSheet(),
-                        ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: _textColor,
-                  side: BorderSide(color: _textColor.withAlpha(70)),
-                  minimumSize: const Size.fromHeight(AppSizes.buttonHeightMd),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
-                  ),
-                ),
-                child: Text(l10n?.authSignInWithEmail ?? 'Accedi con email'),
-              ),
-
-              const SizedBox(height: AppSpacing.md),
-              Center(
-                child: Text(
-                  l10n?.appTosNotice ??
-                      'Accedendo accetti i Termini di servizio',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: _textColor.withAlpha(100),
-                  ),
-                ),
-              ),
-
-              const Spacer(),
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Future<void> _openPrivacyPolicy(
+    BuildContext context,
+    AppLocalizations? l10n,
+  ) async {
+    final opened = await launchUrl(
+      Uri.parse(AppLinks.privacyPolicyUrl),
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n?.loginPrivacyOpenError ??
+                'Impossibile aprire l’informativa sulla privacy.',
+          ),
+        ),
+      );
+    }
+  }
+}
+
+class _LoginPlantShelf extends StatelessWidget {
+  const _LoginPlantShelf();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.piantala;
+
+    return SizedBox(
+      height: 190,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Image.asset(
+              PlantAssetResolver.plantAsset(
+                    'epipremnum_aureum',
+                    water: true,
+                  ) ??
+                  'assets/illustrations/plants/epipremnum_aureum_water.png',
+              width: 172,
+              height: 182,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            left: -16,
+            right: -16,
+            bottom: 0,
+            child: Container(
+              height: 16,
+              decoration: BoxDecoration(
+                color: theme.sage,
+                border: Border.all(
+                  color: theme.ink,
+                  width: 1.5,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -341,7 +350,8 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
               Text(
                 _isReset
                     ? (l10n?.authSheetSubtitleReset ??
-                        'Inserisci la tua email. Se è associata a un account, riceverai le istruzioni.')
+                        'Inserisci la tua email. Se è associata a un account, '
+                            'riceverai le istruzioni.')
                     : (l10n?.authSheetSubtitleLogin ??
                         'Usa un indirizzo email valido e una password sicura.'),
                 style: theme.textTheme.bodyMedium,
@@ -359,7 +369,8 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
                     prefixIcon: const Icon(Icons.person_outline),
                   ),
                   validator: (value) => value?.trim().isEmpty ?? true
-                      ? (l10n?.authValidationNameEmpty ?? 'Inserisci il tuo nome')
+                      ? (l10n?.authValidationNameEmpty ??
+                          'Inserisci il tuo nome')
                       : null,
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -430,8 +441,8 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
                   obscureText: true,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
-                    labelText: l10n?.authFieldConfirmPassword ??
-                        'Conferma password',
+                    labelText:
+                        l10n?.authFieldConfirmPassword ?? 'Conferma password',
                     prefixIcon: const Icon(Icons.lock_reset_outlined),
                   ),
                   validator: (value) => value != _passwordController.text
@@ -500,70 +511,5 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
             ? (l10n?.authButtonRegister ?? 'Crea account')
             : (l10n?.authButtonLogin ?? 'Accedi');
     return Text(label);
-  }
-}
-
-class _GoogleSignInButton extends StatelessWidget {
-  const _GoogleSignInButton({
-    required this.accentColor,
-    required this.textColor,
-    required this.onPressed,
-    super.key,
-  });
-
-  final Color accentColor;
-  final Color textColor;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    return SizedBox(
-      height: AppSizes.buttonHeightLg,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: accentColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: AppSizes.iconMd,
-              height: AppSizes.iconMd,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(AppRadius.xs),
-              ),
-              child: const Center(
-                child: Text(
-                  'G',
-                  style: TextStyle(
-                    color: Color(0xFF4285F4),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Text(
-              l10n?.authSignInWithGoogle ?? 'Continua con Google',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.2,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

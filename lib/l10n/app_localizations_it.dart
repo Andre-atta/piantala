@@ -15,6 +15,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTagline => 'Il tuo giardino tascabile';
 
   @override
+  String get loginTagline => 'Le tue piante, una mensola alla volta.';
+
+  @override
+  String get loginPrivacyNotice => 'Continuando accetti';
+
+  @override
+  String get loginPrivacyLink => 'l\'Informativa sulla privacy';
+
+  @override
+  String get loginPrivacyOpenError =>
+      'Impossibile aprire l\'informativa sulla privacy.';
+
+  @override
   String get appTosNotice => 'Accedendo accetti i Termini di servizio';
 
   @override

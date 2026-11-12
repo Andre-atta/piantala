@@ -7,6 +7,10 @@
 
   "appTagline": "Il tuo giardino tascabile",
   "@appTagline": { "description": "Sottotitolo nella schermata di login" },
+  "loginTagline": "Le tue piante, una mensola alla volta.",
+  "loginPrivacyNotice": "Continuando accetti",
+  "loginPrivacyLink": "l'Informativa sulla privacy",
+  "loginPrivacyOpenError": "Impossibile aprire l'informativa sulla privacy.",
 
   "appTosNotice": "Accedendo accetti i Termini di servizio",
   "@appTosNotice": { "description": "Avviso ToS nella login" },

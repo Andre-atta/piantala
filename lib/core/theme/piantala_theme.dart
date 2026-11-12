@@ -26,6 +26,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     required this.skyDusk,
     required this.skyEvening,
     required this.skyNight,
+    required this.display,
     required this.h1,
     required this.h2,
     required this.body,
@@ -57,6 +58,12 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     skyDusk: Color(0xFFF6C67A),
     skyEvening: Color(0xFF3A4C66),
     skyNight: Color(0xFF2B3A52),
+    display: TextStyle(
+      fontFamily: 'Sue Ellen Francisco',
+      fontSize: 84,
+      fontWeight: FontWeight.w400,
+      color: Color(0xFF344E41),
+    ),
     h1: TextStyle(
       fontFamily: 'Sue Ellen Francisco',
       fontSize: 32,
@@ -106,6 +113,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
   final Color skyDusk;
   final Color skyEvening;
   final Color skyNight;
+  final TextStyle display;
   final TextStyle h1;
   final TextStyle h2;
   final TextStyle body;
@@ -135,6 +143,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     Color? skyDusk,
     Color? skyEvening,
     Color? skyNight,
+    TextStyle? display,
     TextStyle? h1,
     TextStyle? h2,
     TextStyle? body,
@@ -164,6 +173,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       skyDusk: skyDusk ?? this.skyDusk,
       skyEvening: skyEvening ?? this.skyEvening,
       skyNight: skyNight ?? this.skyNight,
+      display: display ?? this.display,
       h1: h1 ?? this.h1,
       h2: h2 ?? this.h2,
       body: body ?? this.body,
@@ -200,6 +210,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       skyDusk: Color.lerp(skyDusk, other.skyDusk, t)!,
       skyEvening: Color.lerp(skyEvening, other.skyEvening, t)!,
       skyNight: Color.lerp(skyNight, other.skyNight, t)!,
+      display: TextStyle.lerp(display, other.display, t)!,
       h1: TextStyle.lerp(h1, other.h1, t)!,
       h2: TextStyle.lerp(h2, other.h2, t)!,
       body: TextStyle.lerp(body, other.body, t)!,
