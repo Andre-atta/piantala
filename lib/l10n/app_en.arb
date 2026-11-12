@@ -33,6 +33,8 @@
   "authValidationEmailInvalid": "Enter a valid email address",
   "authValidationPasswordTooShort": "Use at least 6 characters",
   "authValidationPasswordMismatch": "Passwords do not match",
+  "paperTextFieldShowPassword": "Show password",
+  "paperTextFieldHidePassword": "Hide password",
 
   "authResetEmailSent": "If the address is linked to an account, you'll receive instructions.",
 

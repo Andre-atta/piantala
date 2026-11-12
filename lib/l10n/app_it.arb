@@ -38,6 +38,8 @@
   "authValidationEmailInvalid": "Inserisci un indirizzo email valido",
   "authValidationPasswordTooShort": "Usa almeno 6 caratteri",
   "authValidationPasswordMismatch": "Le password non coincidono",
+  "paperTextFieldShowPassword": "Mostra password",
+  "paperTextFieldHidePassword": "Nascondi password",
 
   "authResetEmailSent": "Se l'indirizzo è associata a un account, riceverai le istruzioni.",
 

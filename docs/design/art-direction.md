@@ -109,6 +109,7 @@ Un'unica famiglia di schede, usata in due modi:
 
 - Area toccabile minima **48 dp** con almeno 8 dp tra i bersagli, sempre un rettangolo dritto anche se il disegno è inclinato.
 - Azioni frequenti reversibili: dopo "Annaffia" compare un messaggio breve con "Annulla".
+- **Regola 11 — link nei fogli:** i link sottolineati servono a cambiare modalità e ad aprire l'informativa; le azioni vere restano cartellini.
 - La scheda si gira toccandola o con swipe. Nessun pulsante "Gira", né sul fronte né sul retro; l'indizio è un'animazione in codice. Azione accessibile personalizzata "Gira la scheda" per TalkBack/VoiceOver.
 - Rispettare `MediaQuery.disableAnimations`.
 
@@ -126,6 +127,9 @@ Un'unica famiglia di schede, usata in due modi:
 #### Componenti condivisi per fogli e dialoghi
 - **TornPaperSheet:** foglio con bordo inferiore strappato, colori carta a token, righe opzionali e nastro o puntina.
 - **HangingTag:** cartellino con filo e puntina per le azioni dei dialoghi, con varianti primaria, secondaria e pericolo.
+- **HangingTag largo con logo:** ammette un leading in un cerchietto crema bordato; l'unica eccezione cromatica è il logo Google a colori, come richiesto dalle linee guida Google.
+- **PaperTextField:** etichetta maiuscola, testo Delius e sottolineatura verde profondo; errori in terracotta e pulsante SVG accessibile per mostrare/nascondere la password.
+- **PaperTextLink:** link Delius sottolineato, senza splash, con bersaglio minimo 48 dp e stato premuto che scende di 2 px.
 - **PaperDialogScaffold:** contenitore dei dialoghi su foglio crema; `showPaperDialog` gestisce sfondo e transizione.
 
 Nei componenti carta, la variante warm usa Carta antica (`#F4EBD8`) e la variante light usa Crema calda (`#FAF7EF`); i token globali esistenti restano invariati.

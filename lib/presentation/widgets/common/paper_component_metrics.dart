@@ -50,7 +50,10 @@ abstract class PaperComponentMetrics {
   static const defaultSheetPadding = EdgeInsets.fromLTRB(22, 26, 22, 8);
 
   static const tagWidth = 112.0;
+  static const tagMaximumWidth = 160.0;
   static const tagHeight = 72.0;
+  static const tagLeadingSize = 26.0;
+  static const tagLeadingSpacing = 6.0;
   static const tagWireStart = Offset(56, 6);
   static const tagWireEnd = Offset(56, 22);
   static const tagPinCenter = Offset(56, 5);
@@ -81,6 +84,16 @@ abstract class PaperComponentMetrics {
   static const disabledDashGap = 3.0;
   static const disabledFillOpacity = 0.5;
   static const disabledInkOpacity = 0.45;
+
+  static const paperFieldLabelSpacing = 4.0;
+  static const paperFieldMinimumHeight = 48.0;
+  static const paperFieldUnderlineWidth = 2.0;
+  static const paperFieldErrorFontSize = 12.0;
+  static const paperFieldEyeTargetSize = 48.0;
+  static const paperFieldEyeIconSize = 22.0;
+  static const paperTextLinkMinimumTarget = 48.0;
+  static const paperTextLinkFontSize = 13.0;
+  static const paperTextLinkUnderlineOffset = 3.0;
 
   static const dialogHorizontalMargin = 20.0;
   static const dialogTopInset = 84.0;

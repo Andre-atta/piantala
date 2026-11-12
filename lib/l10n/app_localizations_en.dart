@@ -86,6 +86,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authValidationPasswordMismatch => 'Passwords do not match';
 
   @override
+  String get paperTextFieldShowPassword => 'Show password';
+
+  @override
+  String get paperTextFieldHidePassword => 'Hide password';
+
+  @override
   String get authResetEmailSent =>
       'If the address is linked to an account, you\'ll receive instructions.';
 

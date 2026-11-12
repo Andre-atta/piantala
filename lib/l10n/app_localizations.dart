@@ -248,6 +248,18 @@ abstract class AppLocalizations {
   /// **'Le password non coincidono'**
   String get authValidationPasswordMismatch;
 
+  /// No description provided for @paperTextFieldShowPassword.
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra password'**
+  String get paperTextFieldShowPassword;
+
+  /// No description provided for @paperTextFieldHidePassword.
+  ///
+  /// In it, this message translates to:
+  /// **'Nascondi password'**
+  String get paperTextFieldHidePassword;
+
   /// No description provided for @authResetEmailSent.
   ///
   /// In it, this message translates to:

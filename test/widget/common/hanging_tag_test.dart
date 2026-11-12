@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
@@ -109,5 +110,51 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('wide tag supports a logo and two lines at large text',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(
+          extensions: const <ThemeExtension<dynamic>>[
+            PiantalaTheme.standard,
+          ],
+        ),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: const TextScaler.linear(1.5),
+          ),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: Center(
+            child: RepaintBoundary(
+              key: const ValueKey('hanging-tag-logo-golden'),
+              child: HangingTag(
+                label: 'Accedi con\nGoogle',
+                leading: SvgPicture.asset(
+                  'assets/svg/auth/google_g.svg',
+                  width: 16,
+                  height: 16,
+                ),
+                onPressed: () {},
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getSize(find.byType(HangingTag)).width,
+      lessThanOrEqualTo(160),
+    );
+    expect(tester.takeException(), isNull);
+    await expectLater(
+      find.byKey(const ValueKey('hanging-tag-logo-golden')),
+      matchesGoldenFile('goldens/hanging_tag_logo_two_lines.png'),
+    );
   });
 }

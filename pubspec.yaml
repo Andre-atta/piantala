@@ -107,6 +107,8 @@ flutter:
     - assets/illustrations/rooms/
     - assets/svg/nav/
     - assets/svg/home/
+    - assets/svg/common/
+    - assets/svg/auth/
 
   fonts:
     - family: Sue Ellen Francisco

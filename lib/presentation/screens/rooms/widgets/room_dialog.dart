@@ -13,6 +13,7 @@ import 'package:piantala/presentation/utils/exposure_localization.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
+import 'package:piantala/presentation/widgets/common/paper_text_field.dart';
 import 'package:uuid/uuid.dart';
 
 class RoomDialog extends ConsumerStatefulWidget {
@@ -115,27 +116,13 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _FieldLabel(text: l10n.roomDialogNameLabel),
-            const SizedBox(height: RoomDialogMetrics.labelSpacing),
-            TextFormField(
-              key: const ValueKey('room-dialog-name-field'),
+            PaperTextField(
+              fieldKey: const ValueKey('room-dialog-name-field'),
+              label: l10n.roomDialogNameLabel,
+              hintText: l10n.roomDialogNameHint,
               controller: _nameController,
               autofocus: true,
               textCapitalization: TextCapitalization.words,
-              style: theme.body.copyWith(
-                color: theme.ink,
-                fontSize: RoomDialogMetrics.nameFieldFontSize,
-              ),
-              cursorColor: theme.deepGreen,
-              decoration: _underlineDecoration(
-                context,
-                hintText: l10n.roomDialogNameHint,
-              ).copyWith(
-                errorStyle: theme.body.copyWith(
-                  color: theme.terracotta,
-                  fontSize: RoomDialogMetrics.nameErrorFontSize,
-                ),
-              ),
               validator: (value) => value == null || value.trim().isEmpty
                   ? l10n.roomDialogNameValidation
                   : null,
@@ -199,11 +186,15 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
                     fontSize: RoomDialogMetrics.notesFontSize,
                   ),
                   cursorColor: theme.deepGreen,
-                  decoration: _underlineDecoration(
-                    context,
+                  decoration: InputDecoration(
                     hintText: l10n.roomDialogNotesHint,
+                    hintStyle: theme.body.copyWith(
+                      color: theme.softInk,
+                      fontSize: RoomDialogMetrics.notesFontSize,
+                    ),
                     border: InputBorder.none,
-                  ).copyWith(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                     contentPadding: const EdgeInsets.only(
                       top: RoomDialogMetrics.ruledNotesTopPadding,
                     ),
@@ -234,46 +225,6 @@ class _FieldLabel extends StatelessWidget {
       ),
     );
   }
-}
-
-InputDecoration _underlineDecoration(
-  BuildContext context, {
-  required String hintText,
-  double focusedStroke = RoomDialogMetrics.nameFieldFocusedStroke,
-  InputBorder? border,
-}) {
-  final theme = context.piantala;
-  final underline = UnderlineInputBorder(
-    borderSide: BorderSide(color: theme.ink),
-  );
-  return InputDecoration(
-    constraints: const BoxConstraints(
-      minHeight: RoomDialogMetrics.nameFieldHeight,
-    ),
-    hintText: hintText,
-    hintStyle: theme.body.copyWith(
-      color: theme.softInk,
-      fontSize: RoomDialogMetrics.nameFieldFontSize,
-    ),
-    contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-    border: border ?? underline,
-    enabledBorder: border ?? underline,
-    focusedBorder: border ??
-        UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: theme.deepGreen,
-            width: focusedStroke,
-          ),
-        ),
-    errorBorder: border ?? underline,
-    focusedErrorBorder: border ??
-        UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: theme.deepGreen,
-            width: focusedStroke,
-          ),
-        ),
-  );
 }
 
 class _NotesLinesPainter extends CustomPainter {
