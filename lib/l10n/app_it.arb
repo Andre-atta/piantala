@@ -72,6 +72,8 @@
   },
   "homeWindowAccessibility": "Indicatore del momento della giornata",
   "homePlantNameFallback": "Pianta",
+  "homeCareWateringSemantics": "Da annaffiare",
+  "homeCareFertilizingSemantics": "Da concimare",
   "homeWateringDueSemantics": "Da annaffiare il {date}",
   "@homeWateringDueSemantics": {
     "placeholders": {

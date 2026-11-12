@@ -67,6 +67,8 @@
   },
   "homeWindowAccessibility": "Time of day indicator",
   "homePlantNameFallback": "Plant",
+  "homeCareWateringSemantics": "Needs watering",
+  "homeCareFertilizingSemantics": "Needs fertilizing",
   "homeWateringDueSemantics": "Water on {date}",
   "@homeWateringDueSemantics": {
     "placeholders": {
