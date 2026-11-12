@@ -31,9 +31,11 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     required this.label,
   });
 
+  static const notificationAccent = Color(0xFF344E41);
+
   static const standard = PiantalaTheme(
     leafGreen: Color(0xFF588157),
-    deepGreen: Color(0xFF344E41),
+    deepGreen: notificationAccent,
     sproutGreen: Color(0xFFCDE7B0),
     sage: Color(0xFFA3B18A),
     terracotta: Color(0xFFBE6E46),
