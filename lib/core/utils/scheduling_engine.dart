@@ -45,4 +45,24 @@ abstract class SchedulingEngine {
     return (lastFertilizedAt ?? DateTime.now())
         .add(Duration(days: frequencyDays));
   }
+
+  static DateTime? fertilizingDateIfDue({
+    required DateTime? lastFertilizedAt,
+    required int? frequencyDays,
+    required DateTime now,
+  }) {
+    if (lastFertilizedAt == null || frequencyDays == null) return null;
+
+    final nextFertilizingAt = nextFertilizing(
+      lastFertilizedAt: lastFertilizedAt,
+      frequencyDays: frequencyDays,
+    );
+    final dueDate = DateTime(
+      nextFertilizingAt.year,
+      nextFertilizingAt.month,
+      nextFertilizingAt.day,
+    );
+    final today = DateTime(now.year, now.month, now.day);
+    return dueDate.isAfter(today) ? null : nextFertilizingAt;
+  }
 }
