@@ -139,9 +139,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homePlantNameFallback => 'Plant';
 
   @override
-  String homeWateringDueSemantics(String date) {
-    return 'Water on $date';
-  }
+  String get homeCareWateringSemantics => 'Needs watering';
+
+  @override
+  String get homeCareFertilizingSemantics => 'Needs fertilizing';
 
   @override
   String homeErrorLoading(Object error) {

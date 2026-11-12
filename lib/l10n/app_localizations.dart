@@ -326,11 +326,17 @@ abstract class AppLocalizations {
   /// **'Pianta'**
   String get homePlantNameFallback;
 
-  /// No description provided for @homeWateringDueSemantics.
+  /// No description provided for @homeCareWateringSemantics.
   ///
   /// In it, this message translates to:
-  /// **'Da annaffiare il {date}'**
-  String homeWateringDueSemantics(String date);
+  /// **'Da annaffiare'**
+  String get homeCareWateringSemantics;
+
+  /// No description provided for @homeCareFertilizingSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Da concimare'**
+  String get homeCareFertilizingSemantics;
 
   /// No description provided for @homeErrorLoading.
   ///

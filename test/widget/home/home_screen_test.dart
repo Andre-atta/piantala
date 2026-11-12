@@ -11,9 +11,9 @@ import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
 import 'package:piantala/presentation/providers/room_providers.dart';
 import 'package:piantala/presentation/providers/theme_providers.dart';
+import 'package:piantala/presentation/screens/home/home_metrics.dart';
 import 'package:piantala/presentation/screens/home/home_screen.dart';
 import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
-import 'package:piantala/presentation/screens/home/widgets/watering_stick.dart';
 import 'package:piantala/presentation/widgets/common/paper_action_button.dart';
 import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
@@ -32,6 +32,7 @@ PlantEntity _plant(
   String? speciesScientificName,
   String cultivationMethod = 'soil',
   WateringConfigEntity? wateringConfig,
+  FertilizingConfigEntity? fertilizingConfig,
 }) =>
     PlantEntity(
       id: id,
@@ -43,6 +44,7 @@ PlantEntity _plant(
       speciesScientificName: speciesScientificName,
       cultivationMethod: cultivationMethod,
       wateringConfig: wateringConfig,
+      fertilizingConfig: fertilizingConfig,
     );
 
 ({Widget widget, GoRouter router}) _app({
@@ -59,6 +61,12 @@ PlantEntity _plant(
         path: '/plants/add',
         builder: (context, state) => const Scaffold(
           body: Text('Add plant route'),
+        ),
+      ),
+      GoRoute(
+        path: '/plants/:id',
+        builder: (context, state) => Scaffold(
+          body: Text('Plant ${state.pathParameters['id']} route'),
         ),
       ),
     ],
@@ -234,7 +242,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('renders centered watering sticks on three plant species',
+  testWidgets('renders care signals in corners of three plant cells',
       (tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
@@ -250,7 +258,7 @@ void main() {
           cultivationMethod: 'hydro',
           wateringConfig: WateringConfigEntity(
             frequencyDays: 1,
-            lastWateredAt: DateTime(2026),
+            lastWateredAt: DateTime(2026, 11),
           ),
         ),
         _plant(
@@ -258,9 +266,9 @@ void main() {
           'room-1',
           speciesScientificName: 'Epipremnum aureum',
           cultivationMethod: 'hydro',
-          wateringConfig: WateringConfigEntity(
+          fertilizingConfig: FertilizingConfigEntity(
             frequencyDays: 1,
-            lastWateredAt: DateTime(2026),
+            lastFertilizedAt: DateTime(2026, 11),
           ),
         ),
         _plant(
@@ -269,7 +277,11 @@ void main() {
           speciesScientificName: 'Pilea peperomioides',
           wateringConfig: WateringConfigEntity(
             frequencyDays: 1,
-            lastWateredAt: DateTime(2026),
+            lastWateredAt: DateTime(2026, 11),
+          ),
+          fertilizingConfig: FertilizingConfigEntity(
+            frequencyDays: 1,
+            lastFertilizedAt: DateTime(2026, 11),
           ),
         ),
       ],
@@ -280,12 +292,116 @@ void main() {
     await tester.pumpWidget(app.widget);
     await tester.pumpAndSettle();
 
-    expect(find.byType(WateringStick), findsNWidgets(3));
+    expect(
+      find.byKey(const ValueKey('care-signal-watering')),
+      findsNWidgets(2),
+    );
+    expect(
+      find.byKey(const ValueKey('care-signal-fertilizing')),
+      findsNWidgets(2),
+    );
+    for (final (plantId, watering, fertilizing) in [
+      ('chlorophytum', true, false),
+      ('epipremnum', false, true),
+      ('pilea', true, true),
+    ]) {
+      final cell = tester.getRect(
+        find.byKey(ValueKey('care-signals-$plantId')),
+      );
+      if (watering) {
+        final signal = tester.getRect(
+          find.descendant(
+            of: find.byKey(ValueKey('care-signals-$plantId')),
+            matching: find.byKey(const ValueKey('care-signal-watering')),
+          ),
+        );
+        expect(signal.left, cell.left + HomeMetrics.careSignalWateringLeft);
+        expect(signal.top, cell.top + HomeMetrics.careSignalWateringTop);
+      }
+      if (fertilizing) {
+        final signal = tester.getRect(
+          find.descendant(
+            of: find.byKey(ValueKey('care-signals-$plantId')),
+            matching: find.byKey(const ValueKey('care-signal-fertilizing')),
+          ),
+        );
+        expect(
+          signal.right,
+          cell.right - HomeMetrics.careSignalFertilizingRight,
+        );
+        expect(signal.top, cell.top + HomeMetrics.careSignalFertilizingTop);
+      }
+      expect(find.byKey(ValueKey('care-signals-$plantId')), findsOneWidget);
+    }
+
+    expect(
+      tester
+          .getSemantics(find.byKey(const ValueKey('plant-chlorophytum')))
+          .value,
+      'Da annaffiare',
+    );
+    expect(
+      tester.getSemantics(find.byKey(const ValueKey('plant-epipremnum'))).value,
+      'Da concimare',
+    );
+    expect(
+      tester.getSemantics(find.byKey(const ValueKey('plant-pilea'))).value,
+      'Da annaffiare, Da concimare',
+    );
     await expectLater(
       find.byType(MainScaffold),
-      matchesGoldenFile('goldens/home_watering_sticks.png'),
+      matchesGoldenFile('goldens/home_care_signals.png'),
     );
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders no care signals for a plant without due care',
+      (tester) async {
+    final app = _app(
+      plants: [_plant('plant-no-care', 'room-1')],
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+    );
+    addTearDown(app.router.dispose);
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('care-signal-watering')),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('care-signal-fertilizing')),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('tapping a care signal opens the plant details', (tester) async {
+    final app = _app(
+      plants: [
+        _plant(
+          'plant-tappable',
+          'room-1',
+          wateringConfig: WateringConfigEntity(
+            frequencyDays: 1,
+            lastWateredAt: DateTime(2026, 11),
+          ),
+        ),
+      ],
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+    );
+    addTearDown(app.router.dispose);
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+    await tester.tapAt(
+      tester.getRect(find.byKey(const ValueKey('care-signal-watering'))).center,
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      app.router.routeInformationProvider.value.uri.path,
+      '/plants/plant-tappable',
+    );
   });
 
   testWidgets('advances to the next room from its accessible header target',

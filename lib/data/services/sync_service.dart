@@ -61,6 +61,7 @@ class SyncService {
 
   // Subscriptions Firestore → Isar
   final List<StreamSubscription<dynamic>> _firestoreSubs = [];
+  String? _listeningUid;
 
   /// Ascolta in tempo reale le nuove PendingOperation e avvia il drain.
   /// Avvia anche i listener Firestore → Isar per la sincronizzazione
@@ -82,6 +83,7 @@ class SyncService {
 
       // Quando l'utente si autentica (o cambia), aggiorna i listener
       auth.authStateChanges().listen((user) {
+        if (user?.uid == _listeningUid) return;
         _stopFirestoreListeners();
         if (user != null) {
           _startFirestoreListeners(user.uid);
@@ -91,7 +93,9 @@ class SyncService {
   }
 
   void _startFirestoreListeners(String uid) {
+    if (_listeningUid == uid) return;
     _stopFirestoreListeners();
+    _listeningUid = uid;
 
     // ── Listener piante ──────────────────────────────────────────────
     final plantsSub = _firestore
@@ -126,8 +130,7 @@ class SyncService {
     // ── Migrazione one-shot per piante legacy ────────────────────────
     // Per piante create prima che cultivationMethod venisse
     // scritti su Firestore, forziamo un update dalla copia Isar locale.
-    // L'operazione è idempotente: se la pending op esiste già, Isar la
-    // sovrascrive senza duplicarla (stesso documentId).
+    // L'operazione viene deduplicata per UID e verificata atomicamente in Isar.
     _migrateLegacyPlants(uid);
   }
 
@@ -148,10 +151,6 @@ class SyncService {
         // Salta le piante senza cultivationMethod (niente da migrare)
         final method = plant.cultivationMethod;
         if (method == null || method == 'soil') continue;
-
-        // Salta se c'è già una pending op per questo documento
-        final hasPending = await _hasPendingOp(plant.firestoreId, uid);
-        if (hasPending) continue;
 
         // Crea il payload JSON letto direttamente da Isar.
         // Non usiamo toEntity().toJson() per evitare un import circolare
@@ -182,9 +181,33 @@ class SyncService {
           ..createdAt = now
           ..attemptCount = 0;
 
-        await _isar.writeTxn(() async {
+        final queued = await _isar.writeTxn(() async {
+          final existingMigration = await _isar.pendingOperationCollections
+              .where()
+              .operationIdEqualTo(pendingOp.operationId)
+              .findFirst();
+          if (existingMigration != null) {
+            existingMigration
+              ..payloadJson = pendingOp.payloadJson
+              ..createdAt = now
+              ..attemptCount = 0
+              ..lastAttemptAt = null;
+            await _isar.pendingOperationCollections.put(existingMigration);
+            return false;
+          }
+
+          final existingPending = await _isar.pendingOperationCollections
+              .filter()
+              .documentIdEqualTo(plant.firestoreId)
+              .and()
+              .userIdEqualTo(uid)
+              .findFirst();
+          if (existingPending != null) return false;
+
           await _isar.pendingOperationCollections.put(pendingOp);
+          return true;
         });
+        if (!queued) continue;
 
         debugPrint(
           'SyncService: migrazione pianta legacy → Firestore: ${plant.customName} (${plant.firestoreId})',
@@ -203,6 +226,7 @@ class SyncService {
       sub.cancel();
     }
     _firestoreSubs.clear();
+    _listeningUid = null;
   }
 
   /// Applica lo snapshot Firestore su Isar, gestendo add/update/remove.

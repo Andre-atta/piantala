@@ -1,13 +1,20 @@
 import 'dart:io';
 
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:piantala/data/local/collections/pending_operation_collection.dart';
 import 'package:piantala/data/local/collections/plant_collection.dart';
 import 'package:piantala/data/local/isar_service.dart';
 import 'package:piantala/data/local/sync_status.dart';
 import 'package:piantala/data/services/sync_service.dart';
+
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
+class MockUser extends Mock implements User {}
 
 void main() {
   late Isar isar;
@@ -34,6 +41,87 @@ void main() {
   tearDownAll(() async {
     await IsarService.instance.close();
     tempDirectory.deleteSync(recursive: true);
+  });
+
+  test('deduplicates concurrent legacy migration listener startup', () async {
+    final auth = MockFirebaseAuth();
+    final user = MockUser();
+    when(() => auth.currentUser).thenReturn(user);
+    // Stream stubs must return a fresh stream through thenAnswer.
+    // ignore: unnecessary_lambdas
+    when(() => auth.authStateChanges()).thenAnswer((_) => Stream.value(user));
+    when(() => user.uid).thenReturn('user1');
+
+    syncService = SyncService(
+      isar: isar,
+      firestore: fakeFirestore,
+      auth: auth,
+    );
+    final plant = PlantCollection()
+      ..firestoreId = 'legacy-hydro'
+      ..userId = 'user1'
+      ..roomId = 'room1'
+      ..customName = 'Pothos'
+      ..shelfPosition = 0
+      ..isArchived = false
+      ..tags = []
+      ..createdAt = DateTime(2026)
+      ..syncStatusIndex = SyncStatus.synced.index
+      ..localUpdatedAt = DateTime(2026)
+      ..cultivationMethod = 'hydro';
+    await isar.writeTxn(() => isar.plantCollections.put(plant));
+
+    final previousDebugPrint = debugPrint;
+    final debugMessages = <String>[];
+    void captureDebugPrint(String? message, {int? wrapWidth}) {
+      if (message != null) debugMessages.add(message);
+    }
+
+    debugPrint = captureDebugPrint;
+    void restoreDebugPrint() => debugPrint = previousDebugPrint;
+    addTearDown(restoreDebugPrint);
+
+    syncService
+      ..startListening()
+      ..startListening();
+    SyncService(
+      isar: isar,
+      firestore: fakeFirestore,
+      auth: auth,
+    ).startListening();
+
+    final document =
+        fakeFirestore.collection('users/user1/plants').doc('legacy-hydro');
+    for (var attempt = 0; attempt < 50; attempt++) {
+      final snapshot = await document.get();
+      if (snapshot.data()?['cultivationMethod'] == 'hydro') break;
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+
+    expect(
+      (await document.get()).data()?['cultivationMethod'],
+      'hydro',
+    );
+    expect(
+      debugMessages.where(
+        (message) => message.contains('Unique index violated'),
+      ),
+      isEmpty,
+    );
+    expect(
+      debugMessages.where(
+        (message) =>
+            message.startsWith('SyncService: migrazione pianta legacy'),
+      ),
+      isNotEmpty,
+    );
+    expect(
+      debugMessages.where(
+        (message) =>
+            message.startsWith('SyncService: Firestore listeners avviati'),
+      ),
+      hasLength(2),
+    );
   });
 
   test('SyncService processa pending_create e lo manda a Firestore', () async {
