@@ -69,12 +69,6 @@
   "homePlantNameFallback": "Plant",
   "homeCareWateringSemantics": "Needs watering",
   "homeCareFertilizingSemantics": "Needs fertilizing",
-  "homeWateringDueSemantics": "Water on {date}",
-  "@homeWateringDueSemantics": {
-    "placeholders": {
-      "date": { "type": "String", "example": "Nov 9" }
-    }
-  },
 
   "homeErrorLoading": "Error: {error}",
   "@homeErrorLoading": {

@@ -3,12 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/core/utils/plant_asset_resolver.dart';
-import 'package:piantala/core/utils/scheduling_engine.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
+import 'package:piantala/presentation/screens/home/care_type.dart';
 import 'package:piantala/presentation/screens/home/home_metrics.dart';
+import 'package:piantala/presentation/screens/home/widgets/care_signals.dart';
 import 'package:piantala/presentation/screens/home/widgets/plant_name_tag.dart';
-import 'package:piantala/presentation/screens/home/widgets/watering_stick.dart';
 
 class ShelfRow extends StatelessWidget {
   const ShelfRow({
@@ -112,18 +112,10 @@ class _PlantOnShelf extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.piantala;
     final localizations = AppLocalizations.of(context)!;
-    final config = plant.wateringConfig;
-    final dueDate = SchedulingEngine.wateringDateIfDue(
-      lastWateredAt: config?.lastWateredAt,
-      frequencyDays: config?.frequencyDays,
-      now: now,
-    );
+    final cares = dueCares(plant, now);
     final name = _displayName(localizations);
-    final semanticValue = dueDate == null
-        ? null
-        : localizations.homeWateringDueSemantics(
-            MaterialLocalizations.of(context).formatShortDate(dueDate),
-          );
+    final semanticValue =
+        cares.isEmpty ? null : careSemanticsValue(cares, localizations);
     final asset = PlantAssetResolver.plantAsset(
       plant.canonicalSpeciesSlug,
       water: plant.cultivationMethod == 'hydro',
@@ -187,16 +179,10 @@ class _PlantOnShelf extends StatelessWidget {
                         child: image,
                       ),
                     ),
-                    if (dueDate != null)
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: HomeMetrics.wateringStickBottom,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: WateringStick(dueDate: dueDate),
-                        ),
-                      ),
+                    CareSignals(
+                      key: ValueKey('care-signals-${plant.id}'),
+                      cares: cares,
+                    ),
                   ],
                 ),
               ),

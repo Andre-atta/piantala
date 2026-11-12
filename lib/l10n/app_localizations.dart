@@ -338,12 +338,6 @@ abstract class AppLocalizations {
   /// **'Da concimare'**
   String get homeCareFertilizingSemantics;
 
-  /// No description provided for @homeWateringDueSemantics.
-  ///
-  /// In it, this message translates to:
-  /// **'Da annaffiare il {date}'**
-  String homeWateringDueSemantics(String date);
-
   /// No description provided for @homeErrorLoading.
   ///
   /// In it, this message translates to:

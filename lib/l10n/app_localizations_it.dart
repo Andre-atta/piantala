@@ -147,11 +147,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get homeCareFertilizingSemantics => 'Da concimare';
 
   @override
-  String homeWateringDueSemantics(String date) {
-    return 'Da annaffiare il $date';
-  }
-
-  @override
   String homeErrorLoading(Object error) {
     return 'Errore: $error';
   }
