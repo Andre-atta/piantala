@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/presentation/providers/scheduling_providers.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -36,7 +37,7 @@ class NotificationService {
     }
 
     const settings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      android: AndroidInitializationSettings('ic_stat_plant'),
       iOS: DarwinInitializationSettings(
         requestAlertPermission: false,
         requestBadgePermission: false,
@@ -121,7 +122,8 @@ class NotificationService {
             NotifChannel.dailyReminder,
             'Promemoria giornaliero',
             channelDescription: 'Promemoria per le piante da innaffiare',
-            color: Color(0xFF4CAF50),
+            icon: 'ic_stat_plant',
+            color: PiantalaTheme.notificationAccent,
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
@@ -159,6 +161,8 @@ class NotificationService {
             channelDescription: 'Notifiche per piante da innaffiare',
             importance: Importance.high,
             priority: Priority.high,
+            icon: 'ic_stat_plant',
+            color: PiantalaTheme.notificationAccent,
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
