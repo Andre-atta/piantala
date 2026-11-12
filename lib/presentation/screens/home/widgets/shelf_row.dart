@@ -189,9 +189,13 @@ class _PlantOnShelf extends StatelessWidget {
                     ),
                     if (dueDate != null)
                       Positioned(
-                        right: HomeMetrics.wateringStickRight,
+                        left: 0,
+                        right: 0,
                         bottom: HomeMetrics.wateringStickBottom,
-                        child: WateringStick(dueDate: dueDate),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: WateringStick(dueDate: dueDate),
+                        ),
                       ),
                   ],
                 ),

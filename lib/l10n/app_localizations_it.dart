@@ -183,17 +183,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get greetingSubtitleEvening => 'Pianifica la cura di domani';
 
   @override
-  String get roomsTitle => 'Stanze';
-
-  @override
   String get roomsEmptyTitle => 'Nessuna stanza creata.';
 
   @override
-  String get roomsAddButton => 'Aggiungi Stanza';
+  String get roomsEmptyHint => 'Tocca \"nuova stanza\" per cominciare.';
 
   @override
-  String roomsSubtitle(String exposure, int count) {
-    return 'Esposizione: $exposure • Piante: $count';
+  String roomsOptionsSemantics(String roomName) {
+    return 'Opzioni stanza $roomName';
+  }
+
+  @override
+  String roomsExposure(String exposure) {
+    return 'Esposizione: $exposure';
+  }
+
+  @override
+  String roomsPlants(int count) {
+    return 'Piante: $count';
   }
 
   @override
@@ -210,10 +217,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get roomDialogNewTitle => 'Nuova Stanza';
+  String get roomDialogNewTitle => 'Nuova stanza';
 
   @override
-  String get roomDialogEditTitle => 'Modifica Stanza';
+  String get roomDialogEditTitle => 'Modifica stanza';
 
   @override
   String get roomDialogNameLabel => 'Nome della stanza';
@@ -222,13 +229,72 @@ class AppLocalizationsIt extends AppLocalizations {
   String get roomDialogNameValidation => 'Inserisci un nome';
 
   @override
+  String get roomDialogNameHint => 'Scrivi il nome';
+
+  @override
   String get roomDialogNotesLabel => 'Note (opzionali)';
+
+  @override
+  String get roomDialogNotesHint => 'Aggiungi una nota';
 
   @override
   String get roomDialogExposureLabel => 'Esposizione';
 
   @override
-  String get roomDialogCompassHint => 'Tocca per misurare con la bussola';
+  String get roomDialogCompassSemantics =>
+      'Rileva l\'esposizione con la bussola';
+
+  @override
+  String get compassTitle => 'Rilevamento esposizione';
+
+  @override
+  String get compassPointHint => 'Punta verso la finestra';
+
+  @override
+  String get compassLocked => 'Direzione rilevata';
+
+  @override
+  String compassHold(int seconds) {
+    return 'Tieni fermo per: $seconds s';
+  }
+
+  @override
+  String get compassDone => 'Esposizione rilevata';
+
+  @override
+  String get compassRetry => 'Riprova';
+
+  @override
+  String get compassUnavailable => 'Bussola non disponibile';
+
+  @override
+  String compassDialSemantics(String direction) {
+    return 'Bussola, direzione $direction';
+  }
+
+  @override
+  String get compassLetterNorth => 'N';
+
+  @override
+  String get compassLetterEast => 'E';
+
+  @override
+  String get compassLetterSouth => 'S';
+
+  @override
+  String get compassLetterWest => 'O';
+
+  @override
+  String get exposureNorthEast => 'Nord-Est';
+
+  @override
+  String get exposureSouthEast => 'Sud-Est';
+
+  @override
+  String get exposureSouthWest => 'Sud-Ovest';
+
+  @override
+  String get exposureNorthWest => 'Nord-Ovest';
 
   @override
   String get encyclopediaTitle => 'Enciclopedia';

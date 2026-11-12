@@ -381,11 +381,17 @@ Metafore per schermata: Home = stanza con mensola; schede = erbario; risultati d
 | Segnapagina a nastro | Azioni sulla scheda pianta (Annaffia, Concima), appeso al bordo della card |
 | Etichetta appesa a due fili | Azioni principali a larghezza piena |
 | Cartellino con filo e puntina | Azioni in dialoghi e Profilo |
+| `TornPaperSheet` | Foglio con bordo inferiore strappato, colori carta, righe opzionali e nastro o puntina |
+| `HangingTag` | Azione appesa per dialoghi, con varianti primaria, secondaria e pericolo |
+| `PaperDialogScaffold` / `showPaperDialog` | Struttura, transizione e sfondo oscurato dei dialoghi cartacei |
+| `CompassDialPainter` | Quadrante della bussola delle Stanze, Nord fisso e ago direzionale |
 | Puntina | Menu, bussola, cancella testo |
 | Testo con sottolineatura a mano | Azioni secondarie (Annulla) |
 | Post-it con puntina | Origine, orario notifiche |
 | Ritaglio di carta irregolare | Risultati di ricerca |
 | Bastoncino segna-nome | Promemoria "da annaffiare" sulla pianta, piantato nel vaso |
+
+`RoomPaperCard` è il widget specifico della schermata Stanze: targa su foglio strappato, con aspetto stabile per ID e pulsante opzioni.
 
 Regole dei pulsanti: tutto ciò che si preme è attaccato a qualcosa; stato premuto = scende di 2 px; area toccabile sempre un rettangolo dritto di almeno 48 dp; inclinazione del testo al massimo 1°; nessuna ombra o spessore sotto i pulsanti.
 

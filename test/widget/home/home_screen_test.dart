@@ -13,8 +13,10 @@ import 'package:piantala/presentation/providers/room_providers.dart';
 import 'package:piantala/presentation/providers/theme_providers.dart';
 import 'package:piantala/presentation/screens/home/home_screen.dart';
 import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
+import 'package:piantala/presentation/screens/home/widgets/watering_stick.dart';
 import 'package:piantala/presentation/widgets/common/paper_action_button.dart';
 import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
+import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
 RoomEntity _room(String id, String name, String exposure) => RoomEntity(
       id: id,
@@ -29,6 +31,7 @@ PlantEntity _plant(
   String roomId, {
   String? speciesScientificName,
   String cultivationMethod = 'soil',
+  WateringConfigEntity? wateringConfig,
 }) =>
     PlantEntity(
       id: id,
@@ -39,6 +42,7 @@ PlantEntity _plant(
       createdAt: DateTime(2026),
       speciesScientificName: speciesScientificName,
       cultivationMethod: cultivationMethod,
+      wateringConfig: wateringConfig,
     );
 
 ({Widget widget, GoRouter router}) _app({
@@ -226,6 +230,60 @@ void main() {
         'assets/illustrations/plants/epipremnum_aureum_water.png',
         'assets/illustrations/plants/pilea_peperomioides_soil.png',
       ]),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders centered watering sticks on three plant species',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final app = _app(
+      plants: [
+        _plant(
+          'chlorophytum',
+          'room-1',
+          speciesScientificName: 'Chlorophytum comosum',
+          cultivationMethod: 'hydro',
+          wateringConfig: WateringConfigEntity(
+            frequencyDays: 1,
+            lastWateredAt: DateTime(2026),
+          ),
+        ),
+        _plant(
+          'epipremnum',
+          'room-1',
+          speciesScientificName: 'Epipremnum aureum',
+          cultivationMethod: 'hydro',
+          wateringConfig: WateringConfigEntity(
+            frequencyDays: 1,
+            lastWateredAt: DateTime(2026),
+          ),
+        ),
+        _plant(
+          'pilea',
+          'room-1',
+          speciesScientificName: 'Pilea peperomioides',
+          wateringConfig: WateringConfigEntity(
+            frequencyDays: 1,
+            lastWateredAt: DateTime(2026),
+          ),
+        ),
+      ],
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+    );
+    addTearDown(app.router.dispose);
+
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WateringStick), findsNWidgets(3));
+    await expectLater(
+      find.byType(MainScaffold),
+      matchesGoldenFile('goldens/home_watering_sticks.png'),
     );
     expect(tester.takeException(), isNull);
   });

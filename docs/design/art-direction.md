@@ -46,7 +46,8 @@ Otto colori di base, nient'altro. Poca saturazione, nessun neon, nessuna sfumatu
 
 ### 2.1 Superfici e forme
 
-- **Nessuna ombra.** Né proiettata dagli oggetti né applicata ai componenti (niente ombre a blocco, niente ombre morbide). La profondità viene da bordi sottili e da strati di carta.
+- **Nessuna ombra morbida, sfumatura o luce proiettata.** La profondità viene da bordi sottili e da strati di carta.
+- Eccezione: I pulsanti tondi (ciottolo) e i dischi icona hanno una base scura sfalsata di 2–4 px e un puntino chiaro; nessuna ombra morbida, nessuna sfumatura, nessuna luce proiettata.
 - **Nessuna luce.** Niente fasci, riflessi o sorgenti luminose disegnate. Il volume nasce da variazioni di tono (2-3 toni per forma, dalla palette).
 - **Linee.** Nessun contorno nero pieno. Dove serve separazione: linea sottile da 1 px in inchiostro `#292D25` a opacità 40-55%.
 - **Forme quasi squadrate.** Schede e post-it a spigolo vivo (0), controlli a 2 px. I cerchi solo per l'anello dell'acqua, la spilla del post-it e i marcatori.
@@ -96,6 +97,13 @@ Un'unica famiglia di schede, usata in due modi:
 - La finestra è l'indicatore del ciclo della giornata (vedi sezione 5).
 - Barra di navigazione con un pulsante centrale a cartellino di carta che esce dal bordo della barra: è parte della barra, non è un "+" tondo e non è mai una sezione selezionabile. Il suo ruolo cambia solo nelle Stanze: "nuova stanza", con martello e assi. Altrove "nuova pianta", con il vaso.
 - Ultima voce della barra: "Profilo" (prima Impostazioni).
+- **Stanze:** nessun titolo o pulsante di aggiunta in alto. Le stanze sono una lista di targhe su fogli strappati,
+  con disco verde e nome grande; la variante della carta è stabile per stanza. Le opzioni si aprono su un foglio
+  crema con le righe Modifica ed Elimina; la conferma di eliminazione usa i cartellini appesi.
+- Senza stanze, un solo foglio crema centrato invita a usare il cartellino "nuova stanza" della barra in basso.
+- **Bussola delle stanze:** il rilevamento è un quadrante disegnato su carta, con Nord fisso, tacche sottili e ago
+  terracotta/crema. L'ago segue la direzione con il percorso più breve; la schermata conferma l'esposizione solo dopo
+  tre secondi di stabilità. In assenza del sensore mostra un avviso e permette di annullare, senza proporre una direzione manuale.
 
 ### 2.5 Interazione e accessibilità
 
@@ -112,7 +120,19 @@ Un'unica famiglia di schede, usata in due modi:
 - **Testo con sottolineatura a mano** (azioni secondarie, es. "Annulla").
 - Stato premuto: scende di 2 px e si raddrizza. Disabilitato: perde il riempimento e il bordo pieno.
 - Inclinazione del testo al massimo 1°. Nessuno spessore o ombra sotto i pulsanti.
+- Eccezione: I pulsanti tondi (ciottolo) e i dischi icona hanno una base scura sfalsata di 2–4 px e un puntino chiaro; nessuna ombra morbida, nessuna sfumatura, nessuna luce proiettata.
 - Eccezione ancora aperta: il cartellino centrale della barra ha uno spessore scuro sotto; da decidere se toglierlo.
+
+#### Componenti condivisi per fogli e dialoghi
+- **TornPaperSheet:** foglio con bordo inferiore strappato, colori carta a token, righe opzionali e nastro o puntina.
+- **HangingTag:** cartellino con filo e puntina per le azioni dei dialoghi, con varianti primaria, secondaria e pericolo.
+- **PaperDialogScaffold:** contenitore dei dialoghi su foglio crema; `showPaperDialog` gestisce sfondo e transizione.
+
+Nei componenti carta, la variante warm usa Carta antica (`#F4EBD8`) e la variante light usa Crema calda (`#FAF7EF`); i token globali esistenti restano invariati.
+
+I dialoghi sono un foglio crema appeso con nastro verde e bordo inferiore strappato, sopra la schermata oscurata al 68%.
+
+Le azioni dei dialoghi sono cartellini con filo appesi al bordo del foglio: Salva a destra (verde), Annulla a sinistra (carta, specchiato).
 
 ### 2.6 Asset pianta
 

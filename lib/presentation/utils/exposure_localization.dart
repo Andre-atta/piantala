@@ -6,8 +6,12 @@ String localizedExposure(
 ) {
   if (localizations == null) return exposure;
   return switch (exposure.toUpperCase()) {
-    'NORTH' || 'NORD' || 'N' || 'NE' || 'NW' => localizations.exposureNorth,
-    'SOUTH' || 'SUD' || 'S' || 'SE' || 'SW' => localizations.exposureSouth,
+    'NORTH' || 'NORD' || 'N' => localizations.exposureNorth,
+    'NE' => localizations.exposureNorthEast,
+    'SE' => localizations.exposureSouthEast,
+    'SW' => localizations.exposureSouthWest,
+    'NW' => localizations.exposureNorthWest,
+    'SOUTH' || 'SUD' || 'S' => localizations.exposureSouth,
     'EAST' || 'EST' || 'E' => localizations.exposureEast,
     'WEST' || 'OVEST' || 'W' => localizations.exposureWest,
     _ => localizations.exposureUnknown,

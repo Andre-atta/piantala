@@ -398,29 +398,35 @@ abstract class AppLocalizations {
   /// **'Pianifica la cura di domani'**
   String get greetingSubtitleEvening;
 
-  /// No description provided for @roomsTitle.
-  ///
-  /// In it, this message translates to:
-  /// **'Stanze'**
-  String get roomsTitle;
-
   /// No description provided for @roomsEmptyTitle.
   ///
   /// In it, this message translates to:
   /// **'Nessuna stanza creata.'**
   String get roomsEmptyTitle;
 
-  /// No description provided for @roomsAddButton.
+  /// No description provided for @roomsEmptyHint.
   ///
   /// In it, this message translates to:
-  /// **'Aggiungi Stanza'**
-  String get roomsAddButton;
+  /// **'Tocca \"nuova stanza\" per cominciare.'**
+  String get roomsEmptyHint;
 
-  /// No description provided for @roomsSubtitle.
+  /// No description provided for @roomsOptionsSemantics.
   ///
   /// In it, this message translates to:
-  /// **'Esposizione: {exposure} • Piante: {count}'**
-  String roomsSubtitle(String exposure, int count);
+  /// **'Opzioni stanza {roomName}'**
+  String roomsOptionsSemantics(String roomName);
+
+  /// No description provided for @roomsExposure.
+  ///
+  /// In it, this message translates to:
+  /// **'Esposizione: {exposure}'**
+  String roomsExposure(String exposure);
+
+  /// No description provided for @roomsPlants.
+  ///
+  /// In it, this message translates to:
+  /// **'Piante: {count}'**
+  String roomsPlants(int count);
 
   /// No description provided for @roomsDeleteDialogTitle.
   ///
@@ -443,13 +449,13 @@ abstract class AppLocalizations {
   /// No description provided for @roomDialogNewTitle.
   ///
   /// In it, this message translates to:
-  /// **'Nuova Stanza'**
+  /// **'Nuova stanza'**
   String get roomDialogNewTitle;
 
   /// No description provided for @roomDialogEditTitle.
   ///
   /// In it, this message translates to:
-  /// **'Modifica Stanza'**
+  /// **'Modifica stanza'**
   String get roomDialogEditTitle;
 
   /// No description provided for @roomDialogNameLabel.
@@ -464,11 +470,23 @@ abstract class AppLocalizations {
   /// **'Inserisci un nome'**
   String get roomDialogNameValidation;
 
+  /// No description provided for @roomDialogNameHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Scrivi il nome'**
+  String get roomDialogNameHint;
+
   /// No description provided for @roomDialogNotesLabel.
   ///
   /// In it, this message translates to:
   /// **'Note (opzionali)'**
   String get roomDialogNotesLabel;
+
+  /// No description provided for @roomDialogNotesHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi una nota'**
+  String get roomDialogNotesHint;
 
   /// No description provided for @roomDialogExposureLabel.
   ///
@@ -476,11 +494,107 @@ abstract class AppLocalizations {
   /// **'Esposizione'**
   String get roomDialogExposureLabel;
 
-  /// No description provided for @roomDialogCompassHint.
+  /// No description provided for @roomDialogCompassSemantics.
   ///
   /// In it, this message translates to:
-  /// **'Tocca per misurare con la bussola'**
-  String get roomDialogCompassHint;
+  /// **'Rileva l\'esposizione con la bussola'**
+  String get roomDialogCompassSemantics;
+
+  /// No description provided for @compassTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Rilevamento esposizione'**
+  String get compassTitle;
+
+  /// No description provided for @compassPointHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Punta verso la finestra'**
+  String get compassPointHint;
+
+  /// No description provided for @compassLocked.
+  ///
+  /// In it, this message translates to:
+  /// **'Direzione rilevata'**
+  String get compassLocked;
+
+  /// No description provided for @compassHold.
+  ///
+  /// In it, this message translates to:
+  /// **'Tieni fermo per: {seconds} s'**
+  String compassHold(int seconds);
+
+  /// No description provided for @compassDone.
+  ///
+  /// In it, this message translates to:
+  /// **'Esposizione rilevata'**
+  String get compassDone;
+
+  /// No description provided for @compassRetry.
+  ///
+  /// In it, this message translates to:
+  /// **'Riprova'**
+  String get compassRetry;
+
+  /// No description provided for @compassUnavailable.
+  ///
+  /// In it, this message translates to:
+  /// **'Bussola non disponibile'**
+  String get compassUnavailable;
+
+  /// No description provided for @compassDialSemantics.
+  ///
+  /// In it, this message translates to:
+  /// **'Bussola, direzione {direction}'**
+  String compassDialSemantics(String direction);
+
+  /// No description provided for @compassLetterNorth.
+  ///
+  /// In it, this message translates to:
+  /// **'N'**
+  String get compassLetterNorth;
+
+  /// No description provided for @compassLetterEast.
+  ///
+  /// In it, this message translates to:
+  /// **'E'**
+  String get compassLetterEast;
+
+  /// No description provided for @compassLetterSouth.
+  ///
+  /// In it, this message translates to:
+  /// **'S'**
+  String get compassLetterSouth;
+
+  /// No description provided for @compassLetterWest.
+  ///
+  /// In it, this message translates to:
+  /// **'O'**
+  String get compassLetterWest;
+
+  /// No description provided for @exposureNorthEast.
+  ///
+  /// In it, this message translates to:
+  /// **'Nord-Est'**
+  String get exposureNorthEast;
+
+  /// No description provided for @exposureSouthEast.
+  ///
+  /// In it, this message translates to:
+  /// **'Sud-Est'**
+  String get exposureSouthEast;
+
+  /// No description provided for @exposureSouthWest.
+  ///
+  /// In it, this message translates to:
+  /// **'Sud-Ovest'**
+  String get exposureSouthWest;
+
+  /// No description provided for @exposureNorthWest.
+  ///
+  /// In it, this message translates to:
+  /// **'Nord-Ovest'**
+  String get exposureNorthWest;
 
   /// No description provided for @encyclopediaTitle.
   ///

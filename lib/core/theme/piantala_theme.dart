@@ -10,6 +10,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     required this.sage,
     required this.terracotta,
     required this.paper,
+    required this.paperTan,
     required this.cream,
     required this.ink,
     required this.softInk,
@@ -38,6 +39,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     sage: Color(0xFFA3B18A),
     terracotta: Color(0xFFBE6E46),
     paper: Color(0xFFF4EBD8),
+    paperTan: Color(0xFFE8DABB),
     cream: Color(0xFFFAF7EF),
     ink: Color(0xFF292D25),
     softInk: Color(0xFF3A3E34),
@@ -86,6 +88,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
   final Color sage;
   final Color terracotta;
   final Color paper;
+  final Color paperTan;
   final Color cream;
   final Color ink;
   final Color softInk;
@@ -114,6 +117,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     Color? sage,
     Color? terracotta,
     Color? paper,
+    Color? paperTan,
     Color? cream,
     Color? ink,
     Color? softInk,
@@ -141,6 +145,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       sage: sage ?? this.sage,
       terracotta: terracotta ?? this.terracotta,
       paper: paper ?? this.paper,
+      paperTan: paperTan ?? this.paperTan,
       cream: cream ?? this.cream,
       ink: ink ?? this.ink,
       softInk: softInk ?? this.softInk,
@@ -173,6 +178,7 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       sage: Color.lerp(sage, other.sage, t)!,
       terracotta: Color.lerp(terracotta, other.terracotta, t)!,
       paper: Color.lerp(paper, other.paper, t)!,
+      paperTan: Color.lerp(paperTan, other.paperTan, t)!,
       cream: Color.lerp(cream, other.cream, t)!,
       ink: Color.lerp(ink, other.ink, t)!,
       softInk: Color.lerp(softInk, other.softInk, t)!,

@@ -2,155 +2,352 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_device_compass/flutter_device_compass.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/core/theme/app_colors.dart';
+import 'package:piantala/core/theme/build_context_extensions.dart';
+import 'package:piantala/core/utils/compass_utils.dart';
+import 'package:piantala/l10n/app_localizations.dart';
+import 'package:piantala/presentation/providers/compass_providers.dart';
+import 'package:piantala/presentation/screens/rooms/widgets/compass_dial_painter.dart';
+import 'package:piantala/presentation/screens/rooms/widgets/compass_scanner_metrics.dart';
+import 'package:piantala/presentation/utils/exposure_localization.dart';
+import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
 
-class CompassScannerDialog extends StatefulWidget {
+class CompassScannerDialog extends ConsumerStatefulWidget {
   const CompassScannerDialog({super.key});
 
   @override
-  State<CompassScannerDialog> createState() => _CompassScannerDialogState();
+  ConsumerState<CompassScannerDialog> createState() =>
+      _CompassScannerDialogState();
 }
 
-class _CompassScannerDialogState extends State<CompassScannerDialog> {
-  StreamSubscription<CompassEvent>? _compassSub;
-  Timer? _stabilizationTimer;
-
-  double? _currentHeading;
+class _CompassScannerDialogState extends ConsumerState<CompassScannerDialog>
+    with TickerProviderStateMixin {
+  late final AnimationController _progressController;
+  late final AnimationController _needleController;
+  Animation<double>? _needleAnimation;
+  Timer? _unavailableTimer;
   double? _referenceHeading;
-
+  double? _currentHeading;
+  double? _displayHeading;
   bool _isLocked = false;
-  int _countdown = 3;
+  bool _isUnavailable = false;
 
   @override
   void initState() {
     super.initState();
-    _startListening();
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: CompassScannerMetrics.stabilizationMilliseconds,
+      ),
+    )
+      ..addStatusListener(_onProgressStatus)
+      ..addListener(_onProgressTick);
+    _needleController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: CompassScannerMetrics.needleTransitionMilliseconds,
+      ),
+    )..addListener(_onNeedleTick);
+    _startUnavailableTimer();
   }
 
   @override
   void dispose() {
-    _compassSub?.cancel();
-    _stabilizationTimer?.cancel();
+    _unavailableTimer?.cancel();
+    _progressController.dispose();
+    _needleController.dispose();
     super.dispose();
   }
 
-  void _startListening() {
-    _compassSub = FlutterCompass.events?.listen((event) {
-      if (_isLocked || event.heading == null) return;
+  void _startUnavailableTimer() {
+    _unavailableTimer?.cancel();
+    _unavailableTimer = Timer(
+      const Duration(milliseconds: CompassScannerMetrics.unavailableTimeoutMs),
+      () {
+        if (mounted && _currentHeading == null) {
+          setState(() => _isUnavailable = true);
+        }
+      },
+    );
+  }
 
-      final heading = event.heading!;
-      setState(() => _currentHeading = heading);
+  void _onProgressStatus(AnimationStatus status) {
+    if (status != AnimationStatus.completed || !mounted || _isLocked) return;
+    setState(() => _isLocked = true);
+    unawaited(HapticFeedback.selectionClick());
+  }
 
-      if (_referenceHeading == null ||
-          _calculateDifference(heading, _referenceHeading!) > 10) {
-        _referenceHeading = heading;
-        _resetTimer();
-      }
+  void _onProgressTick() {
+    if (mounted) setState(() {});
+  }
+
+  void _onNeedleTick() {
+    final animation = _needleAnimation;
+    if (animation == null || !mounted) return;
+    setState(() => _displayHeading = animation.value);
+  }
+
+  void _onHeading(double? heading) {
+    if (heading == null || _isLocked) return;
+    _unavailableTimer?.cancel();
+    final wasUnavailable = _isUnavailable;
+    _currentHeading = heading;
+
+    if (wasUnavailable && mounted) {
+      setState(() => _isUnavailable = false);
+    }
+
+    final reference = _referenceHeading;
+    if (reference == null ||
+        angularDifference(heading, reference) >
+            CompassScannerMetrics.stabilityThresholdDegrees) {
+      _referenceHeading = heading;
+      _progressController
+        ..stop()
+        ..value = 0
+        ..forward();
+    }
+
+    _animateNeedleTo(heading);
+    if (mounted) setState(() {});
+  }
+
+  void _animateNeedleTo(double heading) {
+    if (MediaQuery.of(context).disableAnimations) {
+      _needleController
+        ..stop()
+        ..value = 1;
+      _displayHeading = heading;
+      return;
+    }
+
+    final begin = _displayHeading ?? heading;
+    final shortestEnd = begin + ((heading - begin + 540) % 360) - 180;
+    _needleAnimation = Tween<double>(begin: begin, end: shortestEnd).animate(
+      CurvedAnimation(
+        parent: _needleController,
+        curve: Curves.easeOut,
+      ),
+    );
+    _needleController
+      ..stop()
+      ..value = 0
+      ..forward();
+  }
+
+  void _retry() {
+    setState(() {
+      _isLocked = false;
+      _isUnavailable = false;
+      _currentHeading = null;
+      _displayHeading = null;
+      _referenceHeading = null;
+      _progressController
+        ..stop()
+        ..value = 0;
+      _needleController
+        ..stop()
+        ..value = 0;
     });
-  }
-
-  double _calculateDifference(double h1, double h2) {
-    final diff = (h1 - h2).abs();
-    return diff > 180 ? 360 - diff : diff;
-  }
-
-  void _resetTimer() {
-    _stabilizationTimer?.cancel();
-    setState(() => _countdown = 3);
-
-    _stabilizationTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_countdown > 1) {
-        setState(() => _countdown--);
-      } else {
-        timer.cancel();
-        setState(() => _isLocked = true);
-      }
-    });
-  }
-
-  String _getDirection(double heading) {
-    final h = heading < 0 ? heading + 360 : heading;
-    if (h >= 337.5 || h < 22.5) return 'N';
-    if (h >= 22.5 && h < 67.5) return 'NE';
-    if (h >= 67.5 && h < 112.5) return 'E';
-    if (h >= 112.5 && h < 157.5) return 'SE';
-    if (h >= 157.5 && h < 202.5) return 'S';
-    if (h >= 202.5 && h < 247.5) return 'SW';
-    if (h >= 247.5 && h < 292.5) return 'W';
-    if (h >= 292.5 && h < 337.5) return 'NW';
-    return 'UNKNOWN';
+    _startUnavailableTimer();
   }
 
   @override
   Widget build(BuildContext context) {
-    final direction =
-        _currentHeading != null ? _getDirection(_currentHeading!) : '--';
+    final theme = context.piantala;
+    final l10n = AppLocalizations.of(context)!;
+    ref.listen(compassHeadingStreamProvider, (previous, next) {
+      next.when(
+        data: _onHeading,
+        loading: () {},
+        error: (error, stackTrace) {
+          if (mounted) setState(() => _isUnavailable = true);
+        },
+      );
+    });
 
-    return AlertDialog(
-      title: const Text('Rilevamento Esposizione', textAlign: TextAlign.center),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_currentHeading == null)
-            const CircularProgressIndicator()
-          else ...[
-            if (_isLocked)
-              const Icon(Icons.check_circle, color: AppColors.success, size: 60)
-            else
-              Transform.rotate(
-                angle: _currentHeading! * (math.pi / 180) * -1,
-                child: Icon(
-                  Icons.navigation,
-                  size: 80,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              _isLocked ? 'Direzione Rilevata' : 'Punta verso la finestra',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              direction,
-              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
-            if (!_isLocked)
-              Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.md),
-                child: Text(
-                  'Tieni fermo per: $_countdown s',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withAlpha(120),
-                  ),
-                ),
-              ),
-          ],
-        ],
-      ),
+    final directionCode =
+        _currentHeading == null ? null : exposureFromHeading(_currentHeading!);
+    final directionName =
+        directionCode == null ? '--' : localizedExposure(directionCode, l10n);
+    final progress = _isUnavailable
+        ? 0.0
+        : _isLocked
+            ? 1.0
+            : _progressController.value;
+    final remainingSeconds = math.max(
+      0,
+      (CompassScannerMetrics.stabilizationSeconds * (1 - progress)).ceil(),
+    );
+    final isUnavailable = _isUnavailable;
+
+    return PaperDialogScaffold(
+      title: l10n.compassTitle,
+      rotationDegrees: CompassScannerMetrics.dialogRotationDegrees,
       actions: [
-        if (!_isLocked)
-          TextButton(
+        if (isUnavailable || !_isLocked)
+          HangingTag(
+            label: l10n.commonCancel,
+            variant: HangingTagVariant.secondary,
+            mirrored: true,
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Annulla'),
           )
         else ...[
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _isLocked = false;
-                _referenceHeading = null;
-              });
-            },
-            child: const Text('Riprova'),
+          HangingTag(
+            label: l10n.compassRetry,
+            variant: HangingTagVariant.secondary,
+            mirrored: true,
+            onPressed: _retry,
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(direction),
-            child: const Text('Salva Posizione'),
+          HangingTag(
+            label: l10n.commonSave,
+            onPressed: () => Navigator.of(context).pop(directionCode),
           ),
         ],
       ],
+      child: Column(
+        children: [
+          if (isUnavailable)
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: CompassScannerMetrics.unavailableVerticalPadding,
+              ),
+              child: Text(
+                l10n.compassUnavailable,
+                textAlign: TextAlign.center,
+                style: theme.body.copyWith(color: theme.softInk),
+              ),
+            )
+          else ...[
+            Semantics(
+              label: l10n.compassDialSemantics(directionName),
+              image: true,
+              child: ExcludeSemantics(
+                child: Transform.rotate(
+                  angle:
+                      CompassScannerMetrics.dialRotationDegrees * math.pi / 180,
+                  child: RepaintBoundary(
+                    child: CustomPaint(
+                      size: const Size(
+                        CompassScannerMetrics.dialSize,
+                        CompassScannerMetrics.dialSize,
+                      ),
+                      painter: CompassDialPainter(
+                        heading: _displayHeading,
+                        north: l10n.compassLetterNorth,
+                        east: l10n.compassLetterEast,
+                        south: l10n.compassLetterSouth,
+                        west: l10n.compassLetterWest,
+                        cardinalStyle: theme.h1.copyWith(
+                          color: theme.deepGreen,
+                          fontSize: CompassScannerMetrics.cardinalFontSize,
+                        ),
+                        paper: theme.paper,
+                        cream: theme.cream,
+                        ink: theme.ink,
+                        deepGreen: theme.deepGreen,
+                        sage: theme.sage,
+                        terracotta: theme.terracotta,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: CompassScannerMetrics.dialTextSpacing),
+            Text(
+              _isLocked ? l10n.compassLocked : l10n.compassPointHint,
+              textAlign: TextAlign.center,
+              style: theme.body.copyWith(
+                color: theme.ink,
+                fontSize: CompassScannerMetrics.messageFontSize,
+              ),
+            ),
+            Text(
+              directionName,
+              textAlign: TextAlign.center,
+              style: theme.h1.copyWith(
+                color: theme.deepGreen,
+                fontSize: CompassScannerMetrics.directionFontSize,
+              ),
+            ),
+            _CompassProgressBar(progress: progress),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              _isLocked ? l10n.compassDone : l10n.compassHold(remainingSeconds),
+              textAlign: TextAlign.center,
+              style: theme.body.copyWith(color: theme.softInk),
+            ),
+          ],
+        ],
+      ),
     );
   }
+}
+
+class _CompassProgressBar extends StatelessWidget {
+  const _CompassProgressBar({required this.progress});
+
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.piantala;
+    return SizedBox(
+      key: const ValueKey('compass-progress'),
+      width: CompassScannerMetrics.progressWidth,
+      height: CompassScannerMetrics.progressHeight,
+      child: CustomPaint(
+        painter: _CompassProgressPainter(
+          progress: progress,
+          fill: theme.leafGreen,
+          background: theme.paper,
+          outline: theme.ink,
+        ),
+      ),
+    );
+  }
+}
+
+class _CompassProgressPainter extends CustomPainter {
+  const _CompassProgressPainter({
+    required this.progress,
+    required this.fill,
+    required this.background,
+    required this.outline,
+  });
+
+  final double progress;
+  final Color fill;
+  final Color background;
+  final Color outline;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bounds = Offset.zero & size;
+    canvas
+      ..drawRect(bounds, Paint()..color = background)
+      ..drawRect(
+        Rect.fromLTWH(0, 0, size.width * progress, size.height),
+        Paint()..color = fill,
+      )
+      ..drawRect(
+        bounds,
+        Paint()
+          ..color = outline
+          ..strokeWidth = AppStroke.hairline
+          ..style = PaintingStyle.stroke,
+      );
+  }
+
+  @override
+  bool shouldRepaint(_CompassProgressPainter oldDelegate) =>
+      progress != oldDelegate.progress ||
+      fill != oldDelegate.fill ||
+      background != oldDelegate.background ||
+      outline != oldDelegate.outline;
 }

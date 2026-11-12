@@ -93,13 +93,23 @@
   "greetingSubtitleDusk": "Great time to check on your plants",
   "greetingSubtitleEvening": "Plan tomorrow's plant care",
 
-  "roomsTitle": "Rooms",
   "roomsEmptyTitle": "No rooms created yet.",
-  "roomsAddButton": "Add Room",
-  "roomsSubtitle": "Exposure: {exposure} • Plants: {count}",
-  "@roomsSubtitle": {
+  "roomsEmptyHint": "Tap \"new room\" to get started.",
+  "roomsOptionsSemantics": "Room options for {roomName}",
+  "@roomsOptionsSemantics": {
     "placeholders": {
-      "exposure": { "type": "String", "example": "South" },
+      "roomName": { "type": "String", "example": "Living room" }
+    }
+  },
+  "roomsExposure": "Exposure: {exposure}",
+  "@roomsExposure": {
+    "placeholders": {
+      "exposure": { "type": "String", "example": "South" }
+    }
+  },
+  "roomsPlants": "Plants: {count}",
+  "@roomsPlants": {
+    "placeholders": {
       "count": { "type": "int", "example": "3" }
     }
   },
@@ -117,13 +127,41 @@
     }
   },
 
-  "roomDialogNewTitle": "New Room",
-  "roomDialogEditTitle": "Edit Room",
+  "roomDialogNewTitle": "New room",
+  "roomDialogEditTitle": "Edit room",
   "roomDialogNameLabel": "Room name",
   "roomDialogNameValidation": "Please enter a name",
+  "roomDialogNameHint": "Write the name",
   "roomDialogNotesLabel": "Notes (optional)",
+  "roomDialogNotesHint": "Add a note",
   "roomDialogExposureLabel": "Exposure",
-  "roomDialogCompassHint": "Tap to measure with compass",
+  "roomDialogCompassSemantics": "Detect exposure with the compass",
+  "compassTitle": "Detect exposure",
+  "compassPointHint": "Point toward the window",
+  "compassLocked": "Direction detected",
+  "compassHold": "Hold steady for: {seconds} s",
+  "@compassHold": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "compassDone": "Exposure detected",
+  "compassRetry": "Retry",
+  "compassUnavailable": "Compass unavailable",
+  "compassDialSemantics": "Compass, direction {direction}",
+  "@compassDialSemantics": {
+    "placeholders": {
+      "direction": { "type": "String" }
+    }
+  },
+  "compassLetterNorth": "N",
+  "compassLetterEast": "E",
+  "compassLetterSouth": "S",
+  "compassLetterWest": "W",
+  "exposureNorthEast": "Northeast",
+  "exposureSouthEast": "Southeast",
+  "exposureSouthWest": "Southwest",
+  "exposureNorthWest": "Northwest",
 
   "encyclopediaTitle": "Encyclopedia",
   "encyclopediaSearchHint": "Search by common or scientific name...",

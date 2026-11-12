@@ -5,7 +5,6 @@ import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
-import 'package:piantala/presentation/providers/theme_providers.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -14,8 +13,7 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authControllerProvider);
     final isLoading = authState.isLoading;
-    final period = ref.watch(temporalPeriodProvider).valueOrNull ??
-        TemporalPeriodX.fromHour(DateTime.now().hour);
+    const period = TemporalPeriod.day;
 
     ref.listen<AsyncValue<void>>(
       authControllerProvider,

@@ -21,6 +21,22 @@ final roomRepositoryProvider = AutoDisposeProvider<IRoomRepository>.internal(
 );
 
 typedef RoomRepositoryRef = AutoDisposeProviderRef<IRoomRepository>;
+String _$deleteRoomUseCaseHash() => r'a18dcd6896372f6c61aa968b4a88ffe6bb34fe74';
+
+/// See also [deleteRoomUseCase].
+@ProviderFor(deleteRoomUseCase)
+final deleteRoomUseCaseProvider =
+    AutoDisposeProvider<DeleteRoomUseCase>.internal(
+  deleteRoomUseCase,
+  name: r'deleteRoomUseCaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$deleteRoomUseCaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DeleteRoomUseCaseRef = AutoDisposeProviderRef<DeleteRoomUseCase>;
 String _$roomsHash() => r'726dfa4936501009cc1a6edfce7c2c6a10ad8865';
 
 /// See also [rooms].

@@ -98,13 +98,23 @@
   "greetingSubtitleDusk": "Ottimo momento per controllare le tue piante",
   "greetingSubtitleEvening": "Pianifica la cura di domani",
 
-  "roomsTitle": "Stanze",
   "roomsEmptyTitle": "Nessuna stanza creata.",
-  "roomsAddButton": "Aggiungi Stanza",
-  "roomsSubtitle": "Esposizione: {exposure} • Piante: {count}",
-  "@roomsSubtitle": {
+  "roomsEmptyHint": "Tocca \"nuova stanza\" per cominciare.",
+  "roomsOptionsSemantics": "Opzioni stanza {roomName}",
+  "@roomsOptionsSemantics": {
     "placeholders": {
-      "exposure": { "type": "String", "example": "Sud" },
+      "roomName": { "type": "String", "example": "Soggiorno" }
+    }
+  },
+  "roomsExposure": "Esposizione: {exposure}",
+  "@roomsExposure": {
+    "placeholders": {
+      "exposure": { "type": "String", "example": "Sud" }
+    }
+  },
+  "roomsPlants": "Piante: {count}",
+  "@roomsPlants": {
+    "placeholders": {
       "count": { "type": "int", "example": "3" }
     }
   },
@@ -122,13 +132,41 @@
     }
   },
 
-  "roomDialogNewTitle": "Nuova Stanza",
-  "roomDialogEditTitle": "Modifica Stanza",
+  "roomDialogNewTitle": "Nuova stanza",
+  "roomDialogEditTitle": "Modifica stanza",
   "roomDialogNameLabel": "Nome della stanza",
   "roomDialogNameValidation": "Inserisci un nome",
+  "roomDialogNameHint": "Scrivi il nome",
   "roomDialogNotesLabel": "Note (opzionali)",
+  "roomDialogNotesHint": "Aggiungi una nota",
   "roomDialogExposureLabel": "Esposizione",
-  "roomDialogCompassHint": "Tocca per misurare con la bussola",
+  "roomDialogCompassSemantics": "Rileva l'esposizione con la bussola",
+  "compassTitle": "Rilevamento esposizione",
+  "compassPointHint": "Punta verso la finestra",
+  "compassLocked": "Direzione rilevata",
+  "compassHold": "Tieni fermo per: {seconds} s",
+  "@compassHold": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "compassDone": "Esposizione rilevata",
+  "compassRetry": "Riprova",
+  "compassUnavailable": "Bussola non disponibile",
+  "compassDialSemantics": "Bussola, direzione {direction}",
+  "@compassDialSemantics": {
+    "placeholders": {
+      "direction": { "type": "String" }
+    }
+  },
+  "compassLetterNorth": "N",
+  "compassLetterEast": "E",
+  "compassLetterSouth": "S",
+  "compassLetterWest": "O",
+  "exposureNorthEast": "Nord-Est",
+  "exposureSouthEast": "Sud-Est",
+  "exposureSouthWest": "Sud-Ovest",
+  "exposureNorthWest": "Nord-Ovest",
 
   "encyclopediaTitle": "Enciclopedia",
   "encyclopediaSearchHint": "Cerca per nome comune o scientifico...",

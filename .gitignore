@@ -60,6 +60,7 @@ lib/core/constants/env.dart
 key.properties
 
 coverage/
+**/failures/
 
 # iOS
 ios/Pods/

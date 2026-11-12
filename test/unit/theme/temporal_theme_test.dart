@@ -1,5 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
+import 'package:piantala/presentation/providers/theme_providers.dart';
 
 void main() {
   group('TemporalPeriodX.fromHour', () {
@@ -88,5 +90,36 @@ void main() {
         reason: 'Ogni periodo deve avere un scaffoldBackgroundColor UNICO',
       );
     });
+  });
+
+  test('appThemeDataProvider keeps the day theme at night and in the evening',
+      () {
+    final themeAt03 = ProviderContainer(
+      overrides: [
+        temporalPeriodProvider
+            .overrideWith((ref) => Stream.value(TemporalPeriod.night)),
+      ],
+    );
+    final themeAt22 = ProviderContainer(
+      overrides: [
+        temporalPeriodProvider
+            .overrideWith((ref) => Stream.value(TemporalPeriod.evening)),
+      ],
+    );
+    addTearDown(themeAt03.dispose);
+    addTearDown(themeAt22.dispose);
+
+    expect(
+      themeAt03.read(appThemeDataProvider),
+      same(TemporalTheme.buildTheme(TemporalPeriod.day)),
+    );
+    expect(
+      themeAt22.read(appThemeDataProvider),
+      same(TemporalTheme.buildTheme(TemporalPeriod.day)),
+    );
+    expect(
+      themeAt03.read(appThemeDataProvider),
+      same(themeAt22.read(appThemeDataProvider)),
+    );
   });
 }
