@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
@@ -24,6 +25,14 @@ void main() {
   });
 
   group('AuthRepositoryImpl', () {
+    test('returns null when Google sign-in is canceled', () async {
+      when(() => mockGoogleSignIn.signIn()).thenThrow(
+        PlatformException(code: GoogleSignIn.kSignInCanceledError),
+      );
+
+      expect(await repository.signInWithGoogle(), isNull);
+    });
+
     test('maps missing user and wrong password to one neutral failure',
         () async {
       for (final code in [

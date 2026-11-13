@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @authErrorEmailAlreadyInUse.
   ///
   /// In it, this message translates to:
-  /// **'Non possiamo completare l\'operazione con questi dati.'**
+  /// **'Email già in uso.'**
   String get authErrorEmailAlreadyInUse;
 
   /// No description provided for @authErrorWeakPassword.

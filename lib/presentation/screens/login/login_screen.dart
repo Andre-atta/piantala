@@ -194,9 +194,14 @@ class _LoginBodyState extends State<_LoginBody> {
                               ? null
                               : () => showPaperDialog<void>(
                                     context: context,
-                                    builder: (_) => _EmailAuthSheet(
-                                      onOpenPrivacyPolicy: () =>
-                                          _openPrivacyPolicy(context, l10n),
+                                    builder: (_) => Theme(
+                                      data: TemporalTheme.buildTheme(
+                                        TemporalPeriod.day,
+                                      ),
+                                      child: _EmailAuthSheet(
+                                        onOpenPrivacyPolicy: () =>
+                                            _openPrivacyPolicy(context, l10n),
+                                      ),
                                     ),
                                   ),
                         ),
@@ -205,14 +210,15 @@ class _LoginBodyState extends State<_LoginBody> {
                   ),
                   if (widget.googleError != null) ...[
                     const SizedBox(height: LoginMetrics.errorSpacing),
-                    Text(
-                      widget.googleError!,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.body.copyWith(
-                        color: theme.terracotta,
-                        fontSize: LoginMetrics.errorFontSize,
+                    Semantics(
+                      liveRegion: true,
+                      child: Text(
+                        widget.googleError!,
+                        textAlign: TextAlign.center,
+                        style: theme.body.copyWith(
+                          color: theme.terracotta,
+                          fontSize: LoginMetrics.errorFontSize,
+                        ),
                       ),
                     ),
                   ],
@@ -402,6 +408,14 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
     Navigator.of(context).pop();
   }
 
+  void _onEmailChanged(String value) {
+    if (!_resetEmailSent && _errorMessage == null) return;
+    setState(() {
+      _resetEmailSent = false;
+      _errorMessage = null;
+    });
+  }
+
   String? _validateEmail(String? value, AppLocalizations l10n) {
     final email = value?.trim() ?? '';
     if (email.isEmpty || !email.contains('@')) {
@@ -460,13 +474,14 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
                 padding: const EdgeInsets.only(
                   bottom: LoginMetrics.formFieldSpacing,
                 ),
-                child: Text(
-                  _errorMessage!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.body.copyWith(
-                    color: theme.terracotta,
-                    fontSize: LoginMetrics.errorFontSize,
+                child: Semantics(
+                  liveRegion: true,
+                  child: Text(
+                    _errorMessage!,
+                    style: theme.body.copyWith(
+                      color: theme.terracotta,
+                      fontSize: LoginMetrics.errorFontSize,
+                    ),
                   ),
                 ),
               ),
@@ -510,6 +525,7 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
                   isReset ? TextInputAction.done : TextInputAction.next,
               autofillHints: const [AutofillHints.email],
               autocorrect: false,
+              onChanged: _onEmailChanged,
               validator: (value) => _validateEmail(value, l10n),
             ),
             if (!isReset) ...[

@@ -12,6 +12,7 @@ class PaperTextField extends StatefulWidget {
     this.controller,
     this.fieldKey,
     this.validator,
+    this.onChanged,
     this.autofillHints,
     this.keyboardType,
     this.textInputAction,
@@ -29,6 +30,7 @@ class PaperTextField extends StatefulWidget {
   final TextEditingController? controller;
   final Key? fieldKey;
   final FormFieldValidator<String>? validator;
+  final ValueChanged<String>? onChanged;
   final Iterable<String>? autofillHints;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -78,6 +80,7 @@ class _PaperTextFieldState extends State<PaperTextField> {
           key: widget.fieldKey,
           controller: widget.controller,
           validator: widget.validator,
+          onChanged: widget.onChanged,
           autofillHints: widget.autofillHints,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,

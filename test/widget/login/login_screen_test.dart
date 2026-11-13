@@ -20,6 +20,7 @@ class _FakeAuthController extends AuthController {
   int registrationCalls = 0;
   int resetCalls = 0;
   Completer<void>? googleSignInCompleter;
+  Completer<void>? operationCompleter;
   String? submittedEmail;
   String? submittedPassword;
   AuthFailure? nextFailure;
@@ -43,7 +44,7 @@ class _FakeAuthController extends AuthController {
     emailSignInCalls++;
     submittedEmail = email;
     submittedPassword = password;
-    _completeNextOperation();
+    await _completeNextOperation();
   }
 
   @override
@@ -55,17 +56,21 @@ class _FakeAuthController extends AuthController {
     registrationCalls++;
     submittedEmail = email;
     submittedPassword = password;
-    _completeNextOperation();
+    await _completeNextOperation();
   }
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
     resetCalls++;
     submittedEmail = email;
-    _completeNextOperation();
+    await _completeNextOperation();
   }
 
-  void _completeNextOperation() {
+  Future<void> _completeNextOperation() async {
+    if (operationCompleter != null) {
+      state = const AsyncLoading();
+      await operationCompleter!.future;
+    }
     final failure = nextFailure;
     nextFailure = null;
     if (failure == null) {
@@ -111,9 +116,12 @@ Widget _app({
 
 Future<void> _openEmailDialog(
   WidgetTester tester,
-  _FakeAuthController controller,
-) async {
-  await tester.pumpWidget(_app(authController: controller));
+  _FakeAuthController controller, {
+  double textScale = 1,
+}) async {
+  await tester.pumpWidget(
+    _app(authController: controller, textScale: textScale),
+  );
   await tester.pumpAndSettle();
   final googleTag = find.byKey(const ValueKey('login-google'));
   final emailTag = find.byKey(const ValueKey('login-email'));
@@ -305,6 +313,40 @@ void main() {
     expect(find.byType(SnackBar), findsNothing);
   });
 
+  testWidgets('wraps and announces long auth errors in a live region',
+      (tester) async {
+    tester.view
+      ..physicalSize = const Size(360, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controller = _FakeAuthController()
+      ..nextFailure = AuthFailure.tooManyRequests;
+    await _openEmailDialog(tester, controller, textScale: 1.5);
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-email-field')),
+      'person@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-password-field')),
+      'secret1',
+    );
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pumpAndSettle();
+
+    final errorText = find.text('Troppi tentativi. Riprova più tardi.');
+    expect(errorText, findsOneWidget);
+    expect(tester.widget<Text>(errorText).maxLines, isNull);
+    expect(tester.getSize(errorText).height, greaterThan(20));
+    expect(
+      tester.getSemantics(errorText).flagsCollection.isLiveRegion,
+      isTrue,
+    );
+    expect(find.byType(SnackBar), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
       'password reset reports neutral success in dialog and disables tag',
       (tester) async {
@@ -337,7 +379,104 @@ void main() {
           .onPressed,
       isNull,
     );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-email-field')),
+      'updated@example.com',
+    );
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<HangingTag>(find.byKey(const ValueKey('email-auth-submit')))
+          .onPressed,
+      isNotNull,
+    );
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pumpAndSettle();
+    expect(controller.resetCalls, 2);
     expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets('registration validation stays inline and no request is sent',
+      (tester) async {
+    final controller = _FakeAuthController();
+    await _openEmailDialog(tester, controller);
+    await tester.tap(find.text('Non hai un account? Registrati'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Inserisci il tuo nome'), findsOneWidget);
+    expect(find.text('Inserisci un indirizzo email valido'), findsOneWidget);
+    expect(find.text('Usa almeno 6 caratteri'), findsOneWidget);
+    expect(controller.registrationCalls, 0);
+    expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets('disables submit tag while authentication is loading',
+      (tester) async {
+    final controller = _FakeAuthController()
+      ..operationCompleter = Completer<void>();
+    await _openEmailDialog(tester, controller);
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-email-field')),
+      'person@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-password-field')),
+      'secret1',
+    );
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pump();
+
+    expect(
+      tester
+          .widget<HangingTag>(find.byKey(const ValueKey('email-auth-submit')))
+          .onPressed,
+      isNull,
+    );
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+
+    controller.operationCompleter!.complete();
+    await tester.pumpAndSettle();
+    expect(find.byType(PaperDialogScaffold), findsNothing);
+  });
+
+  testWidgets('registration at text scale 1.5 has no overflow or small targets',
+      (tester) async {
+    tester.view
+      ..physicalSize = const Size(360, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controller = _FakeAuthController();
+    await _openEmailDialog(tester, controller, textScale: 1.5);
+    final registrationLink = find.text('Non hai un account? Registrati');
+    await tester.ensureVisible(registrationLink);
+    await tester.tap(registrationLink);
+    await tester.pumpAndSettle();
+
+    final cancelTag = find.byKey(const ValueKey('email-auth-cancel'));
+    final submitTag = find.byKey(const ValueKey('email-auth-submit'));
+    expect(tester.getSize(cancelTag).width, greaterThanOrEqualTo(48));
+    expect(tester.getSize(cancelTag).height, greaterThanOrEqualTo(48));
+    expect(tester.getSize(submitTag).width, greaterThanOrEqualTo(48));
+    expect(tester.getSize(submitTag).height, greaterThanOrEqualTo(48));
+
+    final passwordField = find.ancestor(
+      of: find.byKey(const ValueKey('auth-password-field')),
+      matching: find.byType(PaperTextField),
+    );
+    expect(tester.getSize(passwordField).height, greaterThanOrEqualTo(48));
+    final eyeTargets = find.bySemanticsLabel('Mostra password');
+    expect(eyeTargets, findsNWidgets(2));
+    for (var index = 0; index < eyeTargets.evaluate().length; index++) {
+      final eyeTarget = eyeTargets.at(index);
+      expect(tester.getSize(eyeTarget).width, greaterThanOrEqualTo(48));
+      expect(tester.getSize(eyeTarget).height, greaterThanOrEqualTo(48));
+    }
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('keeps form scrollable and action tags above the keyboard',

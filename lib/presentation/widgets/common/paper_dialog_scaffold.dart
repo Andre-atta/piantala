@@ -139,7 +139,9 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
                                           width: PaperComponentMetrics
                                               .dialogActionSpacing,
                                         ),
-                                      widget.actions[index],
+                                      Flexible(
+                                        child: widget.actions[index],
+                                      ),
                                     ],
                                   ],
                                 ),

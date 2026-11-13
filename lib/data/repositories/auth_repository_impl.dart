@@ -117,6 +117,9 @@ class AuthRepositoryImpl implements IAuthRepository {
       return _mapFirebaseUser(userCredential.user);
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapGoogleAuthError(e));
+    } on PlatformException catch (error) {
+      if (error.code == GoogleSignIn.kSignInCanceledError) return null;
+      throw const AuthException(AppAuthStrings.errGoogleSignIn);
     } catch (_) {
       throw const AuthException(AppAuthStrings.errGoogleSignIn);
     }

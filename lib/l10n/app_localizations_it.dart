@@ -116,8 +116,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get authErrorInvalidCredential => 'Email o password non validi.';
 
   @override
-  String get authErrorEmailAlreadyInUse =>
-      'Non possiamo completare l\'operazione con questi dati.';
+  String get authErrorEmailAlreadyInUse => 'Email già in uso.';
 
   @override
   String get authErrorWeakPassword =>

@@ -18,3 +18,4 @@
 - La cancellazione completa dell'account, dei documenti Firestore, degli oggetti Storage, del token FCM e dei dati Isar non è implementata nell'app.
 - La regola Storage proposta limita l'accesso SDK agli oggetti sotto `users/{uid}/`; l'URL `getDownloadURL()` contiene un token bearer e va protetto come una credenziale.
 - Il path Storage precedente `plants_images/{uid}/{uuid}.jpg` non rientra nel nuovo path protetto. Le immagini esistenti richiedono una migrazione controllata prima di distribuire le nuove regole.
+- L'accesso raccoglie email e UID; la registrazione raccoglie anche il nome, salvato come `displayName` in Firebase Authentication e nel documento `users/{uid}`. L'errore esplicito "Email già in uso" durante la registrazione rivela che l'indirizzo è già associato a un account; per ora è una scelta consapevole del prodotto.

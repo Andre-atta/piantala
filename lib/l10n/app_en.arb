@@ -43,7 +43,7 @@
 
   "authResetEmailSent": "If the address is linked to an account, you'll receive instructions.",
   "authErrorInvalidCredential": "Email or password is incorrect.",
-  "authErrorEmailAlreadyInUse": "We can't complete the request with these details.",
+  "authErrorEmailAlreadyInUse": "This email is already in use.",
   "authErrorWeakPassword": "Choose a password with at least 6 characters.",
   "authErrorTooManyRequests": "Too many attempts. Try again later.",
   "authErrorNetwork": "No or unstable connection. Please try again.",

@@ -48,7 +48,7 @@
 
   "authResetEmailSent": "Se l'indirizzo è associato a un account, riceverai le istruzioni.",
   "authErrorInvalidCredential": "Email o password non validi.",
-  "authErrorEmailAlreadyInUse": "Non possiamo completare l'operazione con questi dati.",
+  "authErrorEmailAlreadyInUse": "Email già in uso.",
   "authErrorWeakPassword": "Scegli una password di almeno 6 caratteri.",
   "authErrorTooManyRequests": "Troppi tentativi. Riprova più tardi.",
   "authErrorNetwork": "Connessione assente o instabile. Riprova.",
