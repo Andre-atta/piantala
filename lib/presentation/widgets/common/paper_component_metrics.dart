@@ -86,6 +86,7 @@ abstract class PaperComponentMetrics {
   static const disabledInkOpacity = 0.45;
 
   static const paperFieldLabelSpacing = 4.0;
+  static const paperFieldFontSize = 15.0;
   static const paperFieldMinimumHeight = 48.0;
   static const paperFieldUnderlineWidth = 2.0;
   static const paperFieldErrorFontSize = 12.0;

@@ -109,7 +109,6 @@ Un'unica famiglia di schede, usata in due modi:
 
 - Area toccabile minima **48 dp** con almeno 8 dp tra i bersagli, sempre un rettangolo dritto anche se il disegno è inclinato.
 - Azioni frequenti reversibili: dopo "Annaffia" compare un messaggio breve con "Annulla".
-- **Regola 11 — link nei fogli:** i link sottolineati servono a cambiare modalità e ad aprire l'informativa; le azioni vere restano cartellini.
 - La scheda si gira toccandola o con swipe. Nessun pulsante "Gira", né sul fronte né sul retro; l'indizio è un'animazione in codice. Azione accessibile personalizzata "Gira la scheda" per TalkBack/VoiceOver.
 - Rispettare `MediaQuery.disableAnimations`.
 
@@ -119,6 +118,7 @@ Un'unica famiglia di schede, usata in due modi:
 - **Cartellino con filo e puntina** (azioni in dialoghi e in Profilo): pende da una puntina e può oscillare di 1-2°.
 - **Puntina** (menu, bussola, cancella): infissa nella superficie.
 - **Testo con sottolineatura a mano** (azioni secondarie, es. "Annulla").
+- **Regola 11 — link nei fogli:** i link sottolineati servono a cambiare modalità e ad aprire l'informativa; le azioni vere restano cartellini appesi.
 - Stato premuto: scende di 2 px e si raddrizza. Disabilitato: perde il riempimento e il bordo pieno.
 - Inclinazione del testo al massimo 1°. Nessuno spessore o ombra sotto i pulsanti.
 - Eccezione: I pulsanti tondi (ciottolo) e i dischi icona hanno una base scura sfalsata di 2–4 px e un puntino chiaro; nessuna ombra morbida, nessuna sfumatura, nessuna luce proiettata.

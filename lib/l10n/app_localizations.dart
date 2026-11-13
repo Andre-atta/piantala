@@ -155,7 +155,7 @@ abstract class AppLocalizations {
   /// No description provided for @authSheetTitleLogin.
   ///
   /// In it, this message translates to:
-  /// **'Accedi con email'**
+  /// **'Accedi'**
   String get authSheetTitleLogin;
 
   /// No description provided for @authSheetTitleRegister.
@@ -181,6 +181,12 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Usa un indirizzo email valido e una password sicura.'**
   String get authSheetSubtitleLogin;
+
+  /// No description provided for @authRegisterPrivacyNotice.
+  ///
+  /// In it, this message translates to:
+  /// **'Creando l\'account accetti'**
+  String get authRegisterPrivacyNotice;
 
   /// No description provided for @authFieldName.
   ///
@@ -287,8 +293,50 @@ abstract class AppLocalizations {
   /// No description provided for @authResetEmailSent.
   ///
   /// In it, this message translates to:
-  /// **'Se l\'indirizzo è associata a un account, riceverai le istruzioni.'**
+  /// **'Se l\'indirizzo è associato a un account, riceverai le istruzioni.'**
   String get authResetEmailSent;
+
+  /// No description provided for @authErrorInvalidCredential.
+  ///
+  /// In it, this message translates to:
+  /// **'Email o password non validi.'**
+  String get authErrorInvalidCredential;
+
+  /// No description provided for @authErrorEmailAlreadyInUse.
+  ///
+  /// In it, this message translates to:
+  /// **'Non possiamo completare l\'operazione con questi dati.'**
+  String get authErrorEmailAlreadyInUse;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli una password di almeno 6 caratteri.'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In it, this message translates to:
+  /// **'Troppi tentativi. Riprova più tardi.'**
+  String get authErrorTooManyRequests;
+
+  /// No description provided for @authErrorNetwork.
+  ///
+  /// In it, this message translates to:
+  /// **'Connessione assente o instabile. Riprova.'**
+  String get authErrorNetwork;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un indirizzo email valido.'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorGeneric.
+  ///
+  /// In it, this message translates to:
+  /// **'Non è stato possibile completare l\'operazione. Riprova.'**
+  String get authErrorGeneric;
 
   /// No description provided for @homeEmptyShelfTitle.
   ///

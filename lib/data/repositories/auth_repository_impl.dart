@@ -49,19 +49,37 @@ class AuthRepositoryImpl implements IAuthRepository {
       case 'user-not-found':
       case 'wrong-password':
       case 'invalid-credential':
-        return const AuthException(AppAuthStrings.errInvalidCredential);
+        return const AuthException(
+          AppAuthStrings.errInvalidCredential,
+          failure: AuthFailure.invalidCredential,
+        );
       case 'invalid-email':
-        return const AuthException(AppAuthStrings.errInvalidEmail);
+        return const AuthException(
+          AppAuthStrings.errInvalidEmail,
+          failure: AuthFailure.invalidEmail,
+        );
       case 'weak-password':
-        return const AuthException(AppAuthStrings.errWeakPassword);
+        return const AuthException(
+          AppAuthStrings.errWeakPassword,
+          failure: AuthFailure.weakPassword,
+        );
       case 'email-already-in-use':
-        return const AuthException(AppAuthStrings.errEmailInUse);
+        return const AuthException(
+          AppAuthStrings.errEmailInUse,
+          failure: AuthFailure.emailAlreadyInUse,
+        );
       case 'user-disabled':
         return const AuthException(AppAuthStrings.errUserDisabled);
       case 'too-many-requests':
-        return const AuthException(AppAuthStrings.errTooManyRequests);
+        return const AuthException(
+          AppAuthStrings.errTooManyRequests,
+          failure: AuthFailure.tooManyRequests,
+        );
       case 'network-request-failed':
-        return const AuthException(AppAuthStrings.errNetworkFailed);
+        return const AuthException(
+          AppAuthStrings.errNetworkFailed,
+          failure: AuthFailure.networkUnavailable,
+        );
       case 'operation-not-allowed':
         return AuthException(
           isRegistration
@@ -73,6 +91,7 @@ class AuthRepositoryImpl implements IAuthRepository {
           isRegistration
               ? AppAuthStrings.errRegistrationFallback
               : AppAuthStrings.errLoginFallback,
+          failure: AuthFailure.generic,
         );
     }
   }
@@ -178,11 +197,13 @@ class AuthRepositoryImpl implements IAuthRepository {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: normalizedEmail);
     } on FirebaseAuthException catch (e) {
-      // Mantiene un messaggio neutro per non rivelare se l'account esiste.
-      if (e.code == 'invalid-email' || e.code == 'network-request-failed') {
-        throw _mapEmailAuthException(e, isRegistration: false);
+      if (e.code == 'user-not-found' || e.code == 'email-not-found') {
+        throw const AuthException(
+          AppAuthStrings.resetEmailSent,
+          failure: AuthFailure.resetEmailSent,
+        );
       }
-      throw const AuthException(AppAuthStrings.resetEmailSent);
+      throw _mapEmailAuthException(e, isRegistration: false);
     }
   }
 

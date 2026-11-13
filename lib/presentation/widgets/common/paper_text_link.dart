@@ -8,11 +8,13 @@ class PaperTextLink extends StatefulWidget {
   const PaperTextLink({
     required this.label,
     required this.onPressed,
+    this.enabled = true,
     super.key,
   });
 
   final String label;
   final VoidCallback onPressed;
+  final bool enabled;
 
   @override
   State<PaperTextLink> createState() => _PaperTextLinkState();
@@ -32,14 +34,15 @@ class _PaperTextLinkState extends State<PaperTextLink> {
     return Semantics(
       button: true,
       label: widget.label,
-      onTap: widget.onPressed,
+      enabled: widget.enabled,
+      onTap: widget.enabled ? widget.onPressed : null,
       child: ExcludeSemantics(
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: widget.onPressed,
-          onTapDown: (_) => _setPressed(true),
-          onTapUp: (_) => _setPressed(false),
-          onTapCancel: () => _setPressed(false),
+          onTap: widget.enabled ? widget.onPressed : null,
+          onTapDown: widget.enabled ? (_) => _setPressed(true) : null,
+          onTapUp: widget.enabled ? (_) => _setPressed(false) : null,
+          onTapCancel: widget.enabled ? () => _setPressed(false) : null,
           child: ConstrainedBox(
             constraints: const BoxConstraints(
               minWidth: PaperComponentMetrics.paperTextLinkMinimumTarget,

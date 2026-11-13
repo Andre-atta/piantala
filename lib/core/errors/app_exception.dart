@@ -24,8 +24,21 @@ final class FirestoreException extends AppException {
 }
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
+enum AuthFailure {
+  invalidCredential,
+  invalidEmail,
+  weakPassword,
+  emailAlreadyInUse,
+  tooManyRequests,
+  networkUnavailable,
+  resetEmailSent,
+  generic,
+}
+
 final class AuthException extends AppException {
-  const AuthException(super.message);
+  const AuthException(super.message, {this.failure});
+
+  final AuthFailure? failure;
 }
 
 final class UserNotFoundException extends AppException {

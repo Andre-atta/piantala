@@ -37,7 +37,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get authSignInWithEmail => 'Accedi con email';
 
   @override
-  String get authSheetTitleLogin => 'Accedi con email';
+  String get authSheetTitleLogin => 'Accedi';
 
   @override
   String get authSheetTitleRegister => 'Crea account';
@@ -52,6 +52,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get authSheetSubtitleLogin =>
       'Usa un indirizzo email valido e una password sicura.';
+
+  @override
+  String get authRegisterPrivacyNotice => 'Creando l\'account accetti';
 
   @override
   String get authFieldName => 'Nome';
@@ -107,7 +110,31 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get authResetEmailSent =>
-      'Se l\'indirizzo è associata a un account, riceverai le istruzioni.';
+      'Se l\'indirizzo è associato a un account, riceverai le istruzioni.';
+
+  @override
+  String get authErrorInvalidCredential => 'Email o password non validi.';
+
+  @override
+  String get authErrorEmailAlreadyInUse =>
+      'Non possiamo completare l\'operazione con questi dati.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Scegli una password di almeno 6 caratteri.';
+
+  @override
+  String get authErrorTooManyRequests => 'Troppi tentativi. Riprova più tardi.';
+
+  @override
+  String get authErrorNetwork => 'Connessione assente o instabile. Riprova.';
+
+  @override
+  String get authErrorInvalidEmail => 'Inserisci un indirizzo email valido.';
+
+  @override
+  String get authErrorGeneric =>
+      'Non è stato possibile completare l\'operazione. Riprova.';
 
   @override
   String get homeEmptyShelfTitle => 'La tua mensola è vuota';

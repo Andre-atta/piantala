@@ -4,16 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:piantala/core/errors/app_exception.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/screens/login/login_screen.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
+import 'package:piantala/presentation/widgets/common/paper_text_field.dart';
 
 class _FakeAuthController extends AuthController {
   int googleSignInCalls = 0;
+  int emailSignInCalls = 0;
+  int registrationCalls = 0;
+  int resetCalls = 0;
   Completer<void>? googleSignInCompleter;
+  String? submittedEmail;
+  String? submittedPassword;
+  AuthFailure? nextFailure;
 
   @override
   FutureOr<void> build() {}
@@ -24,6 +33,49 @@ class _FakeAuthController extends AuthController {
     state = const AsyncLoading();
     await googleSignInCompleter?.future;
     state = const AsyncData(null);
+  }
+
+  @override
+  Future<void> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    emailSignInCalls++;
+    submittedEmail = email;
+    submittedPassword = password;
+    _completeNextOperation();
+  }
+
+  @override
+  Future<void> createUserWithEmailAndPassword(
+    String email,
+    String password,
+    String displayName,
+  ) async {
+    registrationCalls++;
+    submittedEmail = email;
+    submittedPassword = password;
+    _completeNextOperation();
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    resetCalls++;
+    submittedEmail = email;
+    _completeNextOperation();
+  }
+
+  void _completeNextOperation() {
+    final failure = nextFailure;
+    nextFailure = null;
+    if (failure == null) {
+      state = const AsyncData(null);
+    } else {
+      state = AsyncError(
+        AuthException('firebase-internal-detail', failure: failure),
+        StackTrace.current,
+      );
+    }
   }
 }
 
@@ -55,6 +107,23 @@ Widget _app({
       home: const LoginScreen(),
     ),
   );
+}
+
+Future<void> _openEmailDialog(
+  WidgetTester tester,
+  _FakeAuthController controller,
+) async {
+  await tester.pumpWidget(_app(authController: controller));
+  await tester.pumpAndSettle();
+  final googleTag = find.byKey(const ValueKey('login-google'));
+  final emailTag = find.byKey(const ValueKey('login-email'));
+  await tester.scrollUntilVisible(googleTag, 100);
+  await tester.scrollUntilVisible(emailTag, 100);
+  await tester.drag(find.byType(ListView).first, const Offset(0, -200));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(emailTag);
+  await tester.tap(emailTag);
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -131,7 +200,8 @@ void main() {
     expect(tester.getRect(emailTag).bottom, lessThanOrEqualTo(640));
     await tester.tap(emailTag);
     await tester.pumpAndSettle();
-    expect(find.text('Email'), findsOneWidget);
+    expect(find.byType(PaperDialogScaffold), findsOneWidget);
+    expect(find.text('EMAIL'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -160,22 +230,148 @@ void main() {
     expect(tester.widget<HangingTag>(googleTag).onPressed, isNotNull);
   });
 
-  testWidgets('email tag opens the existing authentication sheet',
+  testWidgets('email opens a paper dialog and switches to registration',
       (tester) async {
-    await tester.pumpWidget(_app(authController: _FakeAuthController()));
+    await _openEmailDialog(tester, _FakeAuthController());
+
+    expect(find.byType(PaperDialogScaffold), findsOneWidget);
+    expect(find.text('Accedi'), findsOneWidget);
+    expect(find.text('EMAIL'), findsOneWidget);
+    expect(find.text('PASSWORD'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+
+    await tester.tap(find.text('Non hai un account? Registrati'));
     await tester.pumpAndSettle();
 
-    final emailTag = find.byKey(const ValueKey('login-email'));
-    await tester.scrollUntilVisible(emailTag, 100);
-    await tester.tap(emailTag);
-    await tester.pumpAndSettle();
+    expect(find.text('Crea account'), findsOneWidget);
+    expect(find.text('NOME'), findsOneWidget);
+    expect(find.text('CONFERMA PASSWORD'), findsOneWidget);
+    expect(find.textContaining("Creando l'account accetti"), findsOneWidget);
+    expect(find.text('Hai già un account? Accedi'), findsOneWidget);
 
-    expect(find.text('Accedi con email'), findsOneWidget);
-    expect(find.text('Email'), findsOneWidget);
+    final passwordField = tester.widget<PaperTextField>(
+      find.ancestor(
+        of: find.byKey(const ValueKey('auth-password-field')),
+        matching: find.byType(PaperTextField),
+      ),
+    );
+    expect(passwordField.obscureText, isTrue);
+    expect(passwordField.enableSuggestions, isFalse);
+    expect(passwordField.autocorrect, isFalse);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('uses localized English login copy', (tester) async {
+  testWidgets('trims email and closes after successful login', (tester) async {
+    final controller = _FakeAuthController();
+    await _openEmailDialog(tester, controller);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-email-field')),
+      '  person@example.com  ',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-password-field')),
+      'secret1',
+    );
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pumpAndSettle();
+
+    expect(controller.emailSignInCalls, 1);
+    expect(controller.submittedEmail, 'person@example.com');
+    expect(controller.submittedPassword, 'secret1');
+    expect(find.byType(PaperDialogScaffold), findsNothing);
+    expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets('shows neutral localized auth errors without raw exceptions',
+      (tester) async {
+    final controller = _FakeAuthController()
+      ..nextFailure = AuthFailure.invalidCredential;
+    await _openEmailDialog(tester, controller);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-email-field')),
+      'person@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-password-field')),
+      'secret1',
+    );
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Email o password non validi.'), findsOneWidget);
+    expect(find.text('firebase-internal-detail'), findsNothing);
+    expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets(
+      'password reset reports neutral success in dialog and disables tag',
+      (tester) async {
+    final controller = _FakeAuthController()
+      ..nextFailure = AuthFailure.resetEmailSent;
+    await _openEmailDialog(tester, controller);
+
+    await tester.tap(find.text('Password dimenticata?'));
+    await tester.pumpAndSettle();
+    expect(find.text('Recupera password'), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-email-field')),
+      '  person@example.com ',
+    );
+    await tester.tap(find.byKey(const ValueKey('email-auth-submit')));
+    await tester.pumpAndSettle();
+
+    expect(controller.resetCalls, 1);
+    expect(controller.submittedEmail, 'person@example.com');
+    expect(
+      find.text(
+        "Se l'indirizzo è associato a un account, riceverai le istruzioni.",
+      ),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<HangingTag>(find.byKey(const ValueKey('email-auth-submit')))
+          .onPressed,
+      isNull,
+    );
+    expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgets('keeps form scrollable and action tags above the keyboard',
+      (tester) async {
+    tester.view
+      ..physicalSize = const Size(360, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetViewInsets);
+
+    await _openEmailDialog(tester, _FakeAuthController());
+    tester.view.viewInsets = const FakeViewPadding(bottom: 320);
+    await tester.pumpAndSettle();
+
+    const keyboardTop = 320.0;
+    for (final key in [
+      const ValueKey('email-auth-cancel'),
+      const ValueKey('email-auth-submit'),
+    ]) {
+      expect(
+        tester.getRect(find.byKey(key)).bottom,
+        lessThanOrEqualTo(keyboardTop),
+      );
+    }
+    expect(
+      tester.getRect(find.byKey(const ValueKey('auth-email-field'))).top,
+      lessThan(keyboardTop),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('uses localized English login and auth dialog copy',
+      (tester) async {
     await tester.pumpWidget(
       _app(
         authController: _FakeAuthController(),
@@ -187,5 +383,11 @@ void main() {
     expect(find.text('Hello'), findsOneWidget);
     expect(find.text('Your plants, one shelf at a time.'), findsOneWidget);
     expect(find.bySemanticsLabel('the Privacy Policy'), findsOneWidget);
+
+    final emailTag = find.byKey(const ValueKey('login-email'));
+    await tester.ensureVisible(emailTag);
+    await tester.tap(emailTag);
+    await tester.pumpAndSettle();
+    expect(find.text('Sign in'), findsOneWidget);
   });
 }

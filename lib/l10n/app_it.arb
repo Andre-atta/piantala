@@ -18,12 +18,13 @@
   "authSignInWithGoogle": "Continua con Google",
   "authSignInWithEmail": "Accedi con email",
 
-  "authSheetTitleLogin": "Accedi con email",
+  "authSheetTitleLogin": "Accedi",
   "authSheetTitleRegister": "Crea account",
   "authSheetTitleReset": "Recupera password",
 
   "authSheetSubtitleReset": "Inserisci la tua email. Se è associata a un account, riceverai le istruzioni.",
   "authSheetSubtitleLogin": "Usa un indirizzo email valido e una password sicura.",
+  "authRegisterPrivacyNotice": "Creando l'account accetti",
 
   "authFieldName": "Nome",
   "authFieldEmail": "Email",
@@ -45,7 +46,14 @@
   "paperTextFieldShowPassword": "Mostra password",
   "paperTextFieldHidePassword": "Nascondi password",
 
-  "authResetEmailSent": "Se l'indirizzo è associata a un account, riceverai le istruzioni.",
+  "authResetEmailSent": "Se l'indirizzo è associato a un account, riceverai le istruzioni.",
+  "authErrorInvalidCredential": "Email o password non validi.",
+  "authErrorEmailAlreadyInUse": "Non possiamo completare l'operazione con questi dati.",
+  "authErrorWeakPassword": "Scegli una password di almeno 6 caratteri.",
+  "authErrorTooManyRequests": "Troppi tentativi. Riprova più tardi.",
+  "authErrorNetwork": "Connessione assente o instabile. Riprova.",
+  "authErrorInvalidEmail": "Inserisci un indirizzo email valido.",
+  "authErrorGeneric": "Non è stato possibile completare l'operazione. Riprova.",
 
   "homeEmptyShelfTitle": "La tua mensola è vuota",
   "homeEmptyShelfSubtitle": "Aggiungi la tua prima pianta\ncon il bottone +",

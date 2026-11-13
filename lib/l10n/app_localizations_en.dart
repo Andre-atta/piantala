@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authSignInWithEmail => 'Sign in with email';
 
   @override
-  String get authSheetTitleLogin => 'Sign in with email';
+  String get authSheetTitleLogin => 'Sign in';
 
   @override
   String get authSheetTitleRegister => 'Create account';
@@ -51,6 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authSheetSubtitleLogin =>
       'Use a valid email address and a secure password.';
+
+  @override
+  String get authRegisterPrivacyNotice => 'By creating an account, you accept';
 
   @override
   String get authFieldName => 'Name';
@@ -106,6 +109,30 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authResetEmailSent =>
       'If the address is linked to an account, you\'ll receive instructions.';
+
+  @override
+  String get authErrorInvalidCredential => 'Email or password is incorrect.';
+
+  @override
+  String get authErrorEmailAlreadyInUse =>
+      'We can\'t complete the request with these details.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Choose a password with at least 6 characters.';
+
+  @override
+  String get authErrorTooManyRequests => 'Too many attempts. Try again later.';
+
+  @override
+  String get authErrorNetwork => 'No or unstable connection. Please try again.';
+
+  @override
+  String get authErrorInvalidEmail => 'Enter a valid email address.';
+
+  @override
+  String get authErrorGeneric =>
+      'We couldn\'t complete the request. Please try again.';
 
   @override
   String get homeEmptyShelfTitle => 'Your shelf is empty';

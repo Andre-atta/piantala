@@ -12,6 +12,7 @@ class PaperDialogScaffold extends StatefulWidget {
     required this.title,
     required this.child,
     required this.actions,
+    this.topInset = PaperComponentMetrics.dialogTopInset,
     this.rotationDegrees = PaperComponentMetrics.dialogSheetRotationDegrees,
     super.key,
   })  : assert(
@@ -27,6 +28,7 @@ class PaperDialogScaffold extends StatefulWidget {
   final String title;
   final Widget child;
   final List<HangingTag> actions;
+  final double topInset;
   final double rotationDegrees;
 
   @override
@@ -68,10 +70,8 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
               ),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final topInset = math.min(
-                    PaperComponentMetrics.dialogTopInset,
-                    constraints.maxHeight,
-                  );
+                  final topInset =
+                      math.min(widget.topInset, constraints.maxHeight);
                   final availableHeight =
                       math.max(0, constraints.maxHeight - topInset).toDouble();
                   final actionsBelowSheet =

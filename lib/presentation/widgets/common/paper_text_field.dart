@@ -15,6 +15,9 @@ class PaperTextField extends StatefulWidget {
     this.autofillHints,
     this.keyboardType,
     this.textInputAction,
+    this.enabled = true,
+    this.enableSuggestions = true,
+    this.autocorrect = true,
     this.textCapitalization = TextCapitalization.none,
     this.autofocus = false,
     this.obscureText = false,
@@ -29,6 +32,9 @@ class PaperTextField extends StatefulWidget {
   final Iterable<String>? autofillHints;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final bool enabled;
+  final bool enableSuggestions;
+  final bool autocorrect;
   final TextCapitalization textCapitalization;
   final bool autofocus;
   final bool obscureText;
@@ -75,12 +81,15 @@ class _PaperTextFieldState extends State<PaperTextField> {
           autofillHints: widget.autofillHints,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
+          enabled: widget.enabled,
+          enableSuggestions: widget.enableSuggestions,
+          autocorrect: widget.autocorrect,
           textCapitalization: widget.textCapitalization,
           autofocus: widget.autofocus,
           obscureText: _isObscured,
           style: theme.body.copyWith(
             color: theme.ink,
-            fontSize: 15,
+            fontSize: PaperComponentMetrics.paperFieldFontSize,
           ),
           cursorColor: theme.deepGreen,
           decoration: InputDecoration(
@@ -90,7 +99,7 @@ class _PaperTextFieldState extends State<PaperTextField> {
             hintText: widget.hintText,
             hintStyle: theme.body.copyWith(
               color: theme.softInk,
-              fontSize: 15,
+              fontSize: PaperComponentMetrics.paperFieldFontSize,
             ),
             contentPadding: const EdgeInsets.symmetric(vertical: 8),
             border: underline,

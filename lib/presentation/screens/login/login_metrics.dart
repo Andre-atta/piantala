@@ -1,0 +1,28 @@
+abstract final class LoginMetrics {
+  static const horizontalPadding = 20.0;
+  static const contentTopPadding = 84.0;
+  static const contentBottomPadding = 112.0;
+  static const greetingFontSize = 14.0;
+  static const greetingTitleSpacing = 4.0;
+  static const titlePlantSpacing = 20.0;
+  static const shelfHeight = 190.0;
+  static const plantWidth = 172.0;
+  static const plantHeight = 182.0;
+  static const shelfHorizontalOverhang = -16.0;
+  static const shelfThickness = 16.0;
+  static const shelfBorderWidth = 1.5;
+  static const actionSpacing = 14.0;
+  static const privacyHorizontalInset = 16.0;
+  static const privacyBottomInset = 32.0;
+  static const privacyFontSize = 11.0;
+  static const privacyErrorSpacing = 4.0;
+  static const errorFontSize = 13.0;
+  static const errorSpacing = 8.0;
+  static const formSectionSpacing = 16.0;
+  static const formFieldSpacing = 12.0;
+  static const registerPrivacySpacing = 8.0;
+  static const loginDialogTopInset = 120.0;
+  static const registerDialogTopInset = 40.0;
+  static const resetDialogTopInset = 150.0;
+  static const googleLogoSize = 18.0;
+}

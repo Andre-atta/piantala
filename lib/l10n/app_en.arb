@@ -13,12 +13,13 @@
   "authSignInWithGoogle": "Continue with Google",
   "authSignInWithEmail": "Sign in with email",
 
-  "authSheetTitleLogin": "Sign in with email",
+  "authSheetTitleLogin": "Sign in",
   "authSheetTitleRegister": "Create account",
   "authSheetTitleReset": "Reset password",
 
   "authSheetSubtitleReset": "Enter your email. If it's linked to an account, you'll receive instructions.",
   "authSheetSubtitleLogin": "Use a valid email address and a secure password.",
+  "authRegisterPrivacyNotice": "By creating an account, you accept",
 
   "authFieldName": "Name",
   "authFieldEmail": "Email",
@@ -41,6 +42,13 @@
   "paperTextFieldHidePassword": "Hide password",
 
   "authResetEmailSent": "If the address is linked to an account, you'll receive instructions.",
+  "authErrorInvalidCredential": "Email or password is incorrect.",
+  "authErrorEmailAlreadyInUse": "We can't complete the request with these details.",
+  "authErrorWeakPassword": "Choose a password with at least 6 characters.",
+  "authErrorTooManyRequests": "Too many attempts. Try again later.",
+  "authErrorNetwork": "No or unstable connection. Please try again.",
+  "authErrorInvalidEmail": "Enter a valid email address.",
+  "authErrorGeneric": "We couldn't complete the request. Please try again.",
 
   "homeEmptyShelfTitle": "Your shelf is empty",
   "homeEmptyShelfSubtitle": "Add your first plant\nusing the + button",
