@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:piantala/core/errors/app_exception.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/data/services/notification_service.dart';
@@ -9,6 +11,10 @@ import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/providers/locale_providers.dart';
 import 'package:piantala/presentation/providers/notification_providers.dart';
+import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
+import 'package:piantala/presentation/widgets/common/paper_text_link.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -239,14 +245,14 @@ class SettingsScreen extends ConsumerWidget {
                       children: [
                         ListTile(
                           contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.info_outline),
+                          leading: const Icon(Icons.info_outline),
                           title: Text(l10n.settingsAboutVersion),
-                          trailing: Text('0.1.0'),
+                          trailing: const Text('0.1.0'),
                         ),
-                        Divider(height: 1),
+                        const Divider(height: 1),
                         ListTile(
                           contentPadding: EdgeInsets.zero,
-                          leading: Icon(Icons.eco),
+                          leading: const Icon(Icons.eco),
                           title: Text(l10n.settingsAboutDataSource),
                           subtitle: Text(l10n.settingsAboutDataSourceSubtitle),
                         ),
@@ -256,20 +262,27 @@ class SettingsScreen extends ConsumerWidget {
                 ),
 
                 const SizedBox(height: AppSpacing.lg),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () async {
-                      await ref.read(authControllerProvider.notifier).signOut();
-                    },
-                    child: Text(
-                      l10n.settingsLogout,
-                      style: context.piantala.body.copyWith(
-                        decoration: TextDecoration.underline,
-                      ),
+
+                // ── Logout e Elimina account ────────────────────────────
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PaperTextLink(
+                      label: l10n.settingsLogout,
+                      onPressed: () async {
+                        await ref
+                            .read(authControllerProvider.notifier)
+                            .signOut();
+                      },
                     ),
-                  ),
+                    PaperTextLink(
+                      label: l10n.settingsDeleteAccountButton,
+                      onPressed: () =>
+                          _confirmAndDeleteAccount(context, ref, l10n),
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: AppSpacing.xxl),
               ]),
             ),
@@ -277,6 +290,66 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Mostra il dialog di conferma (design system: PaperDialogScaffold con
+  /// HangingTag) e, se l'utente conferma, avvia la cancellazione account.
+  Future<void> _confirmAndDeleteAccount(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    final confirmed = await showPaperDialog<bool>(
+      context: context,
+      dismissible: true,
+      builder: (dialogContext) => PaperDialogScaffold(
+        title: l10n.settingsDeleteAccountDialogTitle,
+        actions: [
+          HangingTag(
+            label: l10n.commonCancel,
+            variant: HangingTagVariant.secondary,
+            mirrored: true,
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+          ),
+          HangingTag(
+            label: l10n.settingsDeleteAccountConfirm,
+            variant: HangingTagVariant.danger,
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+          ),
+        ],
+        child: Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.sm),
+          child: Text(
+            l10n.settingsDeleteAccountDialogBody,
+            style: dialogContext.piantala.body.copyWith(
+              color: dialogContext.piantala.ink,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+
+    await ref.read(authControllerProvider.notifier).deleteAccount();
+
+    if (!context.mounted) return;
+
+    final authState = ref.read(authControllerProvider);
+    if (authState.hasError) {
+      final error = authState.error;
+      final message = error is DeleteAccountException
+          ? error.message
+          : l10n.settingsDeleteAccountDialogTitle;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+    // Se va a buon fine: il logout locale dentro deleteAccount() fa scattare
+    // authStateChanges → null e GoRouter reindirizza automaticamente al Login.
   }
 }
 

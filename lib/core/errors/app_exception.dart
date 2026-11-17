@@ -69,3 +69,12 @@ final class StorageUploadException extends AppException {
 final class LocalDatabaseException extends AppException {
   const LocalDatabaseException(super.message);
 }
+
+// ── Eliminazione account ─────────────────────────────────────────────────────
+final class DeleteAccountException extends AppException {
+  const DeleteAccountException(super.message, {this.requiresRecentLogin = false});
+
+  /// `true` quando la Cloud Function ha risposto `requires-recent-login`:
+  /// il client deve richiedere una nuova autenticazione prima di riprovare.
+  final bool requiresRecentLogin;
+}

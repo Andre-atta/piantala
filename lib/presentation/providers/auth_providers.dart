@@ -8,8 +8,6 @@ part 'auth_providers.g.dart';
 
 @Riverpod(keepAlive: true)
 IAuthRepository authRepository(AuthRepositoryRef ref) {
-  // FIX A-03: inietta sempre FirebaseFirestore.instance in modo esplicito
-  // per garantire testabilità e coerenza con il costruttore non-nullable.
   return AuthRepositoryImpl(firestore: FirebaseFirestore.instance);
 }
 
@@ -25,7 +23,7 @@ UserEntity? currentUser(CurrentUserRef ref) {
   return authState.valueOrNull;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AuthController extends _$AuthController {
   @override
   FutureOr<void> build() {}
@@ -78,6 +76,14 @@ class AuthController extends _$AuthController {
     state = await AsyncValue.guard(() async {
       final repository = ref.read(authRepositoryProvider);
       await repository.signOut();
+    });
+  }
+
+  Future<void> deleteAccount() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.deleteAccount();
     });
   }
 }

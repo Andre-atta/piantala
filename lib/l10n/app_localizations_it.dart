@@ -510,4 +510,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exposureUnknown => 'Sconosciuta';
+
+  @override
+  String get settingsDeleteAccountButton => 'Elimina account';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => 'Elimina account';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'Stai per eliminare definitivamente il tuo account. Tutte le tue piante, stanze e immagini saranno cancellate in modo irreversibile.';
+
+  @override
+  String get settingsDeleteAccountConfirm => 'Elimina definitivamente';
+
+  @override
+  String get settingsDeleteAccountRecentLoginError =>
+      'Per sicurezza, effettua nuovamente il login prima di eliminare il profilo.';
 }

@@ -1,11 +1,15 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart'; // PlatformException per Google Sign-In
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:isar/isar.dart';
 
 import 'package:piantala/core/constants/app_strings.dart';
 import 'package:piantala/core/errors/app_exception.dart';
+import 'package:piantala/data/local/isar_service.dart';
 import 'package:piantala/domain/entities/user_entity.dart';
 import 'package:piantala/domain/repositories/i_auth_repository.dart';
 
@@ -14,13 +18,22 @@ class AuthRepositoryImpl implements IAuthRepository {
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
     FirebaseFirestore? firestore,
+    FirebaseFunctions? functions,
+    Isar? isar,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn(),
-        _firestore = firestore;
+        _firestore = firestore,
+        _functions = functions ??
+            FirebaseFunctions.instanceFor(region: 'europe-west1'),
+        _isar = isar;
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore? _firestore;
+  final FirebaseFunctions _functions;
+  final Isar? _isar;
+
+  Isar get _db => _isar ?? IsarService.instance.db;
 
   UserEntity? _mapFirebaseUser(User? user) {
     if (user == null) return null;
@@ -238,6 +251,41 @@ class AuthRepositoryImpl implements IAuthRepository {
         return AppAuthStrings.errTooManyRequests;
       default:
         return AppAuthStrings.errAuthFallback;
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      // 1. Invoca la Cloud Function che cancella Firestore e Storage lato server.
+      final callable = _functions.httpsCallable('deleteMyAccount');
+      await callable.call<dynamic>();
+
+      // 2. Svuota il database locale Isar: rimuove piante, stanze, cache
+      //    specie e operazioni pending per evitare dati orfani offline.
+      await _db.writeTxn(() async => _db.clear());
+
+      // 3. Logout locale: invalida il token FirebaseAuth e il token GoogleSignIn.
+      //    Questo fa scattare authStateChanges -> null, che GoRouter intercetta
+      //    per reindirizzare automaticamente alla schermata di Login.
+      await signOut();
+    } on FirebaseFunctionsException catch (e) {
+      if (e.code == 'failed-precondition' &&
+          e.message == 'requires-recent-login') {
+        throw const DeleteAccountException(
+          'Per motivi di sicurezza, accedi nuovamente prima di eliminare il profilo.',
+          requiresRecentLogin: true,
+        );
+      }
+      throw DeleteAccountException(
+        e.message ?? "Impossibile eliminare l'account. Riprova più tardi.",
+      );
+    } on DeleteAccountException {
+      rethrow;
+    } catch (_) {
+      throw const DeleteAccountException(
+        "Impossibile eliminare l'account. Riprova più tardi.",
+      );
     }
   }
 }

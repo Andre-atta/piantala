@@ -49,12 +49,12 @@ final currentUserProvider = Provider<UserEntity?>.internal(
 );
 
 typedef CurrentUserRef = ProviderRef<UserEntity?>;
-String _$authControllerHash() => r'd1d75ec1b3194daf9b631d2cf0647e239f1c0718';
+String _$authControllerHash() => r'260f8bc5b8823f6cbfa9788f6fa9b4a45ea19c35';
 
 /// See also [AuthController].
 @ProviderFor(AuthController)
 final authControllerProvider =
-    AutoDisposeAsyncNotifierProvider<AuthController, void>.internal(
+    AsyncNotifierProvider<AuthController, void>.internal(
   AuthController.new,
   name: r'authControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -64,6 +64,6 @@ final authControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AuthController = AutoDisposeAsyncNotifier<void>;
+typedef _$AuthController = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

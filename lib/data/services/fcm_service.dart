@@ -12,33 +12,28 @@ class FcmService {
   final _messaging = FirebaseMessaging.instance;
   final _firestore = FirebaseFirestore.instance;
 
-  bool _isInitialized = false;
-
   /// Da chiamare dopo il login per registrare/aggiornare il token.
+  String? _tokenUid;
+  bool _listenersAttached = false;
+
   Future<void> init() async {
-    if (_isInitialized) return;
-    _isInitialized = true;
-
-    // Richiesta permessi FCM su iOS (su Android API < 33 già garantiti)
-    await _messaging.requestPermission();
-
-    // Salva il token corrente
-    await _saveToken();
-
-    // Aggiorna il token se viene ruotato da Firebase
-    _messaging.onTokenRefresh.listen(_onTokenRefresh);
-
-    // Handler messaggi in foreground (mostriamo la notifica manualmente
-    // tramite flutter_local_notifications — FCM in foreground non la mostra)
-    FirebaseMessaging.onMessage.listen(_onForegroundMessage);
-
-    // Handler per apertura app da notifica FCM in background/terminato
-    FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
-
-    // Controlla se l'app è stata aperta da una notifica terminata
-    final initial = await _messaging.getInitialMessage();
-    if (initial != null) {
-      _handleMessage(initial);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null || _tokenUid == uid) return;
+    _tokenUid = uid;
+    try {
+      if (!_listenersAttached) {
+        _listenersAttached = true;
+        await _messaging.requestPermission();
+        _messaging.onTokenRefresh.listen(_onTokenRefresh);
+        FirebaseMessaging.onMessage.listen(_onForegroundMessage);
+        FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
+        final initial = await _messaging.getInitialMessage();
+        if (initial != null) _handleMessage(initial);
+      }
+      await _saveToken();
+    } catch (e, st) {
+      _tokenUid = null; // riprova al prossimo giro
+      debugPrint('FcmService: init fallito → $e\n$st');
     }
   }
 
@@ -47,7 +42,9 @@ class FcmService {
     if (uid == null) return;
 
     try {
+      debugPrint('FcmService: getToken...');
       final token = await _messaging.getToken();
+      debugPrint('FcmService: token = ${token == null ? "null" : "ok"}');
       if (token == null) return;
 
       await _firestore.doc('users/$uid').set(

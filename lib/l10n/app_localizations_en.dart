@@ -506,4 +506,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exposureUnknown => 'Unknown';
+
+  @override
+  String get settingsDeleteAccountButton => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'You are about to permanently delete your account. All your plants, rooms, and images will be erased. This action cannot be undone.';
+
+  @override
+  String get settingsDeleteAccountConfirm => 'Delete permanently';
+
+  @override
+  String get settingsDeleteAccountRecentLoginError =>
+      'For security reasons, please sign in again before deleting your account.';
 }

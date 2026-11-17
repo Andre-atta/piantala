@@ -1003,6 +1003,36 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Sconosciuta'**
   String get exposureUnknown;
+
+  /// Etichetta pulsante eliminazione account nelle impostazioni
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina account'**
+  String get settingsDeleteAccountButton;
+
+  /// Titolo dialog conferma eliminazione account
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina account'**
+  String get settingsDeleteAccountDialogTitle;
+
+  /// Corpo dialog conferma eliminazione account
+  ///
+  /// In it, this message translates to:
+  /// **'Stai per eliminare definitivamente il tuo account. Tutte le tue piante, stanze e immagini saranno cancellate in modo irreversibile.'**
+  String get settingsDeleteAccountDialogBody;
+
+  /// Etichetta cartellino conferma eliminazione account
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina definitivamente'**
+  String get settingsDeleteAccountConfirm;
+
+  /// Errore quando il login e troppo vecchio
+  ///
+  /// In it, this message translates to:
+  /// **'Per sicurezza, effettua nuovamente il login prima di eliminare il profilo.'**
+  String get settingsDeleteAccountRecentLoginError;
 }
 
 class _AppLocalizationsDelegate

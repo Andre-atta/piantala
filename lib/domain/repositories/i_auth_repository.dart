@@ -28,4 +28,6 @@ abstract class IAuthRepository {
 
   /// Ottiene l'utente corrente, se presente.
   UserEntity? get currentUser;
+
+  Future<void> deleteAccount() async {}
 }
