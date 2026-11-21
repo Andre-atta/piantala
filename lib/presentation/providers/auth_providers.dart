@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:piantala/data/repositories/auth_repository_impl.dart';
+import 'package:piantala/data/services/fcm_service.dart';
 import 'package:piantala/domain/entities/user_entity.dart';
 import 'package:piantala/domain/repositories/i_auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -74,6 +75,12 @@ class AuthController extends _$AuthController {
   Future<void> signOut() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
+      // Rimuove il token FCM prima del logout (serve essere autenticati).
+      // Con timeout: se offline il logout avviene comunque.
+      await FcmService.instance
+          .clearForSignOut()
+          .timeout(const Duration(seconds: 3))
+          .catchError((_) {}); // timeout ignorato
       final repository = ref.read(authRepositoryProvider);
       await repository.signOut();
     });
