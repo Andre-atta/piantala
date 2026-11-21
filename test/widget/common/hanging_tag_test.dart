@@ -112,6 +112,81 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('testo centrato nel corpo del cartellino con e senza leading',
+      (tester) async {
+    // Senza leading — 1× scale
+    for (final textScale in [1.0, 1.5]) {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(
+            extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
+          ),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(textScale),
+            ),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: Center(
+              child: HangingTag(
+                label: 'Salva',
+                variant: HangingTagVariant.primary,
+                onPressed: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      // Il widget deve esistere e avere dimensione positiva
+      final size = tester.getSize(find.byType(HangingTag));
+      expect(size.width, greaterThan(0));
+      expect(size.height, greaterThan(0));
+
+      // Il centro del HangingTag deve essere centrato nel viewport
+      final center = tester.getCenter(find.byType(HangingTag));
+      final screenSize = tester.view.physicalSize / tester.view.devicePixelRatio;
+      expect(center.dx, closeTo(screenSize.width / 2, 2.0),
+          reason: 'textScale=$textScale, senza leading');
+    }
+
+    // Con leading — 1× scale
+    for (final textScale in [1.0, 1.5]) {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(
+            extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
+          ),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(textScale),
+            ),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: Center(
+              child: HangingTag(
+                label: 'Salva',
+                variant: HangingTagVariant.primary,
+                leading: const Icon(Icons.eco, size: 16),
+                onPressed: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+
+      final size = tester.getSize(find.byType(HangingTag));
+      expect(size.width, greaterThan(0));
+      expect(size.height, greaterThan(0));
+    }
+  });
+
   testWidgets('wide tag supports a logo and two lines at large text',
       (tester) async {
     await tester.pumpWidget(
