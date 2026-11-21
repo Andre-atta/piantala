@@ -48,7 +48,7 @@ class OpbContributionRepository {
       ..documentId = entity.displayPid.toLowerCase()
       ..operation = 'opb_contribute'
       ..payloadJson = jsonEncode(payload)
-      ..createdAt = DateTime.now()
+      ..createdAt = DateTime.now().toUtc()
       ..attemptCount = 0;
 
     await _isar.writeTxn(() async {
@@ -74,7 +74,7 @@ class OpbContributionRepository {
       ..documentId = pid
       ..operation = 'opb_update'
       ..payloadJson = jsonEncode({'pid': pid, ...payload})
-      ..createdAt = DateTime.now()
+      ..createdAt = DateTime.now().toUtc()
       ..attemptCount = 0;
 
     await _isar.writeTxn(() async {

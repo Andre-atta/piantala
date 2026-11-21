@@ -57,7 +57,7 @@ class RoomRepositoryImpl implements IRoomRepository {
       _assertOwner(room.userId);
       final collection = room.toCollection()
         ..syncStatusIndex = SyncStatus.pendingCreate.index
-        ..localUpdatedAt = DateTime.now();
+        ..localUpdatedAt = DateTime.now().toUtc();
 
       final pendingOp = PendingOperationCollection()
         ..operationId = _uuid.v4()
@@ -66,7 +66,7 @@ class RoomRepositoryImpl implements IRoomRepository {
         ..documentId = room.id
         ..operation = 'create'
         ..payloadJson = jsonEncode(room.toJson())
-        ..createdAt = DateTime.now()
+        ..createdAt = DateTime.now().toUtc()
         ..attemptCount = 0;
 
       await _isar.writeTxn(() async {
@@ -101,7 +101,7 @@ class RoomRepositoryImpl implements IRoomRepository {
       final collection = room.toCollection()
         ..id = existing?.id ?? Isar.autoIncrement
         ..syncStatusIndex = SyncStatus.pendingUpdate.index
-        ..localUpdatedAt = DateTime.now();
+        ..localUpdatedAt = DateTime.now().toUtc();
 
       final pendingOp = PendingOperationCollection()
         ..operationId = _uuid.v4()
@@ -110,7 +110,7 @@ class RoomRepositoryImpl implements IRoomRepository {
         ..documentId = room.id
         ..operation = 'update'
         ..payloadJson = jsonEncode(room.toJson())
-        ..createdAt = DateTime.now()
+        ..createdAt = DateTime.now().toUtc()
         ..attemptCount = 0;
 
       await _isar.writeTxn(() async {
@@ -140,7 +140,7 @@ class RoomRepositoryImpl implements IRoomRepository {
 
       existing
         ..syncStatusIndex = SyncStatus.pendingDelete.index
-        ..localUpdatedAt = DateTime.now();
+        ..localUpdatedAt = DateTime.now().toUtc();
 
       final pendingOp = PendingOperationCollection()
         ..operationId = _uuid.v4()
@@ -149,7 +149,7 @@ class RoomRepositoryImpl implements IRoomRepository {
         ..documentId = roomId
         ..operation = 'delete'
         ..payloadJson = '{}'
-        ..createdAt = DateTime.now()
+        ..createdAt = DateTime.now().toUtc()
         ..attemptCount = 0;
 
       await _isar.writeTxn(() async {
