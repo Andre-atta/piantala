@@ -29,7 +29,7 @@ class FcmService {
 
   String? get _currentUid =>
       _currentUidProvider != null
-          ? _currentUidProvider!()
+          ? _currentUidProvider()
           : FirebaseAuth.instance.currentUser?.uid;
 
   /// Da chiamare dopo il login per registrare/aggiornare il token.

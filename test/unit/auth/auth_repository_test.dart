@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,6 +10,10 @@ import 'package:piantala/data/repositories/auth_repository_impl.dart';
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
+class MockFirebaseFunctions extends Mock implements FirebaseFunctions {}
+
+class MockHttpsCallable extends Mock implements HttpsCallable {}
 
 void main() {
   late MockFirebaseAuth mockFirebaseAuth;
@@ -171,6 +176,42 @@ void main() {
 
       verify(() => mockFirebaseAuth.signOut()).called(1);
       verify(() => mockGoogleSignIn.signOut()).called(1);
+    });
+
+    test(
+      "cancellare l'account chiama deleteMyAccount e gestisce "
+      'requires-recent-login',
+      () async {
+      final mockFunctions = MockFirebaseFunctions();
+      final mockCallable = MockHttpsCallable();
+      when(() => mockFunctions.httpsCallable('deleteMyAccount'))
+          .thenReturn(mockCallable);
+      when(() => mockCallable.call<dynamic>()).thenThrow(
+        FirebaseFunctionsException(
+          code: 'failed-precondition',
+          message: 'requires-recent-login',
+        ),
+      );
+
+      final repo = AuthRepositoryImpl(
+        firebaseAuth: mockFirebaseAuth,
+        googleSignIn: mockGoogleSignIn,
+        functions: mockFunctions,
+      );
+
+      await expectLater(
+        repo.deleteAccount(),
+        throwsA(
+          isA<DeleteAccountException>().having(
+            (e) => e.requiresRecentLogin,
+            'requiresRecentLogin',
+            isTrue,
+          ),
+        ),
+      );
+
+      verify(() => mockFunctions.httpsCallable('deleteMyAccount')).called(1);
+      verify(() => mockCallable.call<dynamic>()).called(1);
     });
   });
 }

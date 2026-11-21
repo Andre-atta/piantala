@@ -23,15 +23,18 @@ class AuthRepositoryImpl implements IAuthRepository {
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn(),
         _firestore = firestore,
-        _functions = functions ??
-            FirebaseFunctions.instanceFor(region: 'europe-west1'),
+        _functionsOverride = functions,
         _isar = isar;
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore? _firestore;
-  final FirebaseFunctions _functions;
+  final FirebaseFunctions? _functionsOverride;
   final Isar? _isar;
+
+  FirebaseFunctions get _functions =>
+      _functionsOverride ??
+      FirebaseFunctions.instanceFor(region: 'europe-west1');
 
   Isar get _db => _isar ?? IsarService.instance.db;
 
