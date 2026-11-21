@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
+import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
 import 'package:piantala/presentation/screens/login/login_screen.dart';
@@ -49,6 +50,27 @@ void main() {
         addTearDown(tester.view.resetDevicePixelRatio);
 
         await tester.pumpWidget(_app(locale));
+        final context = tester.element(find.byType(LoginScreen));
+        final imagesReady = tester.runAsync(
+          () => Future.wait([
+            precacheImage(
+              AssetImage(PlantAssetResolver.wallBackground()),
+              context,
+            ),
+            precacheImage(
+              AssetImage(
+                PlantAssetResolver.plantAsset(
+                      'epipremnum_aureum',
+                      water: true,
+                    ) ??
+                    'assets/illustrations/plants/epipremnum_aureum_water.png',
+              ),
+              context,
+            ),
+          ]),
+        );
+        await tester.pumpAndSettle();
+        await imagesReady;
         await tester.pumpAndSettle();
 
         if (mode != 'home') {
