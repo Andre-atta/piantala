@@ -121,7 +121,6 @@ class _RoomDialogState extends ConsumerState<RoomDialog> {
               label: l10n.roomDialogNameLabel,
               hintText: l10n.roomDialogNameHint,
               controller: _nameController,
-              autofocus: true,
               textCapitalization: TextCapitalization.words,
               validator: (value) => value == null || value.trim().isEmpty
                   ? l10n.roomDialogNameValidation

@@ -14,6 +14,7 @@ class PaperDialogScaffold extends StatefulWidget {
     required this.actions,
     this.topInset = PaperComponentMetrics.dialogTopInset,
     this.rotationDegrees = PaperComponentMetrics.dialogSheetRotationDegrees,
+    this.autofocus = false,
     super.key,
   })  : assert(
           actions.length == 1 || actions.length == 2,
@@ -30,6 +31,7 @@ class PaperDialogScaffold extends StatefulWidget {
   final List<HangingTag> actions;
   final double topInset;
   final double rotationDegrees;
+  final bool autofocus;
 
   @override
   State<PaperDialogScaffold> createState() => _PaperDialogScaffoldState();
@@ -41,6 +43,7 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!widget.autofocus) return;
     if (_requestedInitialFocus) return;
     _requestedInitialFocus = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {

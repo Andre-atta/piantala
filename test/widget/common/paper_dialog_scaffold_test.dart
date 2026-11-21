@@ -57,6 +57,7 @@ Widget _app({
                   final l10n = AppLocalizations.of(dialogContext)!;
                   return PaperDialogScaffold(
                     title: l10n.roomDialogNewTitle,
+                    autofocus: true,
                     actions: [
                       if (actionCount == 2)
                         HangingTag(

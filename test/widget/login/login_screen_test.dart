@@ -509,6 +509,16 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('aprendo il foglio email nessun campo ha focus finche non viene toccato',
+      (tester) async {
+    await _openEmailDialog(tester, _FakeAuthController());
+
+    final focusedEditable = find.byWidgetPredicate(
+      (widget) => widget is EditableText && widget.focusNode.hasFocus,
+    );
+    expect(focusedEditable, findsNothing);
+  });
+
   testWidgets('uses localized English login and auth dialog copy',
       (tester) async {
     await tester.pumpWidget(
