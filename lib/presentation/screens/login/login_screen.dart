@@ -499,6 +499,7 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
               const SizedBox(height: LoginMetrics.formSectionSpacing),
             ],
             if (isRegistration) ...[
+              const SizedBox(height: LoginMetrics.formFieldSpacing),
               PaperTextField(
                 fieldKey: const ValueKey('auth-name-field'),
                 label: l10n.authFieldName,

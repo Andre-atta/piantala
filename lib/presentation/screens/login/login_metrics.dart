@@ -19,7 +19,7 @@ abstract final class LoginMetrics {
   static const errorFontSize = 13.0;
   static const errorSpacing = 8.0;
   static const formSectionSpacing = 16.0;
-  static const formFieldSpacing = 12.0;
+  static const formFieldSpacing = 20.0;
   static const registerPrivacySpacing = 8.0;
   static const loginDialogTopInset = 120.0;
   static const registerDialogTopInset = 40.0;
