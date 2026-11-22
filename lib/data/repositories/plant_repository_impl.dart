@@ -63,7 +63,7 @@ class PlantRepositoryImpl implements IPlantRepository {
       _assertOwner(plant.userId);
       final collection = plant.toCollection()
         ..syncStatusIndex = SyncStatus.pendingCreate.index
-        ..localUpdatedAt = DateTime.now();
+        ..localUpdatedAt = DateTime.now().toUtc();
       await _isar.writeTxn(() async {
         await _isar.plantCollections.put(collection);
         await _isar.pendingOperationCollections.put(_pending(plant, 'create'));
@@ -103,7 +103,7 @@ class PlantRepositoryImpl implements IPlantRepository {
       final collection = plant.toCollection()
         ..id = existing.id
         ..syncStatusIndex = SyncStatus.pendingUpdate.index
-        ..localUpdatedAt = DateTime.now();
+        ..localUpdatedAt = DateTime.now().toUtc();
       await _isar.writeTxn(() async {
         await _isar.plantCollections.put(collection);
         await _isar.pendingOperationCollections.put(_pending(plant, 'update'));
@@ -123,7 +123,7 @@ class PlantRepositoryImpl implements IPlantRepository {
         ..documentId = plant.id
         ..operation = operation
         ..payloadJson = jsonEncode(plant.toJson())
-        ..createdAt = DateTime.now()
+        ..createdAt = DateTime.now().toUtc()
         ..attemptCount = 0;
 
   @override
@@ -140,7 +140,7 @@ class PlantRepositoryImpl implements IPlantRepository {
     }
     existing
       ..syncStatusIndex = SyncStatus.pendingDelete.index
-      ..localUpdatedAt = DateTime.now();
+      ..localUpdatedAt = DateTime.now().toUtc();
     final pending = PendingOperationCollection()
       ..operationId = _uuid.v4()
       ..userId = existing.userId
@@ -148,7 +148,7 @@ class PlantRepositoryImpl implements IPlantRepository {
       ..documentId = plantId
       ..operation = 'delete'
       ..payloadJson = '{}'
-      ..createdAt = DateTime.now()
+      ..createdAt = DateTime.now().toUtc()
       ..attemptCount = 0;
     await _isar.writeTxn(() async {
       await _isar.plantCollections.put(existing);

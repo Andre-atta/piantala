@@ -1,9 +1,6 @@
 abstract class RoomDialogMetrics {
   static const fieldLabelLetterSpacing = 1.32;
   static const nameFieldFontSize = 15.0;
-  static const nameFieldHeight = 48.0;
-  static const nameFieldFocusedStroke = 2.0;
-  static const nameErrorFontSize = 12.0;
   static const exposureRowHeight = 56.0;
   static const notesLineHeight = 24.0;
   static const notesLineCount = 3;

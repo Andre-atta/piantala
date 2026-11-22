@@ -1,26 +1,25 @@
 {
   "@@locale": "en",
   "@@last_modified": "2026-11-01",
-
   "appName": "Piantala",
   "appTagline": "Your pocket garden",
+  "loginTagline": "Your plants, one shelf at a time.",
+  "loginPrivacyNotice": "By continuing, you accept",
+  "loginPrivacyLink": "the Privacy Policy",
+  "loginPrivacyOpenError": "Unable to open the privacy policy.",
   "appTosNotice": "By signing in you accept the Terms of Service",
-
   "authSignInWithGoogle": "Continue with Google",
   "authSignInWithEmail": "Sign in with email",
-
-  "authSheetTitleLogin": "Sign in with email",
+  "authSheetTitleLogin": "Sign in",
   "authSheetTitleRegister": "Create account",
   "authSheetTitleReset": "Reset password",
-
   "authSheetSubtitleReset": "Enter your email. If it's linked to an account, you'll receive instructions.",
   "authSheetSubtitleLogin": "Use a valid email address and a secure password.",
-
+  "authRegisterPrivacyNotice": "By creating an account, you accept",
   "authFieldName": "Name",
   "authFieldEmail": "Email",
   "authFieldPassword": "Password",
   "authFieldConfirmPassword": "Confirm password",
-
   "authButtonLogin": "Sign in",
   "authButtonRegister": "Create account",
   "authButtonSendReset": "Send instructions",
@@ -28,25 +27,32 @@
   "authButtonGoToRegister": "Don't have an account? Sign up",
   "authButtonGoToLogin": "Already have an account? Sign in",
   "authButtonBackToLogin": "Back to sign in",
-
   "authValidationNameEmpty": "Enter your name",
   "authValidationEmailInvalid": "Enter a valid email address",
   "authValidationPasswordTooShort": "Use at least 6 characters",
   "authValidationPasswordMismatch": "Passwords do not match",
-
+  "paperTextFieldShowPassword": "Show password",
+  "paperTextFieldHidePassword": "Hide password",
   "authResetEmailSent": "If the address is linked to an account, you'll receive instructions.",
-
+  "authErrorInvalidCredential": "Email or password is incorrect.",
+  "authErrorEmailAlreadyInUse": "This email is already in use.",
+  "authErrorWeakPassword": "Choose a password with at least 6 characters.",
+  "authErrorTooManyRequests": "Too many attempts. Try again later.",
+  "authErrorNetwork": "No or unstable connection. Please try again.",
+  "authErrorInvalidEmail": "Enter a valid email address.",
+  "authErrorGeneric": "We couldn't complete the request. Please try again.",
   "homeEmptyShelfTitle": "Your shelf is empty",
   "homeEmptyShelfSubtitle": "Add your first plant\nusing the + button",
-
   "homeEmptyRoomTitle": "{roomName} is empty",
   "@homeEmptyRoomTitle": {
     "placeholders": {
-      "roomName": { "type": "String", "example": "Living room" }
+      "roomName": {
+        "type": "String",
+        "example": "Living room"
+      }
     }
   },
   "homeEmptyRoomSubtitle": "Add a plant and assign it\nto this room",
-
   "homeButtonAddPlant": "Add plant",
   "homeLabelUnassigned": "Unassigned",
   "homeLabelAllPlants": "All plants",
@@ -54,75 +60,99 @@
   "homeRoomMeta": "{count, plural, one{1 plant} other{{count} plants}} · Exposure {exposure}",
   "@homeRoomMeta": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" },
-      "exposure": { "type": "String", "example": "South" }
+      "count": {
+        "type": "int",
+        "example": "3"
+      },
+      "exposure": {
+        "type": "String",
+        "example": "South"
+      }
     }
   },
   "homeRoomPageSemantics": "Room {current} of {total}",
   "@homeRoomPageSemantics": {
     "placeholders": {
-      "current": { "type": "int", "example": "1" },
-      "total": { "type": "int", "example": "3" }
+      "current": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
     }
   },
   "homeWindowAccessibility": "Time of day indicator",
   "homePlantNameFallback": "Plant",
   "homeCareWateringSemantics": "Needs watering",
   "homeCareFertilizingSemantics": "Needs fertilizing",
-
   "homeErrorLoading": "Error: {error}",
   "@homeErrorLoading": {
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
-
   "greetingNight": "Good night",
   "greetingDawn": "Good morning",
   "greetingDay": "Hello",
   "greetingDusk": "Good afternoon",
   "greetingEvening": "Good evening",
-
   "greetingSubtitleNight": "Even at night your plants keep growing 🌙",
   "greetingSubtitleDawn": "A great start to the day with your plants",
   "greetingSubtitleDay": "How are your plants doing today?",
   "greetingSubtitleDusk": "Great time to check on your plants",
   "greetingSubtitleEvening": "Plan tomorrow's plant care",
-
   "roomsEmptyTitle": "No rooms created yet.",
   "roomsEmptyHint": "Tap \"new room\" to get started.",
   "roomsOptionsSemantics": "Room options for {roomName}",
   "@roomsOptionsSemantics": {
     "placeholders": {
-      "roomName": { "type": "String", "example": "Living room" }
+      "roomName": {
+        "type": "String",
+        "example": "Living room"
+      }
     }
   },
   "roomsExposure": "Exposure: {exposure}",
   "@roomsExposure": {
     "placeholders": {
-      "exposure": { "type": "String", "example": "South" }
+      "exposure": {
+        "type": "String",
+        "example": "South"
+      }
     }
   },
   "roomsPlants": "Plants: {count}",
   "@roomsPlants": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" }
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
     }
   },
   "roomsDeleteDialogTitle": "Delete Room",
   "roomsDeleteWarning": "This room contains {count} plants! Deleting it will make the plants \"Unassigned\". Do you want to proceed?",
   "@roomsDeleteWarning": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" }
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
     }
   },
   "roomsDeleteConfirm": "Are you sure you want to delete the room \"{roomName}\"?",
   "@roomsDeleteConfirm": {
     "placeholders": {
-      "roomName": { "type": "String", "example": "Living room" }
+      "roomName": {
+        "type": "String",
+        "example": "Living room"
+      }
     }
   },
-
   "roomDialogNewTitle": "New room",
   "roomDialogEditTitle": "Edit room",
   "roomDialogNameLabel": "Room name",
@@ -138,7 +168,9 @@
   "compassHold": "Hold steady for: {seconds} s",
   "@compassHold": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "compassDone": "Exposure detected",
@@ -147,7 +179,9 @@
   "compassDialSemantics": "Compass, direction {direction}",
   "@compassDialSemantics": {
     "placeholders": {
-      "direction": { "type": "String" }
+      "direction": {
+        "type": "String"
+      }
     }
   },
   "compassLetterNorth": "N",
@@ -158,7 +192,6 @@
   "exposureSouthEast": "Southeast",
   "exposureSouthWest": "Southwest",
   "exposureNorthWest": "Northwest",
-
   "encyclopediaTitle": "Encyclopedia",
   "encyclopediaSearchHint": "Search by common or scientific name...",
   "encyclopediaEmptyTitle": "Explore thousands of plants",
@@ -167,10 +200,11 @@
   "encyclopediaError": "Error: {error}",
   "@encyclopediaError": {
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
-
   "settingsScreenTitle": "Settings",
   "settingsLogout": "Sign out",
   "settingsSectionGeneral": "General",
@@ -180,33 +214,35 @@
   "settingsLanguageEnglish": "English",
   "settingsSectionNotifications": "Notifications",
   "settingsSectionAbout": "About",
-
   "settingsNotifPermissionTitle": "Notification Permission",
   "settingsNotifPermissionSubtitle": "Grant permission to receive alerts about plants that need attention.",
   "settingsNotifPermissionButton": "Request Permission",
   "settingsNotifPermissionGranted": "✅ Permission granted!",
   "settingsNotifPermissionDenied": "❌ Permission denied.",
-
   "settingsReminderTitle": "Morning reminder time",
   "settingsReminderSubtitle": "Every morning at {time}",
   "@settingsReminderSubtitle": {
     "placeholders": {
-      "time": { "type": "String", "example": "08:00" }
+      "time": {
+        "type": "String",
+        "example": "08:00"
+      }
     }
   },
   "settingsReminderUpdated": "⏰ Reminder updated: {time}",
   "@settingsReminderUpdated": {
     "placeholders": {
-      "time": { "type": "String", "example": "08:00" }
+      "time": {
+        "type": "String",
+        "example": "08:00"
+      }
     }
   },
   "settingsReminderPickerHelpText": "Choose reminder time",
-
   "settingsAboutVersion": "Version",
   "settingsAboutVersionNumber": "0.1.0",
   "settingsAboutDataSource": "Species data",
   "settingsAboutDataSourceSubtitle": "Provided by Perenual API (free plan)",
-
   "navHome": "Shelf",
   "navRooms": "Rooms",
   "navEncyclopedia": "Encyclopedia",
@@ -214,11 +250,9 @@
   "navProfile": "Profile",
   "navNewPlant": "new plant",
   "navNewRoom": "new room",
-
   "errPageNotFound": "Page not found",
   "errPageNotFoundBody": "Oops, this page doesn't exist",
   "errNetworkUnavailable": "No connection available. Data will sync when you're back online.",
-
   "commonButtonConfirm": "Confirm",
   "commonButtonClose": "Close",
   "commonButtonRetry": "Retry",
@@ -229,10 +263,29 @@
   "commonSave": "Save",
   "commonUnknown": "Unknown",
   "commonLoading": "Loading...",
-
   "exposureNorth": "North",
   "exposureSouth": "South",
   "exposureEast": "East",
   "exposureWest": "West",
-  "exposureUnknown": "Unknown"
+  "exposureUnknown": "Unknown",
+  "settingsDeleteAccountButton": "Delete account",
+  "@settingsDeleteAccountButton": {
+    "description": "Settings delete account button label"
+  },
+  "settingsDeleteAccountDialogTitle": "Delete account",
+  "@settingsDeleteAccountDialogTitle": {
+    "description": "Delete account confirmation dialog title"
+  },
+  "settingsDeleteAccountDialogBody": "You are about to permanently delete your account. All your plants, rooms, and images will be erased. This action cannot be undone.",
+  "@settingsDeleteAccountDialogBody": {
+    "description": "Delete account confirmation dialog body"
+  },
+  "settingsDeleteAccountConfirm": "Delete permanently",
+  "@settingsDeleteAccountConfirm": {
+    "description": "Delete account confirm tag label"
+  },
+  "settingsDeleteAccountRecentLoginError": "For security reasons, please sign in again before deleting your account.",
+  "@settingsDeleteAccountRecentLoginError": {
+    "description": "Error shown when session is too old to delete account"
+  }
 }

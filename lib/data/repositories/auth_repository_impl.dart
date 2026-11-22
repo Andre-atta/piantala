@@ -1,11 +1,15 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart'; // PlatformException per Google Sign-In
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:isar/isar.dart';
 
 import 'package:piantala/core/constants/app_strings.dart';
 import 'package:piantala/core/errors/app_exception.dart';
+import 'package:piantala/data/local/isar_service.dart';
 import 'package:piantala/domain/entities/user_entity.dart';
 import 'package:piantala/domain/repositories/i_auth_repository.dart';
 
@@ -14,13 +18,25 @@ class AuthRepositoryImpl implements IAuthRepository {
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
     FirebaseFirestore? firestore,
+    FirebaseFunctions? functions,
+    Isar? isar,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn(),
-        _firestore = firestore;
+        _firestore = firestore,
+        _functionsOverride = functions,
+        _isar = isar;
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final FirebaseFirestore? _firestore;
+  final FirebaseFunctions? _functionsOverride;
+  final Isar? _isar;
+
+  FirebaseFunctions get _functions =>
+      _functionsOverride ??
+      FirebaseFunctions.instanceFor(region: 'europe-west1');
+
+  Isar get _db => _isar ?? IsarService.instance.db;
 
   UserEntity? _mapFirebaseUser(User? user) {
     if (user == null) return null;
@@ -49,19 +65,37 @@ class AuthRepositoryImpl implements IAuthRepository {
       case 'user-not-found':
       case 'wrong-password':
       case 'invalid-credential':
-        return const AuthException(AppAuthStrings.errInvalidCredential);
+        return const AuthException(
+          AppAuthStrings.errInvalidCredential,
+          failure: AuthFailure.invalidCredential,
+        );
       case 'invalid-email':
-        return const AuthException(AppAuthStrings.errInvalidEmail);
+        return const AuthException(
+          AppAuthStrings.errInvalidEmail,
+          failure: AuthFailure.invalidEmail,
+        );
       case 'weak-password':
-        return const AuthException(AppAuthStrings.errWeakPassword);
+        return const AuthException(
+          AppAuthStrings.errWeakPassword,
+          failure: AuthFailure.weakPassword,
+        );
       case 'email-already-in-use':
-        return const AuthException(AppAuthStrings.errEmailInUse);
+        return const AuthException(
+          AppAuthStrings.errEmailInUse,
+          failure: AuthFailure.emailAlreadyInUse,
+        );
       case 'user-disabled':
         return const AuthException(AppAuthStrings.errUserDisabled);
       case 'too-many-requests':
-        return const AuthException(AppAuthStrings.errTooManyRequests);
+        return const AuthException(
+          AppAuthStrings.errTooManyRequests,
+          failure: AuthFailure.tooManyRequests,
+        );
       case 'network-request-failed':
-        return const AuthException(AppAuthStrings.errNetworkFailed);
+        return const AuthException(
+          AppAuthStrings.errNetworkFailed,
+          failure: AuthFailure.networkUnavailable,
+        );
       case 'operation-not-allowed':
         return AuthException(
           isRegistration
@@ -73,6 +107,7 @@ class AuthRepositoryImpl implements IAuthRepository {
           isRegistration
               ? AppAuthStrings.errRegistrationFallback
               : AppAuthStrings.errLoginFallback,
+          failure: AuthFailure.generic,
         );
     }
   }
@@ -98,6 +133,9 @@ class AuthRepositoryImpl implements IAuthRepository {
       return _mapFirebaseUser(userCredential.user);
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapGoogleAuthError(e));
+    } on PlatformException catch (error) {
+      if (error.code == GoogleSignIn.kSignInCanceledError) return null;
+      throw const AuthException(AppAuthStrings.errGoogleSignIn);
     } catch (_) {
       throw const AuthException(AppAuthStrings.errGoogleSignIn);
     }
@@ -178,11 +216,13 @@ class AuthRepositoryImpl implements IAuthRepository {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: normalizedEmail);
     } on FirebaseAuthException catch (e) {
-      // Mantiene un messaggio neutro per non rivelare se l'account esiste.
-      if (e.code == 'invalid-email' || e.code == 'network-request-failed') {
-        throw _mapEmailAuthException(e, isRegistration: false);
+      if (e.code == 'user-not-found' || e.code == 'email-not-found') {
+        throw const AuthException(
+          AppAuthStrings.resetEmailSent,
+          failure: AuthFailure.resetEmailSent,
+        );
       }
-      throw const AuthException(AppAuthStrings.resetEmailSent);
+      throw _mapEmailAuthException(e, isRegistration: false);
     }
   }
 
@@ -214,6 +254,41 @@ class AuthRepositoryImpl implements IAuthRepository {
         return AppAuthStrings.errTooManyRequests;
       default:
         return AppAuthStrings.errAuthFallback;
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      // 1. Invoca la Cloud Function che cancella Firestore e Storage lato server.
+      final callable = _functions.httpsCallable('deleteMyAccount');
+      await callable.call<dynamic>();
+
+      // 2. Svuota il database locale Isar: rimuove piante, stanze, cache
+      //    specie e operazioni pending per evitare dati orfani offline.
+      await _db.writeTxn(() async => _db.clear());
+
+      // 3. Logout locale: invalida il token FirebaseAuth e il token GoogleSignIn.
+      //    Questo fa scattare authStateChanges -> null, che GoRouter intercetta
+      //    per reindirizzare automaticamente alla schermata di Login.
+      await signOut();
+    } on FirebaseFunctionsException catch (e) {
+      if (e.code == 'failed-precondition' &&
+          e.message == 'requires-recent-login') {
+        throw const DeleteAccountException(
+          'Per motivi di sicurezza, accedi nuovamente prima di eliminare il profilo.',
+          requiresRecentLogin: true,
+        );
+      }
+      throw DeleteAccountException(
+        e.message ?? "Impossibile eliminare l'account. Riprova più tardi.",
+      );
+    } on DeleteAccountException {
+      rethrow;
+    } catch (_) {
+      throw const DeleteAccountException(
+        "Impossibile eliminare l'account. Riprova più tardi.",
+      );
     }
   }
 }

@@ -1,244 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:piantala/core/theme/app_colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:piantala/core/constants/app_links.dart';
+import 'package:piantala/core/errors/app_exception.dart';
+import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
+import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
+import 'package:piantala/presentation/screens/login/login_metrics.dart';
+import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
+import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
+import 'package:piantala/presentation/widgets/common/paper_text_field.dart';
+import 'package:piantala/presentation/widgets/common/paper_text_link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authControllerProvider);
-    final isLoading = authState.isLoading;
-    const period = TemporalPeriod.day;
-
-    ref.listen<AsyncValue<void>>(
-      authControllerProvider,
-      (_, state) {
-        if (!state.isLoading && state.hasError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error.toString()),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      },
-    );
-
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: _iconBrightness(period),
-      ),
-      child: Scaffold(
-        body: _LoginBody(period: period, isLoading: isLoading, ref: ref),
-      ),
-    );
-  }
-
-  Brightness _iconBrightness(TemporalPeriod period) =>
-      (period == TemporalPeriod.night || period == TemporalPeriod.evening)
-          ? Brightness.light
-          : Brightness.dark;
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginBody extends StatelessWidget {
-  const _LoginBody({
-    required this.period,
-    required this.isLoading,
-    required this.ref,
-  });
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  String? _googleError;
 
-  final TemporalPeriod period;
-  final bool isLoading;
-  final WidgetRef ref;
+  Future<void> _signInWithGoogle(AppLocalizations l10n) async {
+    setState(() => _googleError = null);
+    await ref.read(authControllerProvider.notifier).signInWithGoogle();
+    if (!mounted) return;
 
-  Color get _bgTop => switch (period) {
-        TemporalPeriod.night => AppColors.nightBackground,
-        TemporalPeriod.dawn => AppColors.dawnBackground,
-        TemporalPeriod.day => const Color(0xFFF0F7F2),
-        TemporalPeriod.dusk => AppColors.duskBackground,
-        TemporalPeriod.evening => AppColors.eveningBackground,
-      };
-
-  Color get _bgBottom => switch (period) {
-        TemporalPeriod.night => AppColors.nightSurface,
-        TemporalPeriod.dawn => AppColors.dawnSurface,
-        TemporalPeriod.day => AppColors.daySurface,
-        TemporalPeriod.dusk => AppColors.duskSurface,
-        TemporalPeriod.evening => AppColors.eveningSurface,
-      };
-
-  Color get _textColor => switch (period) {
-        TemporalPeriod.night => AppColors.nightText,
-        TemporalPeriod.dawn => AppColors.dawnText,
-        TemporalPeriod.day => AppColors.dayText,
-        TemporalPeriod.dusk => AppColors.duskText,
-        TemporalPeriod.evening => AppColors.eveningText,
-      };
-
-  Color get _accentColor => switch (period) {
-        TemporalPeriod.night => AppColors.nightAccent,
-        TemporalPeriod.dawn => AppColors.dawnAccent,
-        TemporalPeriod.day => AppColors.plantGreen,
-        TemporalPeriod.dusk => AppColors.duskAccent,
-        TemporalPeriod.evening => AppColors.eveningAccent,
-      };
-
-  String _localizedGreeting(TemporalPeriod p, AppLocalizations? l10n) {
-    if (l10n == null) return p.greeting;
-    return switch (p) {
-      TemporalPeriod.night => l10n.greetingNight,
-      TemporalPeriod.dawn => l10n.greetingDawn,
-      TemporalPeriod.day => l10n.greetingDay,
-      TemporalPeriod.dusk => l10n.greetingDusk,
-      TemporalPeriod.evening => l10n.greetingEvening,
-    };
+    final authState = ref.read(authControllerProvider);
+    if (authState.hasError) {
+      setState(() => _googleError = _localizedAuthError(authState.error, l10n));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final authState = ref.watch(authControllerProvider);
+    final l10n = AppLocalizations.of(context)!;
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [_bgTop, _bgBottom],
-          stops: const [0.0, 0.85],
-        ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
       ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Spacer(flex: 2),
-
-              // ── Logo & titolo ──────────────────────────────────────
-              Center(
-                child: Column(
-                  children: [
-                    Container(
-                      width: AppSizes.avatarLg,
-                      height: AppSizes.avatarLg,
-                      decoration: BoxDecoration(
-                        color: _accentColor.withAlpha(25),
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                        border: Border.all(
-                          color: _accentColor.withAlpha(50),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '🌿',
-                          style: TextStyle(fontSize: 42),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      l10n?.appName ?? 'Piantala',
-                      style: TextStyle(
-                        fontFamily: 'DMSerifDisplay',
-                        fontSize: 42,
-                        fontWeight: FontWeight.w400,
-                        color: _textColor,
-                        height: 1.1,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      l10n?.appTagline ?? 'Il tuo giardino tascabile',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: _textColor.withAlpha(153),
-                        fontWeight: FontWeight.w300,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const Spacer(flex: 3),
-
-              // ── Greeting contestuale ──────────────────────────────
-              Center(
-                child: Text(
-                  '${period.icon}  ${_localizedGreeting(period, l10n)}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _textColor.withAlpha(178),
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-
-              // ── Metodi di accesso ─────────────────────────────────
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child: isLoading
-                    ? Center(
-                        key: const ValueKey('loader'),
-                        child: CircularProgressIndicator(color: _accentColor),
-                      )
-                    : _GoogleSignInButton(
-                        key: const ValueKey('btn'),
-                        accentColor: _accentColor,
-                        textColor: _textColor,
-                        onPressed: () {
-                          ref
-                              .read(authControllerProvider.notifier)
-                              .signInWithGoogle();
-                        },
-                      ),
-              ),
-
-              const SizedBox(height: AppSpacing.md),
-              OutlinedButton(
-                onPressed: isLoading
-                    ? null
-                    : () => showModalBottomSheet<void>(
-                          context: context,
-                          isScrollControlled: true,
-                          showDragHandle: true,
-                          builder: (_) => const _EmailAuthSheet(),
-                        ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: _textColor,
-                  side: BorderSide(color: _textColor.withAlpha(70)),
-                  minimumSize: const Size.fromHeight(AppSizes.buttonHeightMd),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
-                  ),
-                ),
-                child: Text(l10n?.authSignInWithEmail ?? 'Accedi con email'),
-              ),
-
-              const SizedBox(height: AppSpacing.md),
-              Center(
-                child: Text(
-                  l10n?.appTosNotice ??
-                      'Accedendo accetti i Termini di servizio',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: _textColor.withAlpha(100),
-                  ),
-                ),
-              ),
-
-              const Spacer(),
-            ],
+      child: Theme(
+        data: TemporalTheme.buildTheme(TemporalPeriod.day),
+        child: Scaffold(
+          body: _LoginBody(
+            isLoading: authState.isLoading,
+            googleError: _googleError,
+            onGoogleSignIn: () => _signInWithGoogle(l10n),
           ),
         ),
       ),
@@ -246,8 +62,269 @@ class _LoginBody extends StatelessWidget {
   }
 }
 
+String _localizedAuthError(Object? error, AppLocalizations l10n) {
+  final failure = error is AuthException ? error.failure : null;
+  return switch (failure) {
+    AuthFailure.invalidCredential => l10n.authErrorInvalidCredential,
+    AuthFailure.invalidEmail => l10n.authErrorInvalidEmail,
+    AuthFailure.weakPassword => l10n.authErrorWeakPassword,
+    AuthFailure.emailAlreadyInUse => l10n.authErrorEmailAlreadyInUse,
+    AuthFailure.tooManyRequests => l10n.authErrorTooManyRequests,
+    AuthFailure.networkUnavailable => l10n.authErrorNetwork,
+    AuthFailure.resetEmailSent => l10n.authResetEmailSent,
+    AuthFailure.generic || null => l10n.authErrorGeneric,
+  };
+}
+
+class _LoginBody extends StatefulWidget {
+  const _LoginBody({
+    required this.isLoading,
+    required this.googleError,
+    required this.onGoogleSignIn,
+  });
+
+  final bool isLoading;
+  final String? googleError;
+  final VoidCallback onGoogleSignIn;
+
+  @override
+  State<_LoginBody> createState() => _LoginBodyState();
+}
+
+class _LoginBodyState extends State<_LoginBody> {
+  String? _privacyError;
+
+  Future<void> _openPrivacyPolicy(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) async {
+    try {
+      final opened = await launchUrl(
+        Uri.parse(AppLinks.privacyPolicyUrl),
+        mode: LaunchMode.externalApplication,
+      );
+      if (mounted) {
+        setState(
+          () => _privacyError = opened ? null : l10n.loginPrivacyOpenError,
+        );
+      }
+    } on PlatformException {
+      if (mounted) setState(() => _privacyError = l10n.loginPrivacyOpenError);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = context.piantala;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          PlantAssetResolver.wallBackground(),
+          fit: BoxFit.cover,
+        ),
+        SafeArea(
+          child: Stack(
+            children: [
+              ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  LoginMetrics.horizontalPadding,
+                  LoginMetrics.contentTopPadding,
+                  LoginMetrics.horizontalPadding,
+                  LoginMetrics.contentBottomPadding,
+                ),
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        l10n.greetingDay,
+                        style: theme.body.copyWith(
+                          fontSize: LoginMetrics.greetingFontSize,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: LoginMetrics.greetingTitleSpacing,
+                      ),
+                      Semantics(
+                        container: true,
+                        header: true,
+                        child: Text(
+                          l10n.appName,
+                          textAlign: TextAlign.center,
+                          style: theme.display,
+                        ),
+                      ),
+                      Text(
+                        l10n.loginTagline,
+                        textAlign: TextAlign.center,
+                        style: theme.body,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: LoginMetrics.titlePlantSpacing),
+                  const _LoginPlantShelf(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: HangingTag(
+                          key: const ValueKey('login-google'),
+                          label: l10n.authSignInWithGoogle,
+                          leading: ExcludeSemantics(
+                            child: SvgPicture.asset(
+                              'assets/svg/auth/google_g.svg',
+                              width: LoginMetrics.googleLogoSize,
+                              height: LoginMetrics.googleLogoSize,
+                            ),
+                          ),
+                          onPressed:
+                              widget.isLoading ? null : widget.onGoogleSignIn,
+                        ),
+                      ),
+                      const SizedBox(width: LoginMetrics.actionSpacing),
+                      Flexible(
+                        child: HangingTag(
+                          key: const ValueKey('login-email'),
+                          label: l10n.authSignInWithEmail,
+                          variant: HangingTagVariant.secondary,
+                          onPressed: widget.isLoading
+                              ? null
+                              : () => showPaperDialog<void>(
+                                    context: context,
+                                    builder: (_) => Theme(
+                                      data: TemporalTheme.buildTheme(
+                                        TemporalPeriod.day,
+                                      ),
+                                      child: _EmailAuthSheet(
+                                        onOpenPrivacyPolicy: () =>
+                                            _openPrivacyPolicy(context, l10n),
+                                      ),
+                                    ),
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (widget.googleError != null) ...[
+                    const SizedBox(height: LoginMetrics.errorSpacing),
+                    Semantics(
+                      liveRegion: true,
+                      child: Text(
+                        widget.googleError!,
+                        textAlign: TextAlign.center,
+                        style: theme.body.copyWith(
+                          color: theme.terracotta,
+                          fontSize: LoginMetrics.errorFontSize,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              Positioned(
+                left: LoginMetrics.privacyHorizontalInset,
+                right: LoginMetrics.privacyHorizontalInset,
+                bottom: LoginMetrics.privacyBottomInset,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(
+                          '${l10n.loginPrivacyNotice} ',
+                          textAlign: TextAlign.center,
+                          style: theme.body.copyWith(
+                            fontSize: LoginMetrics.privacyFontSize,
+                            color: theme.softInk,
+                          ),
+                        ),
+                        PaperTextLink(
+                          label: l10n.loginPrivacyLink,
+                          onPressed: () => _openPrivacyPolicy(context, l10n),
+                        ),
+                      ],
+                    ),
+                    if (_privacyError != null) ...[
+                      const SizedBox(
+                        height: LoginMetrics.privacyErrorSpacing,
+                      ),
+                      Text(
+                        _privacyError!,
+                        textAlign: TextAlign.center,
+                        style: theme.body.copyWith(
+                          color: theme.terracotta,
+                          fontSize: LoginMetrics.errorFontSize,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LoginPlantShelf extends StatelessWidget {
+  const _LoginPlantShelf();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = context.piantala;
+
+    return SizedBox(
+      height: LoginMetrics.shelfHeight,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Image.asset(
+              PlantAssetResolver.plantAsset(
+                    'epipremnum_aureum',
+                    water: true,
+                  ) ??
+                  'assets/illustrations/plants/epipremnum_aureum_water.png',
+              width: LoginMetrics.plantWidth,
+              height: LoginMetrics.plantHeight,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            left: LoginMetrics.shelfHorizontalOverhang,
+            right: LoginMetrics.shelfHorizontalOverhang,
+            bottom: 0,
+            child: Container(
+              height: LoginMetrics.shelfThickness,
+              decoration: BoxDecoration(
+                color: theme.sage,
+                border: Border.all(
+                  color: theme.ink,
+                  width: LoginMetrics.shelfBorderWidth,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum _EmailAuthMode { login, registration, reset }
+
 class _EmailAuthSheet extends ConsumerStatefulWidget {
-  const _EmailAuthSheet();
+  const _EmailAuthSheet({required this.onOpenPrivacyPolicy});
+
+  final VoidCallback onOpenPrivacyPolicy;
 
   @override
   ConsumerState<_EmailAuthSheet> createState() => _EmailAuthSheetState();
@@ -259,9 +336,9 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmationController = TextEditingController();
-  bool _isRegistration = false;
-  bool _isReset = false;
-  bool _obscurePassword = true;
+  _EmailAuthMode _mode = _EmailAuthMode.login;
+  String? _errorMessage;
+  bool _resetEmailSent = false;
 
   @override
   void dispose() {
@@ -272,295 +349,289 @@ class _EmailAuthSheetState extends ConsumerState<_EmailAuthSheet> {
     super.dispose();
   }
 
-  Future<void> _submit(AppLocalizations? l10n) async {
+  void _changeMode(_EmailAuthMode mode) {
+    if (_mode == mode || ref.read(authControllerProvider).isLoading) return;
+    _formKey.currentState?.reset();
+    _passwordController.clear();
+    _confirmationController.clear();
+    setState(() {
+      _mode = mode;
+      _errorMessage = null;
+      _resetEmailSent = false;
+    });
+  }
+
+  Future<void> _submit(AppLocalizations l10n) async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
+    setState(() => _errorMessage = null);
     final controller = ref.read(authControllerProvider.notifier);
-    if (_isReset) {
-      await controller.sendPasswordResetEmail(_emailController.text);
-    } else if (_isRegistration) {
-      await controller.createUserWithEmailAndPassword(
-        _emailController.text,
-        _passwordController.text,
-        _displayNameController.text,
-      );
-    } else {
-      await controller.signInWithEmailAndPassword(
-        _emailController.text,
-        _passwordController.text,
-      );
+    final email = _emailController.text.trim();
+
+    switch (_mode) {
+      case _EmailAuthMode.login:
+        await controller.signInWithEmailAndPassword(
+          email,
+          _passwordController.text,
+        );
+      case _EmailAuthMode.registration:
+        await controller.createUserWithEmailAndPassword(
+          email,
+          _passwordController.text,
+          _displayNameController.text.trim(),
+        );
+      case _EmailAuthMode.reset:
+        await controller.sendPasswordResetEmail(email);
     }
 
     if (!mounted) return;
-    final state = ref.read(authControllerProvider);
-    if (state.hasError) return;
-
-    final message = _isReset
-        ? (l10n?.authResetEmailSent ??
-            'Se l’indirizzo è associato a un account, riceverai le istruzioni.')
-        : null;
-    Navigator.of(context).pop();
-    if (message != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+    final authState = ref.read(authControllerProvider);
+    if (authState.hasError) {
+      final error = authState.error;
+      if (_mode == _EmailAuthMode.reset &&
+          error is AuthException &&
+          error.failure == AuthFailure.resetEmailSent) {
+        setState(() => _resetEmailSent = true);
+        return;
+      }
+      setState(() => _errorMessage = _localizedAuthError(error, l10n));
+      return;
     }
+
+    if (_mode == _EmailAuthMode.reset) {
+      setState(() => _resetEmailSent = true);
+      return;
+    }
+
+    _passwordController.clear();
+    _confirmationController.clear();
+    Navigator.of(context).pop();
+  }
+
+  void _onEmailChanged(String value) {
+    if (!_resetEmailSent && _errorMessage == null) return;
+    setState(() {
+      _resetEmailSent = false;
+      _errorMessage = null;
+    });
+  }
+
+  String? _validateEmail(String? value, AppLocalizations l10n) {
+    final email = value?.trim() ?? '';
+    if (email.isEmpty || !email.contains('@')) {
+      return l10n.authValidationEmailInvalid;
+    }
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authControllerProvider);
-    final theme = Theme.of(context);
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final theme = context.piantala;
+    final isLoading = ref.watch(authControllerProvider).isLoading;
+    final isRegistration = _mode == _EmailAuthMode.registration;
+    final isReset = _mode == _EmailAuthMode.reset;
+    final title = switch (_mode) {
+      _EmailAuthMode.login => l10n.authSheetTitleLogin,
+      _EmailAuthMode.registration => l10n.authSheetTitleRegister,
+      _EmailAuthMode.reset => l10n.authSheetTitleReset,
+    };
+    final submitLabel = switch (_mode) {
+      _EmailAuthMode.login => l10n.authButtonLogin,
+      _EmailAuthMode.registration => l10n.authButtonRegister,
+      _EmailAuthMode.reset => l10n.authButtonSendReset,
+    };
+    final topInset = switch (_mode) {
+      _EmailAuthMode.login => LoginMetrics.loginDialogTopInset,
+      _EmailAuthMode.registration => LoginMetrics.registerDialogTopInset,
+      _EmailAuthMode.reset => LoginMetrics.resetDialogTopInset,
+    };
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        AppSpacing.sm,
-        AppSpacing.lg,
-        bottomInset + AppSpacing.lg,
-      ),
+    return PaperDialogScaffold(
+      title: title,
+      topInset: topInset,
+      actions: [
+        HangingTag(
+          key: const ValueKey('email-auth-cancel'),
+          label: l10n.commonCancel,
+          variant: HangingTagVariant.secondary,
+          mirrored: true,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        HangingTag(
+          key: const ValueKey('email-auth-submit'),
+          label: submitLabel,
+          onPressed: isLoading || _resetEmailSent ? null : () => _submit(l10n),
+        ),
+      ],
       child: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                _isReset
-                    ? (l10n?.authSheetTitleReset ?? 'Recupera password')
-                    : _isRegistration
-                        ? (l10n?.authSheetTitleRegister ?? 'Crea account')
-                        : (l10n?.authSheetTitleLogin ?? 'Accedi con email'),
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontFamily: 'DMSerifDisplay',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (_errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(
+                  bottom: LoginMetrics.formFieldSpacing,
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                _isReset
-                    ? (l10n?.authSheetSubtitleReset ??
-                        'Inserisci la tua email. Se è associata a un account, riceverai le istruzioni.')
-                    : (l10n?.authSheetSubtitleLogin ??
-                        'Usa un indirizzo email valido e una password sicura.'),
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              if (_isRegistration) ...[
-                TextFormField(
-                  controller: _displayNameController,
-                  enabled: !authState.isLoading,
-                  textCapitalization: TextCapitalization.words,
-                  textInputAction: TextInputAction.next,
-                  autofillHints: const [AutofillHints.name],
-                  decoration: InputDecoration(
-                    labelText: l10n?.authFieldName ?? 'Nome',
-                    prefixIcon: const Icon(Icons.person_outline),
-                  ),
-                  validator: (value) => value?.trim().isEmpty ?? true
-                      ? (l10n?.authValidationNameEmpty ?? 'Inserisci il tuo nome')
-                      : null,
-                ),
-                const SizedBox(height: AppSpacing.md),
-              ],
-              TextFormField(
-                controller: _emailController,
-                enabled: !authState.isLoading,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction:
-                    _isReset ? TextInputAction.done : TextInputAction.next,
-                autofillHints: const [AutofillHints.email],
-                decoration: InputDecoration(
-                  labelText: l10n?.authFieldEmail ?? 'Email',
-                  prefixIcon: const Icon(Icons.email_outlined),
-                ),
-                validator: (value) {
-                  final email = value?.trim() ?? '';
-                  if (email.isEmpty || !email.contains('@')) {
-                    return l10n?.authValidationEmailInvalid ??
-                        'Inserisci un indirizzo email valido';
-                  }
-                  return null;
-                },
-              ),
-              if (!_isReset) ...[
-                const SizedBox(height: AppSpacing.md),
-                TextFormField(
-                  controller: _passwordController,
-                  enabled: !authState.isLoading,
-                  obscureText: _obscurePassword,
-                  textInputAction: _isRegistration
-                      ? TextInputAction.next
-                      : TextInputAction.done,
-                  autofillHints: [
-                    if (_isRegistration)
-                      AutofillHints.newPassword
-                    else
-                      AutofillHints.password,
-                  ],
-                  decoration: InputDecoration(
-                    labelText: l10n?.authFieldPassword ?? 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      onPressed: () => setState(
-                        () => _obscurePassword = !_obscurePassword,
-                      ),
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                      ),
+                child: Semantics(
+                  liveRegion: true,
+                  child: Text(
+                    _errorMessage!,
+                    style: theme.body.copyWith(
+                      color: theme.terracotta,
+                      fontSize: LoginMetrics.errorFontSize,
                     ),
                   ),
-                  validator: (value) {
-                    if ((value ?? '').length < 6) {
-                      return l10n?.authValidationPasswordTooShort ??
-                          'Usa almeno 6 caratteri';
-                    }
-                    return null;
-                  },
                 ),
-              ],
-              if (_isRegistration) ...[
-                const SizedBox(height: AppSpacing.md),
-                TextFormField(
-                  controller: _confirmationController,
-                  enabled: !authState.isLoading,
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    labelText: l10n?.authFieldConfirmPassword ??
-                        'Conferma password',
-                    prefixIcon: const Icon(Icons.lock_reset_outlined),
-                  ),
-                  validator: (value) => value != _passwordController.text
-                      ? (l10n?.authValidationPasswordMismatch ??
-                          'Le password non coincidono')
-                      : null,
-                ),
-              ],
-              if (authState.hasError) ...[
-                const SizedBox(height: AppSpacing.md),
-                Text(
-                  authState.error.toString(),
-                  style: TextStyle(color: theme.colorScheme.error),
-                ),
-              ],
-              const SizedBox(height: AppSpacing.lg),
-              FilledButton(
-                onPressed: authState.isLoading ? null : () => _submit(l10n),
-                child: _submitChild(authState.isLoading, l10n),
               ),
-              if (!_isReset && !_isRegistration)
-                TextButton(
-                  onPressed: authState.isLoading
-                      ? null
-                      : () => setState(() => _isReset = true),
-                  child: Text(
-                    l10n?.authButtonForgotPassword ?? 'Password dimenticata?',
-                  ),
-                ),
-              TextButton(
-                onPressed: authState.isLoading
+            if (_mode == _EmailAuthMode.login) ...[
+              Text(
+                l10n.authSheetSubtitleLogin,
+                style: theme.body,
+              ),
+              const SizedBox(height: LoginMetrics.formSectionSpacing),
+            ] else if (isReset) ...[
+              Text(
+                l10n.authSheetSubtitleReset,
+                style: theme.body,
+              ),
+              const SizedBox(height: LoginMetrics.formSectionSpacing),
+            ],
+            if (isRegistration) ...[
+              const SizedBox(height: LoginMetrics.formFieldSpacing),
+              PaperTextField(
+                fieldKey: const ValueKey('auth-name-field'),
+                label: l10n.authFieldName,
+                hintText: '',
+                controller: _displayNameController,
+                enabled: !isLoading,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.name],
+                validator: (value) => value?.trim().isNotEmpty ?? false
                     ? null
-                    : () => setState(() {
-                          _isReset = false;
-                          _isRegistration = !_isRegistration;
-                        }),
-                child: Text(
-                  _isReset
-                      ? (l10n?.authButtonBackToLogin ?? 'Torna all’accesso')
-                      : _isRegistration
-                          ? (l10n?.authButtonGoToLogin ??
-                              'Hai già un account? Accedi')
-                          : (l10n?.authButtonGoToRegister ??
-                              'Non hai un account? Registrati'),
+                    : l10n.authValidationNameEmpty,
+              ),
+              const SizedBox(height: LoginMetrics.formFieldSpacing),
+            ],
+            PaperTextField(
+              fieldKey: const ValueKey('auth-email-field'),
+              label: l10n.authFieldEmail,
+              hintText: '',
+              controller: _emailController,
+              enabled: !isLoading,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction:
+                  isReset ? TextInputAction.done : TextInputAction.next,
+              autofillHints: const [AutofillHints.email],
+              autocorrect: false,
+              onChanged: _onEmailChanged,
+              validator: (value) => _validateEmail(value, l10n),
+            ),
+            if (!isReset) ...[
+              const SizedBox(height: LoginMetrics.formFieldSpacing),
+              PaperTextField(
+                fieldKey: const ValueKey('auth-password-field'),
+                label: l10n.authFieldPassword,
+                hintText: '',
+                controller: _passwordController,
+                enabled: !isLoading,
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                textInputAction: isRegistration
+                    ? TextInputAction.next
+                    : TextInputAction.done,
+                autofillHints: [
+                  if (isRegistration)
+                    AutofillHints.newPassword
+                  else
+                    AutofillHints.password,
+                ],
+                validator: (value) => (value ?? '').length >= 6
+                    ? null
+                    : l10n.authValidationPasswordTooShort,
+              ),
+            ],
+            if (isRegistration) ...[
+              const SizedBox(height: LoginMetrics.formFieldSpacing),
+              PaperTextField(
+                fieldKey: const ValueKey('auth-confirm-password-field'),
+                label: l10n.authFieldConfirmPassword,
+                hintText: '',
+                controller: _confirmationController,
+                enabled: !isLoading,
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.newPassword],
+                validator: (value) => value == _passwordController.text
+                    ? null
+                    : l10n.authValidationPasswordMismatch,
+              ),
+              const SizedBox(height: LoginMetrics.registerPrivacySpacing),
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    '${l10n.authRegisterPrivacyNotice} ',
+                    textAlign: TextAlign.center,
+                    style: theme.body.copyWith(
+                      fontSize: LoginMetrics.privacyFontSize,
+                    ),
+                  ),
+                  PaperTextLink(
+                    label: l10n.loginPrivacyLink,
+                    onPressed: widget.onOpenPrivacyPolicy,
+                  ),
+                ],
+              ),
+            ],
+            if (isReset && _resetEmailSent) ...[
+              const SizedBox(height: LoginMetrics.formFieldSpacing),
+              Text(
+                l10n.authResetEmailSent,
+                style: theme.body.copyWith(
+                  fontSize: LoginMetrics.privacyFontSize,
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _submitChild(bool isLoading, AppLocalizations? l10n) {
-    if (isLoading) {
-      return const SizedBox(
-        width: 20,
-        height: 20,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
-    }
-
-    final label = _isReset
-        ? (l10n?.authButtonSendReset ?? 'Invia istruzioni')
-        : _isRegistration
-            ? (l10n?.authButtonRegister ?? 'Crea account')
-            : (l10n?.authButtonLogin ?? 'Accedi');
-    return Text(label);
-  }
-}
-
-class _GoogleSignInButton extends StatelessWidget {
-  const _GoogleSignInButton({
-    required this.accentColor,
-    required this.textColor,
-    required this.onPressed,
-    super.key,
-  });
-
-  final Color accentColor;
-  final Color textColor;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    return SizedBox(
-      height: AppSizes.buttonHeightLg,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: accentColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.lg),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: AppSizes.iconMd,
-              height: AppSizes.iconMd,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(AppRadius.xs),
-              ),
-              child: const Center(
-                child: Text(
-                  'G',
-                  style: TextStyle(
-                    color: Color(0xFF4285F4),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
+            const SizedBox(height: LoginMetrics.formSectionSpacing),
+            if (_mode == _EmailAuthMode.login)
+              Center(
+                child: PaperTextLink(
+                  label: l10n.authButtonForgotPassword,
+                  enabled: !isLoading,
+                  onPressed: () => _changeMode(_EmailAuthMode.reset),
                 ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Text(
-              l10n?.authSignInWithGoogle ?? 'Continua con Google',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.2,
+            if (isReset)
+              Center(
+                child: PaperTextLink(
+                  label: l10n.authButtonBackToLogin,
+                  enabled: !isLoading,
+                  onPressed: () => _changeMode(_EmailAuthMode.login),
+                ),
               ),
-            ),
+            if (isRegistration)
+              Center(
+                child: PaperTextLink(
+                  label: l10n.authButtonGoToLogin,
+                  enabled: !isLoading,
+                  onPressed: () => _changeMode(_EmailAuthMode.login),
+                ),
+              ),
+            if (_mode == _EmailAuthMode.login)
+              Center(
+                child: PaperTextLink(
+                  label: l10n.authButtonGoToRegister,
+                  enabled: !isLoading,
+                  onPressed: () => _changeMode(_EmailAuthMode.registration),
+                ),
+              ),
           ],
         ),
       ),

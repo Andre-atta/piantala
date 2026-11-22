@@ -1,31 +1,34 @@
 {
   "@@locale": "it",
   "@@last_modified": "2026-11-01",
-
   "appName": "Piantala",
-  "@appName": { "description": "Nome dell'applicazione" },
-
+  "@appName": {
+    "description": "Nome dell'applicazione"
+  },
   "appTagline": "Il tuo giardino tascabile",
-  "@appTagline": { "description": "Sottotitolo nella schermata di login" },
-
+  "@appTagline": {
+    "description": "Sottotitolo nella schermata di login"
+  },
+  "loginTagline": "Le tue piante, una mensola alla volta.",
+  "loginPrivacyNotice": "Continuando accetti",
+  "loginPrivacyLink": "l'Informativa sulla privacy",
+  "loginPrivacyOpenError": "Impossibile aprire l'informativa sulla privacy.",
   "appTosNotice": "Accedendo accetti i Termini di servizio",
-  "@appTosNotice": { "description": "Avviso ToS nella login" },
-
+  "@appTosNotice": {
+    "description": "Avviso ToS nella login"
+  },
   "authSignInWithGoogle": "Continua con Google",
   "authSignInWithEmail": "Accedi con email",
-
-  "authSheetTitleLogin": "Accedi con email",
+  "authSheetTitleLogin": "Accedi",
   "authSheetTitleRegister": "Crea account",
   "authSheetTitleReset": "Recupera password",
-
   "authSheetSubtitleReset": "Inserisci la tua email. Se è associata a un account, riceverai le istruzioni.",
   "authSheetSubtitleLogin": "Usa un indirizzo email valido e una password sicura.",
-
+  "authRegisterPrivacyNotice": "Creando l'account accetti",
   "authFieldName": "Nome",
   "authFieldEmail": "Email",
   "authFieldPassword": "Password",
   "authFieldConfirmPassword": "Conferma password",
-
   "authButtonLogin": "Accedi",
   "authButtonRegister": "Crea account",
   "authButtonSendReset": "Invia istruzioni",
@@ -33,25 +36,32 @@
   "authButtonGoToRegister": "Non hai un account? Registrati",
   "authButtonGoToLogin": "Hai già un account? Accedi",
   "authButtonBackToLogin": "Torna all'accesso",
-
   "authValidationNameEmpty": "Inserisci il tuo nome",
   "authValidationEmailInvalid": "Inserisci un indirizzo email valido",
   "authValidationPasswordTooShort": "Usa almeno 6 caratteri",
   "authValidationPasswordMismatch": "Le password non coincidono",
-
-  "authResetEmailSent": "Se l'indirizzo è associata a un account, riceverai le istruzioni.",
-
+  "paperTextFieldShowPassword": "Mostra password",
+  "paperTextFieldHidePassword": "Nascondi password",
+  "authResetEmailSent": "Se l'indirizzo è associato a un account, riceverai le istruzioni.",
+  "authErrorInvalidCredential": "Email o password non validi.",
+  "authErrorEmailAlreadyInUse": "Email già in uso.",
+  "authErrorWeakPassword": "Scegli una password di almeno 6 caratteri.",
+  "authErrorTooManyRequests": "Troppi tentativi. Riprova più tardi.",
+  "authErrorNetwork": "Connessione assente o instabile. Riprova.",
+  "authErrorInvalidEmail": "Inserisci un indirizzo email valido.",
+  "authErrorGeneric": "Non è stato possibile completare l'operazione. Riprova.",
   "homeEmptyShelfTitle": "La tua mensola è vuota",
   "homeEmptyShelfSubtitle": "Aggiungi la tua prima pianta\ncon il bottone +",
-
   "homeEmptyRoomTitle": "{roomName} è vuota",
   "@homeEmptyRoomTitle": {
     "placeholders": {
-      "roomName": { "type": "String", "example": "Soggiorno" }
+      "roomName": {
+        "type": "String",
+        "example": "Soggiorno"
+      }
     }
   },
   "homeEmptyRoomSubtitle": "Aggiungi una pianta e assegnala\na questa stanza",
-
   "homeButtonAddPlant": "Aggiungi pianta",
   "homeLabelUnassigned": "Senza stanza",
   "homeLabelAllPlants": "Tutte le piante",
@@ -59,75 +69,99 @@
   "homeRoomMeta": "{count, plural, one{1 pianta} other{{count} piante}} · Esposizione {exposure}",
   "@homeRoomMeta": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" },
-      "exposure": { "type": "String", "example": "Sud" }
+      "count": {
+        "type": "int",
+        "example": "3"
+      },
+      "exposure": {
+        "type": "String",
+        "example": "Sud"
+      }
     }
   },
   "homeRoomPageSemantics": "Stanza {current} di {total}",
   "@homeRoomPageSemantics": {
     "placeholders": {
-      "current": { "type": "int", "example": "1" },
-      "total": { "type": "int", "example": "3" }
+      "current": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
     }
   },
   "homeWindowAccessibility": "Indicatore del momento della giornata",
   "homePlantNameFallback": "Pianta",
   "homeCareWateringSemantics": "Da annaffiare",
   "homeCareFertilizingSemantics": "Da concimare",
-
   "homeErrorLoading": "Errore: {error}",
   "@homeErrorLoading": {
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
-
   "greetingNight": "Buonanotte",
   "greetingDawn": "Buongiorno",
   "greetingDay": "Ciao",
   "greetingDusk": "Buon pomeriggio",
   "greetingEvening": "Buonasera",
-
   "greetingSubtitleNight": "Anche di notte le tue piante crescono 🌙",
   "greetingSubtitleDawn": "Buon inizio giornata con le tue piante",
   "greetingSubtitleDay": "Come stanno le tue piante oggi?",
   "greetingSubtitleDusk": "Ottimo momento per controllare le tue piante",
   "greetingSubtitleEvening": "Pianifica la cura di domani",
-
   "roomsEmptyTitle": "Nessuna stanza creata.",
   "roomsEmptyHint": "Tocca \"nuova stanza\" per cominciare.",
   "roomsOptionsSemantics": "Opzioni stanza {roomName}",
   "@roomsOptionsSemantics": {
     "placeholders": {
-      "roomName": { "type": "String", "example": "Soggiorno" }
+      "roomName": {
+        "type": "String",
+        "example": "Soggiorno"
+      }
     }
   },
   "roomsExposure": "Esposizione: {exposure}",
   "@roomsExposure": {
     "placeholders": {
-      "exposure": { "type": "String", "example": "Sud" }
+      "exposure": {
+        "type": "String",
+        "example": "Sud"
+      }
     }
   },
   "roomsPlants": "Piante: {count}",
   "@roomsPlants": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" }
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
     }
   },
   "roomsDeleteDialogTitle": "Elimina Stanza",
   "roomsDeleteWarning": "Questa stanza contiene {count} piante! Eliminandola, le piante diventeranno \"Senza Stanza\". Vuoi procedere?",
   "@roomsDeleteWarning": {
     "placeholders": {
-      "count": { "type": "int", "example": "3" }
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
     }
   },
   "roomsDeleteConfirm": "Sei sicuro di voler eliminare la stanza \"{roomName}\"?",
   "@roomsDeleteConfirm": {
     "placeholders": {
-      "roomName": { "type": "String", "example": "Soggiorno" }
+      "roomName": {
+        "type": "String",
+        "example": "Soggiorno"
+      }
     }
   },
-
   "roomDialogNewTitle": "Nuova stanza",
   "roomDialogEditTitle": "Modifica stanza",
   "roomDialogNameLabel": "Nome della stanza",
@@ -143,7 +177,9 @@
   "compassHold": "Tieni fermo per: {seconds} s",
   "@compassHold": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "compassDone": "Esposizione rilevata",
@@ -152,7 +188,9 @@
   "compassDialSemantics": "Bussola, direzione {direction}",
   "@compassDialSemantics": {
     "placeholders": {
-      "direction": { "type": "String" }
+      "direction": {
+        "type": "String"
+      }
     }
   },
   "compassLetterNorth": "N",
@@ -163,7 +201,6 @@
   "exposureSouthEast": "Sud-Est",
   "exposureSouthWest": "Sud-Ovest",
   "exposureNorthWest": "Nord-Ovest",
-
   "encyclopediaTitle": "Enciclopedia",
   "encyclopediaSearchHint": "Cerca per nome comune o scientifico...",
   "encyclopediaEmptyTitle": "Esplora migliaia di piante",
@@ -172,10 +209,11 @@
   "encyclopediaError": "Errore: {error}",
   "@encyclopediaError": {
     "placeholders": {
-      "error": { "type": "Object" }
+      "error": {
+        "type": "Object"
+      }
     }
   },
-
   "settingsScreenTitle": "Impostazioni",
   "settingsLogout": "Esci dall'account",
   "settingsSectionGeneral": "Generale",
@@ -185,33 +223,35 @@
   "settingsLanguageEnglish": "Inglese",
   "settingsSectionNotifications": "Notifiche",
   "settingsSectionAbout": "Informazioni",
-
   "settingsNotifPermissionTitle": "Permesso Notifiche",
   "settingsNotifPermissionSubtitle": "Concedi il permesso per ricevere avvisi sulle piante che necessitano attenzione.",
   "settingsNotifPermissionButton": "Richiedi Permesso",
   "settingsNotifPermissionGranted": "✅ Permesso concesso!",
   "settingsNotifPermissionDenied": "❌ Permesso negato.",
-
   "settingsReminderTitle": "Orario promemoria mattutino",
   "settingsReminderSubtitle": "Ogni mattina alle {time}",
   "@settingsReminderSubtitle": {
     "placeholders": {
-      "time": { "type": "String", "example": "08:00" }
+      "time": {
+        "type": "String",
+        "example": "08:00"
+      }
     }
   },
   "settingsReminderUpdated": "⏰ Promemoria aggiornato: {time}",
   "@settingsReminderUpdated": {
     "placeholders": {
-      "time": { "type": "String", "example": "08:00" }
+      "time": {
+        "type": "String",
+        "example": "08:00"
+      }
     }
   },
   "settingsReminderPickerHelpText": "Scegli orario promemoria",
-
   "settingsAboutVersion": "Versione",
   "settingsAboutVersionNumber": "0.1.0",
   "settingsAboutDataSource": "Dati specie",
   "settingsAboutDataSourceSubtitle": "Forniti da Perenual API (piano gratuito)",
-
   "navHome": "Mensola",
   "navRooms": "Stanze",
   "navEncyclopedia": "Enciclopedia",
@@ -219,11 +259,9 @@
   "navProfile": "Profilo",
   "navNewPlant": "nuova pianta",
   "navNewRoom": "nuova stanza",
-
   "errPageNotFound": "Pagina non trovata",
   "errPageNotFoundBody": "Oops, questa pagina non esiste",
   "errNetworkUnavailable": "Nessuna connessione disponibile. I dati saranno sincronizzati al ritorno online.",
-
   "commonButtonConfirm": "Conferma",
   "commonButtonClose": "Chiudi",
   "commonButtonRetry": "Riprova",
@@ -234,10 +272,29 @@
   "commonSave": "Salva",
   "commonUnknown": "Sconosciuto",
   "commonLoading": "Caricamento...",
-
   "exposureNorth": "Nord",
   "exposureSouth": "Sud",
   "exposureEast": "Est",
   "exposureWest": "Ovest",
-  "exposureUnknown": "Sconosciuta"
+  "exposureUnknown": "Sconosciuta",
+  "settingsDeleteAccountButton": "Elimina account",
+  "@settingsDeleteAccountButton": {
+    "description": "Etichetta pulsante eliminazione account nelle impostazioni"
+  },
+  "settingsDeleteAccountDialogTitle": "Elimina account",
+  "@settingsDeleteAccountDialogTitle": {
+    "description": "Titolo dialog conferma eliminazione account"
+  },
+  "settingsDeleteAccountDialogBody": "Stai per eliminare definitivamente il tuo account. Tutte le tue piante, stanze e immagini saranno cancellate in modo irreversibile.",
+  "@settingsDeleteAccountDialogBody": {
+    "description": "Corpo dialog conferma eliminazione account"
+  },
+  "settingsDeleteAccountConfirm": "Elimina definitivamente",
+  "@settingsDeleteAccountConfirm": {
+    "description": "Etichetta cartellino conferma eliminazione account"
+  },
+  "settingsDeleteAccountRecentLoginError": "Per sicurezza, effettua nuovamente il login prima di eliminare il profilo.",
+  "@settingsDeleteAccountRecentLoginError": {
+    "description": "Errore quando il login e troppo vecchio"
+  }
 }

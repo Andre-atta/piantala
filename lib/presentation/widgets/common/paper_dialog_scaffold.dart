@@ -12,7 +12,9 @@ class PaperDialogScaffold extends StatefulWidget {
     required this.title,
     required this.child,
     required this.actions,
+    this.topInset = PaperComponentMetrics.dialogTopInset,
     this.rotationDegrees = PaperComponentMetrics.dialogSheetRotationDegrees,
+    this.autofocus = false,
     super.key,
   })  : assert(
           actions.length == 1 || actions.length == 2,
@@ -27,7 +29,9 @@ class PaperDialogScaffold extends StatefulWidget {
   final String title;
   final Widget child;
   final List<HangingTag> actions;
+  final double topInset;
   final double rotationDegrees;
+  final bool autofocus;
 
   @override
   State<PaperDialogScaffold> createState() => _PaperDialogScaffoldState();
@@ -39,6 +43,7 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!widget.autofocus) return;
     if (_requestedInitialFocus) return;
     _requestedInitialFocus = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,10 +73,8 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
               ),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final topInset = math.min(
-                    PaperComponentMetrics.dialogTopInset,
-                    constraints.maxHeight,
-                  );
+                  final topInset =
+                      math.min(widget.topInset, constraints.maxHeight);
                   final availableHeight =
                       math.max(0, constraints.maxHeight - topInset).toDouble();
                   final actionsBelowSheet =
@@ -139,7 +142,9 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
                                           width: PaperComponentMetrics
                                               .dialogActionSpacing,
                                         ),
-                                      widget.actions[index],
+                                      Flexible(
+                                        child: widget.actions[index],
+                                      ),
                                     ],
                                   ],
                                 ),

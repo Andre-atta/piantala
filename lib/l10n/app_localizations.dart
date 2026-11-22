@@ -110,6 +110,30 @@ abstract class AppLocalizations {
   /// **'Il tuo giardino tascabile'**
   String get appTagline;
 
+  /// No description provided for @loginTagline.
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue piante, una mensola alla volta.'**
+  String get loginTagline;
+
+  /// No description provided for @loginPrivacyNotice.
+  ///
+  /// In it, this message translates to:
+  /// **'Continuando accetti'**
+  String get loginPrivacyNotice;
+
+  /// No description provided for @loginPrivacyLink.
+  ///
+  /// In it, this message translates to:
+  /// **'l\'Informativa sulla privacy'**
+  String get loginPrivacyLink;
+
+  /// No description provided for @loginPrivacyOpenError.
+  ///
+  /// In it, this message translates to:
+  /// **'Impossibile aprire l\'informativa sulla privacy.'**
+  String get loginPrivacyOpenError;
+
   /// Avviso ToS nella login
   ///
   /// In it, this message translates to:
@@ -131,7 +155,7 @@ abstract class AppLocalizations {
   /// No description provided for @authSheetTitleLogin.
   ///
   /// In it, this message translates to:
-  /// **'Accedi con email'**
+  /// **'Accedi'**
   String get authSheetTitleLogin;
 
   /// No description provided for @authSheetTitleRegister.
@@ -157,6 +181,12 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Usa un indirizzo email valido e una password sicura.'**
   String get authSheetSubtitleLogin;
+
+  /// No description provided for @authRegisterPrivacyNotice.
+  ///
+  /// In it, this message translates to:
+  /// **'Creando l\'account accetti'**
+  String get authRegisterPrivacyNotice;
 
   /// No description provided for @authFieldName.
   ///
@@ -248,11 +278,65 @@ abstract class AppLocalizations {
   /// **'Le password non coincidono'**
   String get authValidationPasswordMismatch;
 
+  /// No description provided for @paperTextFieldShowPassword.
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra password'**
+  String get paperTextFieldShowPassword;
+
+  /// No description provided for @paperTextFieldHidePassword.
+  ///
+  /// In it, this message translates to:
+  /// **'Nascondi password'**
+  String get paperTextFieldHidePassword;
+
   /// No description provided for @authResetEmailSent.
   ///
   /// In it, this message translates to:
-  /// **'Se l\'indirizzo è associata a un account, riceverai le istruzioni.'**
+  /// **'Se l\'indirizzo è associato a un account, riceverai le istruzioni.'**
   String get authResetEmailSent;
+
+  /// No description provided for @authErrorInvalidCredential.
+  ///
+  /// In it, this message translates to:
+  /// **'Email o password non validi.'**
+  String get authErrorInvalidCredential;
+
+  /// No description provided for @authErrorEmailAlreadyInUse.
+  ///
+  /// In it, this message translates to:
+  /// **'Email già in uso.'**
+  String get authErrorEmailAlreadyInUse;
+
+  /// No description provided for @authErrorWeakPassword.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli una password di almeno 6 caratteri.'**
+  String get authErrorWeakPassword;
+
+  /// No description provided for @authErrorTooManyRequests.
+  ///
+  /// In it, this message translates to:
+  /// **'Troppi tentativi. Riprova più tardi.'**
+  String get authErrorTooManyRequests;
+
+  /// No description provided for @authErrorNetwork.
+  ///
+  /// In it, this message translates to:
+  /// **'Connessione assente o instabile. Riprova.'**
+  String get authErrorNetwork;
+
+  /// No description provided for @authErrorInvalidEmail.
+  ///
+  /// In it, this message translates to:
+  /// **'Inserisci un indirizzo email valido.'**
+  String get authErrorInvalidEmail;
+
+  /// No description provided for @authErrorGeneric.
+  ///
+  /// In it, this message translates to:
+  /// **'Non è stato possibile completare l\'operazione. Riprova.'**
+  String get authErrorGeneric;
 
   /// No description provided for @homeEmptyShelfTitle.
   ///
@@ -919,6 +1003,36 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Sconosciuta'**
   String get exposureUnknown;
+
+  /// Etichetta pulsante eliminazione account nelle impostazioni
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina account'**
+  String get settingsDeleteAccountButton;
+
+  /// Titolo dialog conferma eliminazione account
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina account'**
+  String get settingsDeleteAccountDialogTitle;
+
+  /// Corpo dialog conferma eliminazione account
+  ///
+  /// In it, this message translates to:
+  /// **'Stai per eliminare definitivamente il tuo account. Tutte le tue piante, stanze e immagini saranno cancellate in modo irreversibile.'**
+  String get settingsDeleteAccountDialogBody;
+
+  /// Etichetta cartellino conferma eliminazione account
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina definitivamente'**
+  String get settingsDeleteAccountConfirm;
+
+  /// Errore quando il login e troppo vecchio
+  ///
+  /// In it, this message translates to:
+  /// **'Per sicurezza, effettua nuovamente il login prima di eliminare il profilo.'**
+  String get settingsDeleteAccountRecentLoginError;
 }
 
 class _AppLocalizationsDelegate

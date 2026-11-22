@@ -145,7 +145,7 @@ class SyncService {
     try {
       final plants =
           await _isar.plantCollections.where().userIdEqualTo(uid).findAll();
-      final now = DateTime.now();
+      final now = DateTime.now().toUtc();
 
       for (final plant in plants) {
         // Salta le piante senza cultivationMethod (niente da migrare)
@@ -650,12 +650,12 @@ class SyncService {
           (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
               []
       ..acquisitionDate = _parseDateTime(data['acquisitionDate'])
-      ..createdAt = _parseDateTime(data['createdAt']) ?? DateTime.now()
+      ..createdAt = _parseDateTime(data['createdAt']) ?? DateTime.now().toUtc()
       ..wateringConfig = wateringConfig
       ..careConfig = careConfig
       ..fertilizingConfig = fertilizingConfig
       ..cultivationMethod = cultivationMethod
-      ..localUpdatedAt = DateTime.now()
+      ..localUpdatedAt = DateTime.now().toUtc()
       ..syncStatusIndex = SyncStatus.synced.index;
 
     return col;
@@ -676,16 +676,27 @@ class SyncService {
       ..exposureConfirmedByUser =
           data['exposureConfirmedByUser'] as bool? ?? false
       ..notes = data['notes'] as String?
-      ..createdAt = _parseDateTime(data['createdAt']) ?? DateTime.now()
-      ..localUpdatedAt = DateTime.now()
+      ..createdAt = _parseDateTime(data['createdAt']) ?? DateTime.now().toUtc()
+      ..localUpdatedAt = DateTime.now().toUtc()
       ..syncStatusIndex = SyncStatus.synced.index;
   }
 
-  DateTime? _parseDateTime(dynamic val) {
-    if (val is Timestamp) return val.toDate();
-    if (val is String) return DateTime.tryParse(val);
+  @visibleForTesting
+  static DateTime? parseDateTime(dynamic val) {
+    if (val is Timestamp) return val.toDate().toUtc();
+    if (val is String) {
+      var s = val.trim();
+      if (s.isEmpty) return null;
+      if (!s.endsWith('Z') && !RegExp(r'[+-]\d\d(:?\d\d)?$').hasMatch(s)) {
+        s = '${s}Z';
+      }
+      final dt = DateTime.tryParse(s);
+      return dt?.toUtc();
+    }
     return null;
   }
+
+  DateTime? _parseDateTime(dynamic val) => parseDateTime(val);
 }
 
 enum _CollectionType { plants, rooms }

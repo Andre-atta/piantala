@@ -24,8 +24,21 @@ final class FirestoreException extends AppException {
 }
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
+enum AuthFailure {
+  invalidCredential,
+  invalidEmail,
+  weakPassword,
+  emailAlreadyInUse,
+  tooManyRequests,
+  networkUnavailable,
+  resetEmailSent,
+  generic,
+}
+
 final class AuthException extends AppException {
-  const AuthException(super.message);
+  const AuthException(super.message, {this.failure});
+
+  final AuthFailure? failure;
 }
 
 final class UserNotFoundException extends AppException {
@@ -55,4 +68,13 @@ final class StorageUploadException extends AppException {
 // ── Isar (database locale) ───────────────────────────────────────────────────
 final class LocalDatabaseException extends AppException {
   const LocalDatabaseException(super.message);
+}
+
+// ── Eliminazione account ─────────────────────────────────────────────────────
+final class DeleteAccountException extends AppException {
+  const DeleteAccountException(super.message, {this.requiresRecentLogin = false});
+
+  /// `true` quando la Cloud Function ha risposto `requires-recent-login`:
+  /// il client deve richiedere una nuova autenticazione prima di riprovare.
+  final bool requiresRecentLogin;
 }

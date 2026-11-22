@@ -352,3 +352,38 @@ export const updateSpecies = onCall(
     });
   },
 );
+
+// ── Callable per eliminazione account ───────────────────────────────────────
+export const deleteMyAccount = onCall(
+      { region: "europe-west1", enforceAppCheck: true },
+      async (request) => {
+        const uid = request.auth?.uid;
+        if (!uid) throw new HttpsError("unauthenticated", "Accesso richiesto.");
+
+        // Serve un accesso recente (max 5 minuti): evita che un telefono
+        // lasciato sbloccato possa cancellare l'account.
+        const authTime = request.auth?.token?.auth_time;
+        const now = Math.floor(Date.now() / 1000);
+        if (typeof authTime !== "number" || now - authTime > 300) {
+          throw new HttpsError("failed-precondition", "requires-recent-login");
+        }
+
+        const db = admin.firestore();
+        // 1. Firestore: documento utente + TUTTE le sottoraccolte (plants, rooms)
+        await db.recursiveDelete(db.doc(`users/${uid}`));
+        await db.doc(`_quotas/${uid}`).delete();
+
+        // 2. Storage: nuovo percorso e vecchio percorso
+        const bucket = admin.storage().bucket();
+        await bucket.deleteFiles({ prefix: `users/${uid}/`, force: true });
+        await bucket.deleteFiles({ prefix: `plants_images/${uid}/`, force: true });
+
+        // 3. Per ultimo l'account (con il token FCM già sparito col documento)
+        try {
+          await admin.auth().deleteUser(uid);
+        } catch (e: any) {
+          if (e?.code !== "auth/user-not-found") throw e;
+        }
+        return { deleted: true };
+      }
+    );

@@ -12,6 +12,7 @@ class HangingTag extends StatefulWidget {
   const HangingTag({
     required this.label,
     required this.onPressed,
+    this.leading,
     this.variant = HangingTagVariant.primary,
     this.mirrored = false,
     super.key,
@@ -19,6 +20,7 @@ class HangingTag extends StatefulWidget {
 
   final String label;
   final VoidCallback? onPressed;
+  final Widget? leading;
   final HangingTagVariant variant;
   final bool mirrored;
 
@@ -81,6 +83,7 @@ class _HangingTagState extends State<HangingTag> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(
                 minWidth: PaperComponentMetrics.tagWidth,
+                maxWidth: PaperComponentMetrics.tagMaximumWidth,
                 minHeight: PaperComponentMetrics.tagHeight,
               ),
               child: IntrinsicWidth(
@@ -108,19 +111,43 @@ class _HangingTagState extends State<HangingTag> {
                         ),
                         child: SizedBox(
                           height: PaperComponentMetrics.tagLabelHeight,
-                          child: Center(
-                            child: Text(
-                              widget.label.toUpperCase(),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: theme.body.copyWith(
-                                color: enabled ? colors.text : theme.softInk,
-                                fontSize: PaperComponentMetrics.tagFontSize,
-                                letterSpacing:
-                                    PaperComponentMetrics.tagLetterSpacing,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (widget.leading != null) ...[
+                                Container(
+                                  width: PaperComponentMetrics.tagLeadingSize,
+                                  height: PaperComponentMetrics.tagLeadingSize,
+                                  decoration: BoxDecoration(
+                                    color: theme.cream,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: theme.ink),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child: Center(child: widget.leading),
+                                ),
+                                const SizedBox(
+                                  width:
+                                      PaperComponentMetrics.tagLeadingSpacing,
+                                ),
+                              ],
+                              Flexible(
+                                child: Text(
+                                  widget.label.toUpperCase(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: theme.body.copyWith(
+                                    color:
+                                        enabled ? colors.text : theme.softInk,
+                                    fontSize: PaperComponentMetrics.tagFontSize,
+                                    letterSpacing:
+                                        PaperComponentMetrics.tagLetterSpacing,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       ),

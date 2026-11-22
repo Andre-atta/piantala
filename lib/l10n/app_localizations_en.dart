@@ -15,6 +15,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTagline => 'Your pocket garden';
 
   @override
+  String get loginTagline => 'Your plants, one shelf at a time.';
+
+  @override
+  String get loginPrivacyNotice => 'By continuing, you accept';
+
+  @override
+  String get loginPrivacyLink => 'the Privacy Policy';
+
+  @override
+  String get loginPrivacyOpenError => 'Unable to open the privacy policy.';
+
+  @override
   String get appTosNotice => 'By signing in you accept the Terms of Service';
 
   @override
@@ -24,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authSignInWithEmail => 'Sign in with email';
 
   @override
-  String get authSheetTitleLogin => 'Sign in with email';
+  String get authSheetTitleLogin => 'Sign in';
 
   @override
   String get authSheetTitleRegister => 'Create account';
@@ -39,6 +51,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get authSheetSubtitleLogin =>
       'Use a valid email address and a secure password.';
+
+  @override
+  String get authRegisterPrivacyNotice => 'By creating an account, you accept';
 
   @override
   String get authFieldName => 'Name';
@@ -86,8 +101,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authValidationPasswordMismatch => 'Passwords do not match';
 
   @override
+  String get paperTextFieldShowPassword => 'Show password';
+
+  @override
+  String get paperTextFieldHidePassword => 'Hide password';
+
+  @override
   String get authResetEmailSent =>
       'If the address is linked to an account, you\'ll receive instructions.';
+
+  @override
+  String get authErrorInvalidCredential => 'Email or password is incorrect.';
+
+  @override
+  String get authErrorEmailAlreadyInUse => 'This email is already in use.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Choose a password with at least 6 characters.';
+
+  @override
+  String get authErrorTooManyRequests => 'Too many attempts. Try again later.';
+
+  @override
+  String get authErrorNetwork => 'No or unstable connection. Please try again.';
+
+  @override
+  String get authErrorInvalidEmail => 'Enter a valid email address.';
+
+  @override
+  String get authErrorGeneric =>
+      'We couldn\'t complete the request. Please try again.';
 
   @override
   String get homeEmptyShelfTitle => 'Your shelf is empty';
@@ -462,4 +506,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exposureUnknown => 'Unknown';
+
+  @override
+  String get settingsDeleteAccountButton => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'You are about to permanently delete your account. All your plants, rooms, and images will be erased. This action cannot be undone.';
+
+  @override
+  String get settingsDeleteAccountConfirm => 'Delete permanently';
+
+  @override
+  String get settingsDeleteAccountRecentLoginError =>
+      'For security reasons, please sign in again before deleting your account.';
 }

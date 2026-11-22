@@ -253,6 +253,19 @@ void main() {
     expect(find.byType(RoomDialog), findsNothing);
   });
 
+  testWidgets(
+      'nessun campo prende il focus all\'apertura finché non viene toccato',
+      (tester) async {
+    final app = _app();
+    await tester.pumpWidget(app.widget);
+    await _openDialog(tester);
+
+    final focusedEditable = find.byWidgetPredicate(
+      (widget) => widget is EditableText && widget.focusNode.hasFocus,
+    );
+    expect(focusedEditable, findsNothing);
+  });
+
   testWidgets('keeps the form scrollable and actions above the keyboard',
       (tester) async {
     _setScreenSize(tester);

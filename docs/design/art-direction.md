@@ -118,6 +118,7 @@ Un'unica famiglia di schede, usata in due modi:
 - **Cartellino con filo e puntina** (azioni in dialoghi e in Profilo): pende da una puntina e può oscillare di 1-2°.
 - **Puntina** (menu, bussola, cancella): infissa nella superficie.
 - **Testo con sottolineatura a mano** (azioni secondarie, es. "Annulla").
+- **Regola 11 — link nei fogli:** i link sottolineati servono a cambiare modalità e ad aprire l'informativa; le azioni vere restano cartellini appesi.
 - Stato premuto: scende di 2 px e si raddrizza. Disabilitato: perde il riempimento e il bordo pieno.
 - Inclinazione del testo al massimo 1°. Nessuno spessore o ombra sotto i pulsanti.
 - Eccezione: I pulsanti tondi (ciottolo) e i dischi icona hanno una base scura sfalsata di 2–4 px e un puntino chiaro; nessuna ombra morbida, nessuna sfumatura, nessuna luce proiettata.
@@ -126,6 +127,9 @@ Un'unica famiglia di schede, usata in due modi:
 #### Componenti condivisi per fogli e dialoghi
 - **TornPaperSheet:** foglio con bordo inferiore strappato, colori carta a token, righe opzionali e nastro o puntina.
 - **HangingTag:** cartellino con filo e puntina per le azioni dei dialoghi, con varianti primaria, secondaria e pericolo.
+- **HangingTag largo con logo:** ammette un leading in un cerchietto crema bordato; l'unica eccezione cromatica è il logo Google a colori, come richiesto dalle linee guida Google.
+- **PaperTextField:** etichetta maiuscola, testo Delius e sottolineatura verde profondo; errori in terracotta e pulsante SVG accessibile per mostrare/nascondere la password.
+- **PaperTextLink:** link Delius sottolineato, senza splash, con bersaglio minimo 48 dp e stato premuto che scende di 2 px.
 - **PaperDialogScaffold:** contenitore dei dialoghi su foglio crema; `showPaperDialog` gestisce sfondo e transizione.
 
 Nei componenti carta, la variante warm usa Carta antica (`#F4EBD8`) e la variante light usa Crema calda (`#FAF7EF`); i token globali esistenti restano invariati.

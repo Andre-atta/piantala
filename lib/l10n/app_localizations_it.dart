@@ -15,6 +15,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTagline => 'Il tuo giardino tascabile';
 
   @override
+  String get loginTagline => 'Le tue piante, una mensola alla volta.';
+
+  @override
+  String get loginPrivacyNotice => 'Continuando accetti';
+
+  @override
+  String get loginPrivacyLink => 'l\'Informativa sulla privacy';
+
+  @override
+  String get loginPrivacyOpenError =>
+      'Impossibile aprire l\'informativa sulla privacy.';
+
+  @override
   String get appTosNotice => 'Accedendo accetti i Termini di servizio';
 
   @override
@@ -24,7 +37,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get authSignInWithEmail => 'Accedi con email';
 
   @override
-  String get authSheetTitleLogin => 'Accedi con email';
+  String get authSheetTitleLogin => 'Accedi';
 
   @override
   String get authSheetTitleRegister => 'Crea account';
@@ -39,6 +52,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get authSheetSubtitleLogin =>
       'Usa un indirizzo email valido e una password sicura.';
+
+  @override
+  String get authRegisterPrivacyNotice => 'Creando l\'account accetti';
 
   @override
   String get authFieldName => 'Nome';
@@ -87,8 +103,37 @@ class AppLocalizationsIt extends AppLocalizations {
   String get authValidationPasswordMismatch => 'Le password non coincidono';
 
   @override
+  String get paperTextFieldShowPassword => 'Mostra password';
+
+  @override
+  String get paperTextFieldHidePassword => 'Nascondi password';
+
+  @override
   String get authResetEmailSent =>
-      'Se l\'indirizzo è associata a un account, riceverai le istruzioni.';
+      'Se l\'indirizzo è associato a un account, riceverai le istruzioni.';
+
+  @override
+  String get authErrorInvalidCredential => 'Email o password non validi.';
+
+  @override
+  String get authErrorEmailAlreadyInUse => 'Email già in uso.';
+
+  @override
+  String get authErrorWeakPassword =>
+      'Scegli una password di almeno 6 caratteri.';
+
+  @override
+  String get authErrorTooManyRequests => 'Troppi tentativi. Riprova più tardi.';
+
+  @override
+  String get authErrorNetwork => 'Connessione assente o instabile. Riprova.';
+
+  @override
+  String get authErrorInvalidEmail => 'Inserisci un indirizzo email valido.';
+
+  @override
+  String get authErrorGeneric =>
+      'Non è stato possibile completare l\'operazione. Riprova.';
 
   @override
   String get homeEmptyShelfTitle => 'La tua mensola è vuota';
@@ -465,4 +510,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get exposureUnknown => 'Sconosciuta';
+
+  @override
+  String get settingsDeleteAccountButton => 'Elimina account';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => 'Elimina account';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'Stai per eliminare definitivamente il tuo account. Tutte le tue piante, stanze e immagini saranno cancellate in modo irreversibile.';
+
+  @override
+  String get settingsDeleteAccountConfirm => 'Elimina definitivamente';
+
+  @override
+  String get settingsDeleteAccountRecentLoginError =>
+      'Per sicurezza, effettua nuovamente il login prima di eliminare il profilo.';
 }
