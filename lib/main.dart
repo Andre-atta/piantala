@@ -2,8 +2,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piantala/app.dart';
 import 'package:piantala/data/local/isar_service.dart';
@@ -14,7 +13,7 @@ import 'package:piantala/firebase_options.dart'; // generato da flutterfire conf
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
+  // Removed dotenv load
 
   // 1. Inizializza Firebase
   await Firebase.initializeApp(
