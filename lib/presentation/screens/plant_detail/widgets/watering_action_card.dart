@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
@@ -24,7 +24,7 @@ class WateringActionCard extends ConsumerWidget {
         SnackBar(
           content: Text(plant.cultivationMethod == 'hydro'
               ? 'Acqua controllata!'
-              : 'Pianta innaffiata!'),
+              : 'Pianta innaffiata!',),
           backgroundColor: AppColors.success,
         ),
       );
@@ -44,10 +44,10 @@ class WateringActionCard extends ConsumerWidget {
         leading: Icon(isHydro ? Icons.science_outlined : Icons.water_drop),
         title: Text(overdue
             ? (isHydro ? 'Controlla l’acqua' : 'Richiede acqua')
-            : (isHydro ? 'Prossimo controllo acqua' : 'Prossima innaffiatura')),
+            : (isHydro ? 'Prossimo controllo acqua' : 'Prossima innaffiatura'),),
         subtitle: Text(next == null
             ? 'Ogni ${config?.frequencyDays ?? (isHydro ? 3 : 7)} giorni'
-            : 'Prossima: ${DateFormat('dd MMM yyyy').format(next)}'),
+            : 'Prossima: ${DateFormat('dd MMM yyyy').format(next)}',),
         trailing: IconButton(
           onPressed: () => _water(context, ref),
           icon: const Icon(Icons.check),

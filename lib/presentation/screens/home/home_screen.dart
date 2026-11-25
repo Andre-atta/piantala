@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
-import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/l10n/app_localizations.dart';
@@ -15,6 +13,7 @@ import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
 import 'package:piantala/presentation/screens/home/widgets/home_header.dart';
 import 'package:piantala/presentation/screens/home/widgets/shelf_cabinet.dart';
 import 'package:piantala/presentation/screens/home/widgets/window_indicator.dart';
+import 'package:piantala/presentation/screens/home/widgets/wood_pattern_background.dart';
 import 'package:piantala/presentation/utils/exposure_localization.dart';
 import 'package:piantala/presentation/widgets/common/paper_action_button.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
@@ -66,13 +65,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            PlantAssetResolver.wallBackground(),
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => ColoredBox(
-              color: context.piantala.stickWoodAndReserveWall,
-            ),
-          ),
+          const WoodPatternBackground(),
           Column(
             children: [
               HomeHeader(
@@ -274,10 +267,13 @@ class _ShelfPage extends StatelessWidget {
       );
     }
 
-    return ShelfCabinet(
-      plants: page.plants,
-      now: DateTime.now(),
-      onPlantTap: onPlantTap,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ShelfCabinet(
+        plants: page.plants,
+        now: DateTime.now(),
+        onPlantTap: onPlantTap,
+      ),
     );
   }
 }

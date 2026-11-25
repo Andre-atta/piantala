@@ -6,7 +6,7 @@ void main() {
     final ts = DateTime.now().toUtc();
     final iso = ts.toIso8601String();
     expect(iso.endsWith('Z'), isTrue,
-        reason: 'createdAt deve essere UTC: $iso');
+        reason: 'createdAt deve essere UTC: $iso',);
   });
 
   test('SyncService.parseDateTime interpreta stringhe senza fuso come UTC', () {

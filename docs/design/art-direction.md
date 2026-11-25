@@ -32,6 +32,12 @@ Otto colori di base, nient'altro. Poca saturazione, nessun neon, nessuna sfumatu
 | Inchiostro morbido | `#3A3E34` | Testo secondario, didascalie |
 | Pista del misuratore | `#E6DAC0` | Sfondo di barre e anelli |
 | Giallo post-it | `#EFD27A` | Solo il post-it dell'origine |
+| Fondo armadio | `#E8DABB` | Fondo dell'armadio |
+| Fianco armadio | `#D3C29A` | Fianchi laterali dell'armadio |
+| Piano mensola | `#C5D1AE` | Piano visibile della mensola |
+| Fondo armadio | `#E8DABB` | Fondo dell'armadio |
+| Fianco armadio | `#D3C29A` | Fianchi laterali dell'armadio |
+| Piano mensola | `#C5D1AE` | Piano visibile della mensola |
 
 ### Regole sui colori
 
@@ -47,6 +53,7 @@ Otto colori di base, nient'altro. Poca saturazione, nessun neon, nessuna sfumatu
 ### 2.1 Superfici e forme
 
 - **Nessuna ombra morbida, sfumatura o luce proiettata.** La profondità viene da bordi sottili e da strati di carta.
+- La mensola ha profondità senza ombre morbide: fondo tono su tono, fianchi, piano visibile e segno di contatto, solo forme piatte.
 - Eccezione: I pulsanti tondi (ciottolo) e i dischi icona hanno una base scura sfalsata di 2–4 px e un puntino chiaro; nessuna ombra morbida, nessuna sfumatura, nessuna luce proiettata.
 - **Nessuna luce.** Niente fasci, riflessi o sorgenti luminose disegnate. Il volume nasce da variazioni di tono (2-3 toni per forma, dalla palette).
 - **Linee.** Nessun contorno nero pieno. Dove serve separazione: linea sottile da 1 px in inchiostro `#292D25` a opacità 40-55%.

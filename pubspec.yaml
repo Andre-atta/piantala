@@ -64,7 +64,9 @@ dependencies:
   cloud_functions: ^5.6.2
   firebase_app_check: ^0.3.2+10
   url_launcher: ^6.3.2
+  material_ui: ^1.11.1
 
+  cupertino_ui: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

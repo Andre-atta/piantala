@@ -242,7 +242,7 @@
   "settingsAboutVersion": "Version",
   "settingsAboutVersionNumber": "0.1.0",
   "settingsAboutDataSource": "Species data",
-  "settingsAboutDataSourceSubtitle": "Provided by Perenual API (free plan)",
+  "settingsAboutDataSourceSubtitle": "Provided by Open Plantbook API",
   "navHome": "Shelf",
   "navRooms": "Rooms",
   "navEncyclopedia": "Encyclopedia",

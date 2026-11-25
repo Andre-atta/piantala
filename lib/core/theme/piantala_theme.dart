@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Palette e tipografia della nuova direzione artistica.
 @immutable
@@ -11,6 +11,9 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     required this.terracotta,
     required this.paper,
     required this.paperTan,
+    required this.cabinetBack,
+    required this.cabinetSide,
+    required this.shelfTop,
     required this.cream,
     required this.ink,
     required this.softInk,
@@ -43,6 +46,9 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     terracotta: Color(0xFFBE6E46),
     paper: Color(0xFFF4EBD8),
     paperTan: Color(0xFFE8DABB),
+    cabinetBack: Color(0xFFE8DABB),
+    cabinetSide: Color(0xFFD3C29A),
+    shelfTop: Color(0xFFC5D1AE),
     cream: Color(0xFFFAF7EF),
     ink: Color(0xFF292D25),
     softInk: Color(0xFF3A3E34),
@@ -98,6 +104,9 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
   final Color terracotta;
   final Color paper;
   final Color paperTan;
+  final Color cabinetBack;
+  final Color cabinetSide;
+  final Color shelfTop;
   final Color cream;
   final Color ink;
   final Color softInk;
@@ -128,6 +137,9 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
     Color? terracotta,
     Color? paper,
     Color? paperTan,
+    Color? cabinetBack,
+    Color? cabinetSide,
+    Color? shelfTop,
     Color? cream,
     Color? ink,
     Color? softInk,
@@ -157,6 +169,9 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       terracotta: terracotta ?? this.terracotta,
       paper: paper ?? this.paper,
       paperTan: paperTan ?? this.paperTan,
+      cabinetBack: cabinetBack ?? this.cabinetBack,
+      cabinetSide: cabinetSide ?? this.cabinetSide,
+      shelfTop: shelfTop ?? this.shelfTop,
       cream: cream ?? this.cream,
       ink: ink ?? this.ink,
       softInk: softInk ?? this.softInk,
@@ -191,6 +206,9 @@ class PiantalaTheme extends ThemeExtension<PiantalaTheme> {
       terracotta: Color.lerp(terracotta, other.terracotta, t)!,
       paper: Color.lerp(paper, other.paper, t)!,
       paperTan: Color.lerp(paperTan, other.paperTan, t)!,
+      cabinetBack: Color.lerp(cabinetBack, other.cabinetBack, t)!,
+      cabinetSide: Color.lerp(cabinetSide, other.cabinetSide, t)!,
+      shelfTop: Color.lerp(shelfTop, other.shelfTop, t)!,
       cream: Color.lerp(cream, other.cream, t)!,
       ink: Color.lerp(ink, other.ink, t)!,
       softInk: Color.lerp(softInk, other.softInk, t)!,

@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
@@ -14,6 +13,7 @@ import 'package:piantala/presentation/providers/theme_providers.dart';
 import 'package:piantala/presentation/screens/home/home_metrics.dart';
 import 'package:piantala/presentation/screens/home/home_screen.dart';
 import 'package:piantala/presentation/screens/home/widgets/home_floor.dart';
+import 'package:piantala/presentation/screens/home/widgets/plant_name_tag.dart';
 import 'package:piantala/presentation/widgets/common/paper_action_button.dart';
 import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
 import 'package:piantala/presentation/widgets/main_scaffold.dart';
@@ -29,6 +29,7 @@ RoomEntity _room(String id, String name, String exposure) => RoomEntity(
 PlantEntity _plant(
   String id,
   String roomId, {
+  String? customName,
   String? speciesScientificName,
   String cultivationMethod = 'soil',
   WateringConfigEntity? wateringConfig,
@@ -38,7 +39,7 @@ PlantEntity _plant(
       id: id,
       userId: 'user-1',
       roomId: roomId,
-      customName: 'Pianta $id',
+      customName: customName ?? 'Pianta $id',
       shelfPosition: 0,
       createdAt: DateTime(2026),
       speciesScientificName: speciesScientificName,
@@ -50,6 +51,7 @@ PlantEntity _plant(
 ({Widget widget, GoRouter router}) _app({
   required List<PlantEntity> plants,
   required List<RoomEntity> rooms,
+  double textScale = 1,
 }) {
   final router = GoRouter(
     routes: [
@@ -84,14 +86,18 @@ PlantEntity _plant(
         routerConfig: router,
         locale: const Locale('it'),
         localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
         supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
           extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
+        ),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: child!,
         ),
       ),
     ),
@@ -99,6 +105,129 @@ PlantEntity _plant(
 }
 
 void main() {
+  testWidgets('Home does not overflow at textScale 1.5', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final app = _app(
+      plants: List.generate(3, (index) => _plant('plant-$index', 'room-1')),
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+      textScale: 1.5,
+    );
+    addTearDown(app.router.dispose);
+
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('plant name tags stay compact and single-line at textScale 1.5',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    const shortName = 'Rocco';
+    const longName = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmn';
+    final app = _app(
+      plants: [
+        _plant('short-name', 'room-1', customName: shortName),
+        _plant('long-name', 'room-1', customName: longName),
+      ],
+      rooms: [_room('room-1', 'Soggiorno', 'S')],
+      textScale: 1.5,
+    );
+    addTearDown(app.router.dispose);
+
+    await tester.pumpWidget(app.widget);
+    await tester.pumpAndSettle();
+
+    final shortTag = find.descendant(
+      of: find.byKey(const ValueKey('plant-short-name')),
+      matching: find.byType(PlantNameTag),
+    );
+    final longTag = find.descendant(
+      of: find.byKey(const ValueKey('plant-long-name')),
+      matching: find.byType(PlantNameTag),
+    );
+    expect(shortTag, findsOneWidget);
+    expect(longTag, findsOneWidget);
+
+    final shortText = tester.widget<Text>(
+      find.descendant(of: shortTag, matching: find.byType(Text)),
+    );
+    final longText = tester.widget<Text>(
+      find.descendant(of: longTag, matching: find.byType(Text)),
+    );
+    expect(shortText.maxLines, 1);
+    expect(shortText.softWrap, isFalse);
+    expect(shortText.overflow, TextOverflow.ellipsis);
+    expect(shortText.textScaler, TextScaler.noScaling);
+    expect(longText.maxLines, 1);
+    expect(longText.softWrap, isFalse);
+    expect(longText.overflow, TextOverflow.ellipsis);
+    expect(longText.textScaler, TextScaler.noScaling);
+
+    final shortTagRect = tester.getRect(shortTag);
+    final longTagRect = tester.getRect(longTag);
+    expect(shortTagRect.width, lessThan(HomeMetrics.nameTagMaxWidth));
+    expect(longTagRect.width, lessThanOrEqualTo(HomeMetrics.nameTagMaxWidth));
+    expect(shortTagRect.height, HomeMetrics.nameTagHeight);
+    expect(longTagRect.height, HomeMetrics.nameTagHeight);
+    expect(
+      tester.getSemantics(find.byKey(const ValueKey('plant-long-name'))).label,
+      longName,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('cabinet height fills space to floor for 1, 2, 4, and 6 rows',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    for (final rowCount in [1, 2, 4, 6]) {
+      await tester.pumpWidget(const SizedBox.shrink());
+      final app = _app(
+        plants: List.generate(
+          rowCount * HomeMetrics.plantsPerRow,
+          (index) => _plant('plant-$rowCount-$index', 'room-1'),
+        ),
+        rooms: [_room('room-1', 'Soggiorno', 'S')],
+      );
+      addTearDown(app.router.dispose);
+
+      await tester.pumpWidget(app.widget);
+      await tester.pumpAndSettle();
+
+      final cabinetFrameRect = tester.getRect(
+        find.byKey(const ValueKey('shelf-cabinet-frame')),
+      );
+      final floorRect = tester.getRect(find.byType(HomeFloor));
+      expect(
+        cabinetFrameRect.bottom,
+        equals(floorRect.top),
+      );
+
+      final scrollable = tester.state<ScrollableState>(
+        find.descendant(
+          of: find.byType(SingleChildScrollView).first,
+          matching: find.byType(Scrollable),
+        ),
+      );
+      if (rowCount >= 6) {
+        expect(scrollable.position.maxScrollExtent, greaterThan(0));
+      }
+      expect(tester.takeException(), isNull);
+    }
+  });
+
   testWidgets('renders room metadata, window, cabinet, floor, and navigation',
       (tester) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -118,6 +247,20 @@ void main() {
     expect(find.text('4 piante · Esposizione Sud'), findsOneWidget);
     expect(find.byType(HomeFloor), findsOneWidget);
     expect(find.byType(PiantalaNavigationBar), findsOneWidget);
+    final createButton = find.byKey(
+      const ValueKey('navigation-create-button'),
+    );
+    final createLabel = find.text('nuova pianta');
+    expect(
+      tester
+          .getRect(createButton)
+          .contains(tester.getRect(createLabel).topLeft),
+      isTrue,
+    );
+    expect(
+      tester.getRect(createLabel).bottom,
+      lessThanOrEqualTo(tester.getRect(createButton).bottom),
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -129,12 +272,35 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     final app = _app(
-      plants: List.generate(15, (index) => _plant('plant-$index', 'room-1')),
+      plants: List.generate(18, (index) => _plant('plant-$index', 'room-1')),
       rooms: [_room('room-1', 'Soggiorno', 'S')],
     );
     addTearDown(app.router.dispose);
     await tester.pumpWidget(app.widget);
     await tester.pumpAndSettle();
+    final cabinetHeight = tester
+        .getSize(find.byKey(const ValueKey('shelf-cabinet-frame')))
+        .height;
+    expect(
+      cabinetHeight,
+      lessThan(
+        HomeMetrics.cabinetCrossbarHeight +
+            6 * HomeMetrics.shelfRowHeight +
+            HomeMetrics.cabinetBottomBeamHeight,
+      ),
+    );
+    expect(
+      tester
+          .state<ScrollableState>(
+            find.descendant(
+              of: find.byType(SingleChildScrollView).first,
+              matching: find.byType(Scrollable),
+            ),
+          )
+          .position
+          .maxScrollExtent,
+      greaterThan(0),
+    );
     final headerTop = tester.getTopLeft(find.text('Soggiorno'));
     final floorTop = tester.getTopLeft(find.byType(HomeFloor));
 

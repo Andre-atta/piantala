@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/presentation/screens/home/home_metrics.dart';
@@ -15,32 +15,32 @@ class PlantNameTag extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.piantala;
 
-    return ConstrainedBox(
+    return Container(
       constraints: const BoxConstraints(
-        maxWidth: HomeMetrics.plantTagMaxWidth,
-        minHeight: HomeMetrics.plantTagHeight,
+        maxWidth: HomeMetrics.nameTagMaxWidth,
       ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HomeMetrics.plantTagHorizontalPadding,
+      height: HomeMetrics.nameTagHeight,
+      padding: const EdgeInsets.symmetric(
+        horizontal: HomeMetrics.nameTagHorizontalPadding,
+      ),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: theme.cream,
+        border: Border.all(
+          color: theme.ink,
         ),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: theme.cream,
-          border: Border.all(
-            color: theme.ink,
-          ),
-        ),
-        child: Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: theme.body.copyWith(
-            fontSize: HomeMetrics.plantTagFontSize,
-            height: 1,
-            color: theme.ink,
-          ),
+      ),
+      child: Text(
+        name,
+        maxLines: 1,
+        softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        textScaler: TextScaler.noScaling,
+        style: theme.body.copyWith(
+          fontSize: HomeMetrics.nameTagFontSize,
+          height: 1.15,
+          color: theme.ink,
         ),
       ),
     );

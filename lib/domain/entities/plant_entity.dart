@@ -38,8 +38,8 @@ class PlantEntity with _$PlantEntity {
       return '';
     }
     return speciesScientificName!
-        .replaceAll(RegExp(r"'[^']*'"), '')
-        .replaceAll(RegExp(r'"[^"]*"'), '')
+        .replaceAll(RegExp("'[^']*'"), '')
+        .replaceAll(RegExp('"[^"]*"'), '')
         .toLowerCase()
         .trim()
         .replaceAll(RegExp(r'\s+'), '_');

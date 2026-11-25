@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
@@ -133,11 +133,9 @@ class _PlantRepository implements IPlantRepository {
         routerConfig: router,
         locale: const Locale('it'),
         localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
         supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
           extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],

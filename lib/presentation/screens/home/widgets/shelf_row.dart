@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/core/utils/plant_asset_resolver.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
@@ -15,40 +14,26 @@ class ShelfRow extends StatelessWidget {
     required this.plants,
     required this.now,
     required this.onPlantTap,
+    this.rowHeight = HomeMetrics.shelfRowHeight,
     super.key,
   });
 
   final List<PlantEntity> plants;
   final DateTime now;
   final ValueChanged<PlantEntity> onPlantTap;
+  final double rowHeight;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.piantala;
-    final slots = List<Widget>.generate(
-      HomeMetrics.plantsPerRow,
-      (index) {
-        if (index < plants.length) {
-          final plant = plants[index];
-          return _PlantOnShelf(
-            plant: plant,
-            now: now,
-            onTap: () => onPlantTap(plant),
-          );
-        }
-        if (index == plants.length) return const _ShelfBooks();
-        return const SizedBox(
-          width: HomeMetrics.plantImageWidth,
-          height: HomeMetrics.plantImageHeight,
-        );
-      },
-    );
+    final hasContent = plants.isNotEmpty;
 
     return SizedBox(
-      height: HomeMetrics.shelfRowHeight,
+      height: rowHeight,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          // — Tavola principale della mensola (spessore verde salvia) —
           Positioned(
             left: 0,
             right: 0,
@@ -70,16 +55,109 @@ class ShelfRow extends StatelessWidget {
               ),
             ),
           ),
+          // — Bordo frontale più scuro (faccia anteriore della mensola) —
           Positioned(
             left: 0,
             right: 0,
-            bottom: HomeMetrics.plantTagBottomGap,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: slots,
+            bottom: 0,
+            height: HomeMetrics.shelfFrontEdgeHeight,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.ink.withValues(alpha: 0.12),
+              ),
             ),
           ),
+          // — Piano superiore verde salvia chiaro —
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: HomeMetrics.shelfBoardHeight,
+            height: HomeMetrics.shelfTopHeight,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.shelfTop,
+                border: Border(
+                  top: BorderSide(
+                    color: theme.ink.withValues(alpha: 0.45),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (hasContent) ...[
+            // — Ombre ellittiche sotto piante/vasi/libri —
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: HomeMetrics.shelfBoardHeight +
+                  HomeMetrics.shelfTopHeight -
+                  HomeMetrics.shelfOverlap -
+                  HomeMetrics.plantShadowHeight / 2,
+              height: HomeMetrics.plantShadowHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (var index = 0; index < HomeMetrics.plantsPerRow; index++)
+                    if (index < plants.length ||
+                        (index == plants.length &&
+                            plants.length < HomeMetrics.plantsPerRow))
+                      SizedBox(
+                        width: HomeMetrics.plantImageWidth,
+                        child: Center(
+                          child: SizedBox(
+                            width: HomeMetrics.plantShadowWidth,
+                            height: HomeMetrics.plantShadowHeight,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: theme.ink.withValues(alpha: 0.18),
+                                borderRadius: BorderRadius.circular(
+                                  HomeMetrics.plantShadowHeight / 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      const SizedBox(
+                        width: HomeMetrics.plantImageWidth,
+                      ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: HomeMetrics.shelfBoardHeight +
+                  HomeMetrics.shelfTopHeight -
+                  HomeMetrics.shelfOverlap -
+                  HomeMetrics.nameTagHeight,
+              height:
+                  HomeMetrics.shelfPlantZoneHeight + HomeMetrics.nameTagHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: List<Widget>.generate(
+                  HomeMetrics.plantsPerRow,
+                  (index) {
+                    if (index < plants.length) {
+                      final plant = plants[index];
+                      return _PlantOnShelf(
+                        plant: plant,
+                        now: now,
+                        onTap: () => onPlantTap(plant),
+                      );
+                    }
+                    if (index == plants.length) return const _ShelfBooks();
+                    return const SizedBox(
+                      width: HomeMetrics.plantImageWidth,
+                      height: HomeMetrics.plantImageHeight,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -239,13 +317,20 @@ class _ShelfBooks extends StatelessWidget {
       child: ExcludeSemantics(
         child: SizedBox(
           width: HomeMetrics.plantImageWidth,
-          height: HomeMetrics.plantImageHeight,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SvgPicture.asset(
-              _asset,
-              width: HomeMetrics.booksWidth,
-              height: HomeMetrics.booksHeight,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: HomeMetrics.nameTagHeight,
+            ),
+            child: SizedBox(
+              height: HomeMetrics.plantImageHeight,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: SvgPicture.asset(
+                  _asset,
+                  width: HomeMetrics.booksWidth,
+                  height: HomeMetrics.booksHeight,
+                ),
+              ),
             ),
           ),
         ),

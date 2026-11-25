@@ -432,8 +432,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get settingsAboutDataSource => 'Dati specie';
 
   @override
-  String get settingsAboutDataSourceSubtitle =>
-      'Forniti da Perenual API (piano gratuito)';
+  String get settingsAboutDataSourceSubtitle => 'Forniti da Open Plantbook API';
 
   @override
   String get navHome => 'Mensola';

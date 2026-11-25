@@ -429,7 +429,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsAboutDataSourceSubtitle =>
-      'Provided by Perenual API (free plan)';
+      'Provided by Open Plantbook API';
 
   @override
   String get navHome => 'Shelf';

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
@@ -142,7 +142,7 @@ class PlantDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildPlaceholder(ThemeData theme) {
-    return Container(
+    return ColoredBox(
       color: theme.colorScheme.primary.withAlpha(20),
       child: Center(
         child: Icon(

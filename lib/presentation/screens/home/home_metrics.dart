@@ -6,7 +6,7 @@ abstract class HomeMetrics {
   static const headerRoomNameHeight = 48.0;
   static const headerMetaFontSize = 13.0;
   static const headerMetaLineHeight = 18.0;
-  static const nextRoomNameSize = 28.0;
+  static const nextRoomNameSize = 18.0;
   static const nextRoomOpacity = 0.6;
   static const nextRoomWidth = 96.0;
   static const windowWidth = 64.0;
@@ -31,31 +31,39 @@ abstract class HomeMetrics {
   static const pageIndicatorOverflow = 16.0;
   static const pageTransitionMilliseconds = 180;
 
-  static const floorHeight = 72.0;
+  static const floorHeight = 70.0;
   static const floorBorderHeight = 8.0;
   static const floorJointSpacing = 72.0;
 
-  static const cabinetSideMargin = 8.0;
-  static const cabinetCrossbarHeight = 10.0;
-  static const cabinetCrossbarOverhang = 4.0;
+  static const cabinetSideMargin = 12.0;
+  static const cabinetCrossbarHeight = 14.0;
+  static const cabinetCrossbarOverhang = 8.0;
   static const cabinetPostWidth = 10.0;
-  static const cabinetBottomCrossbarHeight = 12.0;
-  static const cabinetFootWidth = 26.0;
-  static const cabinetFootHeight = 8.0;
-  static const cabinetFootInset = 12.0;
+  static const cabinetBottomBeamHeight = 12.0;
+  static const cabinetFootWidth = 38.0;
+  static const cabinetFootHeight = 10.0;
+  static const cabinetFootInset = 18.0;
+  static const fillCabinetToFloor = true;
+  static const cabinetSideWidth = 11.0;
   static const shelfRowHeight = 138.0;
   static const shelfPlantZoneHeight = 116.0;
   static const shelfBoardHeight = 22.0;
-  static const shelfOverlap = 3.0;
+  static const shelfTopHeight = 10.0;
+  static const shelfOverlap = 5.0;
   static const shelfBoardBorderWidth = 1.5;
+  static const shelfFrontEdgeHeight = 5.0;
+  static const contactMarkWidth = 70.0;
+  static const contactMarkHeight = 7.0;
+  static const plantShadowWidth = 64.0;
+  static const plantShadowHeight = 9.0;
   static const plantsPerRow = 3;
   static const plantImageWidth = 96.0;
   static const plantImageHeight = 100.0;
   static const plantTagBottomGap = 5.0;
-  static const plantTagHeight = 17.0;
-  static const plantTagHorizontalPadding = 8.0;
-  static const plantTagMaxWidth = 100.0;
-  static const plantTagFontSize = 11.0;
+  static const nameTagHeight = 17.0;
+  static const nameTagMaxWidth = 100.0;
+  static const nameTagHorizontalPadding = 8.0;
+  static const nameTagFontSize = 11.0;
   static const plantVariationMinScale = 0.95;
   static const plantVariationMaxScale = 1.05;
   static const plantVariationMaxRotationDegrees = 1.5;
@@ -73,4 +81,6 @@ abstract class HomeMetrics {
   static const vineTop = 8.0;
   static const booksWidth = 68.0;
   static const booksHeight = 84.0;
+
+  static const woodVeinSpacing = 64;
 }
