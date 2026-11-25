@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
 
@@ -131,7 +131,6 @@ void main() {
             body: Center(
               child: HangingTag(
                 label: 'Salva',
-                variant: HangingTagVariant.primary,
                 onPressed: () {},
               ),
             ),
@@ -150,7 +149,7 @@ void main() {
       final center = tester.getCenter(find.byType(HangingTag));
       final screenSize = tester.view.physicalSize / tester.view.devicePixelRatio;
       expect(center.dx, closeTo(screenSize.width / 2, 2.0),
-          reason: 'textScale=$textScale, senza leading');
+          reason: 'textScale=$textScale, senza leading',);
     }
 
     // Con leading — 1× scale
@@ -170,7 +169,6 @@ void main() {
             body: Center(
               child: HangingTag(
                 label: 'Salva',
-                variant: HangingTagVariant.primary,
                 leading: const Icon(Icons.eco, size: 16),
                 onPressed: () {},
               ),

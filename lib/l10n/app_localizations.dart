@@ -851,7 +851,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAboutDataSourceSubtitle.
   ///
   /// In it, this message translates to:
-  /// **'Forniti da Perenual API (piano gratuito)'**
+  /// **'Forniti da Open Plantbook API'**
   String get settingsAboutDataSourceSubtitle;
 
   /// No description provided for @navHome.

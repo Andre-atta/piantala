@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Palette completa di Piantala.
 /// REGOLA: nessun widget usa Color() o Colors.* direttamente.

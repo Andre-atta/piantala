@@ -399,7 +399,7 @@ abstract final class AppSettingsStrings {
   static const aboutVersionNumber = '0.1.0';
   static const aboutDataSource = 'Dati specie';
   static const aboutDataSourceSubtitle =
-      'Forniti da Perenual API (piano gratuito)';
+      'Forniti da Open Plantbook API';
 }
 
 class AppSettingsNamespace {

@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/data/services/fcm_service.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/providers/auth_providers.dart';
@@ -43,9 +41,7 @@ class PiantalaApp extends ConsumerWidget {
       locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
       supportedLocales: const [
         ...AppLocalizations.supportedLocales,

@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
 import 'package:piantala/domain/entities/user_entity.dart';
@@ -59,11 +58,9 @@ class _RoomRepository implements IRoomRepository {
       child: MaterialApp(
         locale: const Locale('it'),
         localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
         supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
           extensions: const <ThemeExtension<dynamic>>[PiantalaTheme.standard],
@@ -254,7 +251,7 @@ void main() {
   });
 
   testWidgets(
-      'nessun campo prende il focus all\'apertura finché non viene toccato',
+      "nessun campo prende il focus all'apertura finché non viene toccato",
       (tester) async {
     final app = _app();
     await tester.pumpWidget(app.widget);

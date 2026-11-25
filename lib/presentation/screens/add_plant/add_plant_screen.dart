@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/domain/entities/room_entity.dart';
@@ -77,7 +77,7 @@ class _AddPlantScreenState extends ConsumerState<AddPlantScreen> {
       final newPosition = plants.length;
       final plantId = const Uuid().v4();
 
-      var customName = _manualNameController.text.trim();
+      final customName = _manualNameController.text.trim();
       String? speciesApiId;
       String? speciesCommonName;
       String? speciesScientificName;
@@ -230,7 +230,7 @@ class _AddPlantScreenState extends ConsumerState<AddPlantScreen> {
             if (_isManualEntry && _manualNameController.text.trim().isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                    content: Text('Inserisci un nome per la pianta')),
+                    content: Text('Inserisci un nome per la pianta'),),
               );
               return;
             }

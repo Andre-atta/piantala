@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/opb_contribution_entity.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
@@ -218,7 +218,7 @@ class _OpbContributionSheetState extends ConsumerState<OpbContributionSheet> {
                   children: [
                     const TextSpan(
                       text:
-                          'I dati verranno aggiunti al profilo OpenPlantBook condiviso dell\'app '
+                          "I dati verranno aggiunti al profilo OpenPlantBook condiviso dell'app "
                           'e saranno visibili agli altri utenti nelle ricerche. ',
                     ),
                     TextSpan(
@@ -288,10 +288,10 @@ class _OpbContributionSheetState extends ConsumerState<OpbContributionSheet> {
               // ── Campi numerici ──────────────────────────────────────────────
               Text('Dati ambientali',
                   style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold)),
+                      ?.copyWith(fontWeight: FontWeight.bold),),
               const SizedBox(height: 4),
               Text(
-                'Compila almeno 3 campi numerici per abilitare l\'invio.',
+                "Compila almeno 3 campi numerici per abilitare l'invio.",
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -299,17 +299,17 @@ class _OpbContributionSheetState extends ConsumerState<OpbContributionSheet> {
               const SizedBox(height: 12),
 
               _buildNumericPair(
-                  'Temperatura (°C)', 'minTemp', 'maxTemp', validation.errors),
+                  'Temperatura (°C)', 'minTemp', 'maxTemp', validation.errors,),
               _buildNumericPair('Umidità ambiente (%)', 'minEnvHumid',
-                  'maxEnvHumid', validation.errors),
+                  'maxEnvHumid', validation.errors,),
               _buildNumericPair('Umidità substrato (%)', 'minSoilMoist',
-                  'maxSoilMoist', validation.errors),
+                  'maxSoilMoist', validation.errors,),
               _buildNumericPair('Luce (lux)', 'minLightLux', 'maxLightLux',
-                  validation.errors),
+                  validation.errors,),
               _buildNumericPair('Luce (mmol/m²/gg)', 'minLightMmol',
-                  'maxLightMmol', validation.errors),
+                  'maxLightMmol', validation.errors,),
               _buildNumericPair(
-                  'EC (µS/cm)', 'minSoilEc', 'maxSoilEc', validation.errors),
+                  'EC (µS/cm)', 'minSoilEc', 'maxSoilEc', validation.errors,),
 
               // Indicatore campi valorizzati
               const SizedBox(height: 8),
@@ -328,25 +328,25 @@ class _OpbContributionSheetState extends ConsumerState<OpbContributionSheet> {
               // ── Istruzioni di cura testuali ─────────────────────────────────
               Text('Istruzioni di cura (opzionale)',
                   style: theme.textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold)),
+                      ?.copyWith(fontWeight: FontWeight.bold),),
               const SizedBox(height: 12),
 
               _buildTextField(
-                  controller: _sunlightCtrl, label: 'Esposizione solare'),
+                  controller: _sunlightCtrl, label: 'Esposizione solare',),
               const SizedBox(height: 8),
               _buildTextField(controller: _wateringCtrl, label: 'Irrigazione'),
               const SizedBox(height: 8),
               _buildTextField(
                   controller: _fertilizationCtrl,
                   label: 'Concimazione',
-                  errorText: validation.errors['fertilization']),
+                  errorText: validation.errors['fertilization'],),
               const SizedBox(height: 8),
               _buildTextField(controller: _pruningCtrl, label: 'Potatura'),
               const SizedBox(height: 8),
               _buildTextField(
                   controller: _soilCtrl,
                   label: 'Substrato',
-                  errorText: validation.errors['soil']),
+                  errorText: validation.errors['soil'],),
 
               const SizedBox(height: 24),
 
@@ -374,7 +374,7 @@ class _OpbContributionSheetState extends ConsumerState<OpbContributionSheet> {
                             )
                           : Text(widget.isUpdateMode
                               ? 'Invia correzione'
-                              : 'Condividi dati'),
+                              : 'Condividi dati',),
                     ),
                   ),
                 ],

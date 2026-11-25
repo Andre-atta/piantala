@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/presentation/providers/species_search_providers.dart';
 
@@ -113,7 +113,7 @@ class SpeciesDetailScreen extends ConsumerWidget {
                     _buildSectionHeader(theme, 'Cura e Mantenimento'),
                     _buildInfoCard(theme, [
                       _InfoRow('💧 Innaffiatura',
-                          '$wateringFreq giorni\n$wateringDesc'),
+                          '$wateringFreq giorni\n$wateringDesc',),
                       _InfoRow('☀️ Luce', lightLabel),
                       _InfoRow('💦 Umidità', humidLabel),
                       if (details['temperatureMin'] != null &&
@@ -127,10 +127,10 @@ class SpeciesDetailScreen extends ConsumerWidget {
                         _InfoRow('🌱 Terriccio', details['careSoil'] as String),
                       if (details['careFertilization'] != null)
                         _InfoRow('🧪 Concimazione',
-                            details['careFertilization'] as String),
+                            details['careFertilization'] as String,),
                       if (details['carePruning'] != null)
                         _InfoRow(
-                            '✂️ Potatura', details['carePruning'] as String),
+                            '✂️ Potatura', details['carePruning'] as String,),
                     ]),
                     if (details['description'] != null) ...[
                       const SizedBox(height: AppSpacing.lg),

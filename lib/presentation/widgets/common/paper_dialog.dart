@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/presentation/widgets/common/paper_component_metrics.dart';

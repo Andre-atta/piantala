@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/widgets/common/paper_component_metrics.dart';
@@ -19,9 +18,7 @@ Widget _app({
     locale: const Locale('it'),
     localizationsDelegates: const [
       AppLocalizations.delegate,
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
+      ...GlobalMaterialLocalizations.delegates,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
     theme: ThemeData(

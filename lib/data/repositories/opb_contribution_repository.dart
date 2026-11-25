@@ -113,26 +113,31 @@ class OpbContributionRepository {
     if (entity.alias != null) map['alias'] = entity.alias;
     if (entity.category != null) map['category'] = entity.category;
     if (entity.origin != null) map['origin'] = entity.origin;
-    if (entity.maxLightMmol != null)
+    if (entity.maxLightMmol != null) {
       map['max_light_mmol'] = entity.maxLightMmol;
-    if (entity.minLightMmol != null)
+    }
+    if (entity.minLightMmol != null) {
       map['min_light_mmol'] = entity.minLightMmol;
+    }
     if (entity.maxLightLux != null) map['max_light_lux'] = entity.maxLightLux;
     if (entity.minLightLux != null) map['min_light_lux'] = entity.minLightLux;
     if (entity.maxTemp != null) map['max_temp'] = entity.maxTemp;
     if (entity.minTemp != null) map['min_temp'] = entity.minTemp;
     if (entity.maxEnvHumid != null) map['max_env_humid'] = entity.maxEnvHumid;
     if (entity.minEnvHumid != null) map['min_env_humid'] = entity.minEnvHumid;
-    if (entity.maxSoilMoist != null)
+    if (entity.maxSoilMoist != null) {
       map['max_soil_moist'] = entity.maxSoilMoist;
-    if (entity.minSoilMoist != null)
+    }
+    if (entity.minSoilMoist != null) {
       map['min_soil_moist'] = entity.minSoilMoist;
+    }
     if (entity.maxSoilEc != null) map['max_soil_ec'] = entity.maxSoilEc;
     if (entity.minSoilEc != null) map['min_soil_ec'] = entity.minSoilEc;
     if (entity.sunlight != null) map['sunlight'] = entity.sunlight;
     if (entity.watering != null) map['watering'] = entity.watering;
-    if (entity.fertilization != null)
+    if (entity.fertilization != null) {
       map['fertilization'] = entity.fertilization;
+    }
     if (entity.pruning != null) map['pruning'] = entity.pruning;
     if (entity.soil != null) map['soil'] = entity.soil;
     return map;

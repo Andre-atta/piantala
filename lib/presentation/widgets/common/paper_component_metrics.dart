@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Torn-edge coordinates use a 360 dp reference width; vertical values stay dp.
 const kTornEdgePoints = <Offset>[

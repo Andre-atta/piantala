@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/l10n/app_localizations.dart';
 import 'package:piantala/presentation/screens/home/care_type.dart';
 import 'package:piantala/presentation/screens/home/home_metrics.dart';
@@ -12,12 +12,10 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         locale: Locale('it'),
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        localizationsDelegates: const [
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: Align(
@@ -78,12 +76,10 @@ void main() {
       (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+        localizationsDelegates: const [
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: CareSignals(cares: []),

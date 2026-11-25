@@ -476,11 +476,11 @@ class SyncService {
                   alreadyExists: () => {'alreadyExists': true},
                   rateLimited: () => {'rateLimited': true},
                   validationError: (field, message) => {
-                    'validationError': {'field': field, 'message': message}
+                    'validationError': {'field': field, 'message': message},
                   },
                   quotaExceeded: () => {'quotaExceeded': true},
                   error: (msg) => {'error': msg},
-                ));
+                ),);
       } else {
         final pid = payload['pid'] as String;
         final partial = Map<String, dynamic>.from(payload)..remove('pid');
@@ -491,11 +491,11 @@ class SyncService {
                   alreadyExists: () => {'alreadyExists': true},
                   rateLimited: () => {'rateLimited': true},
                   validationError: (field, message) => {
-                    'validationError': {'field': field, 'message': message}
+                    'validationError': {'field': field, 'message': message},
                   },
                   quotaExceeded: () => {'quotaExceeded': true},
                   error: (msg) => {'error': msg},
-                ));
+                ),);
       }
 
       // 409 / successo: rimuovi dalla coda.

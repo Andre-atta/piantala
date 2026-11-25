@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
@@ -56,6 +56,7 @@ class HomeHeader extends StatelessWidget {
                         right: HomeMetrics.headerWindowReserveWidth,
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Flexible(
                             child: Semantics(
@@ -69,37 +70,48 @@ class HomeHeader extends StatelessWidget {
                                   height: HomeMetrics.headerRoomNameHeight /
                                       HomeMetrics.headerRoomNameSize,
                                   color: theme.deepGreen,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
                           ),
                           if (nextRoomName != null)
-                            SizedBox(
-                              width: HomeMetrics.nextRoomWidth,
-                              height: HomeMetrics.pageIndicatorTouchSize,
-                              child: Semantics(
-                                button: true,
-                                label: nextRoomName,
-                                child: GestureDetector(
-                                  onTap: onNextRoomTap,
-                                  behavior: HitTestBehavior.opaque,
-                                  child: ShaderMask(
-                                    blendMode: BlendMode.dstIn,
-                                    shaderCallback: (bounds) => LinearGradient(
-                                      colors: [
-                                        theme.deepGreen,
-                                        theme.deepGreen.withValues(alpha: 0),
-                                      ],
-                                    ).createShader(bounds),
-                                    child: Text(
-                                      nextRoomName!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: theme.h1.copyWith(
-                                        fontSize: HomeMetrics.nextRoomNameSize,
-                                        height: 1,
-                                        color: theme.deepGreen.withValues(
-                                          alpha: HomeMetrics.nextRoomOpacity,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 6,
+                                bottom: 7,
+                              ),
+                              child: SizedBox(
+                                width: HomeMetrics.nextRoomWidth,
+                                height: HomeMetrics.pageIndicatorTouchSize,
+                                child: Semantics(
+                                  button: true,
+                                  label: nextRoomName,
+                                  child: GestureDetector(
+                                    onTap: onNextRoomTap,
+                                    behavior: HitTestBehavior.opaque,
+                                    child: Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: ShaderMask(
+                                        blendMode: BlendMode.dstIn,
+                                        shaderCallback: (bounds) =>
+                                            LinearGradient(
+                                          colors: [
+                                            theme.sage,
+                                            theme.sage.withValues(alpha: 0),
+                                          ],
+                                        ).createShader(bounds),
+                                        child: Text(
+                                          nextRoomName!,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: theme.h2.copyWith(
+                                            fontSize:
+                                                HomeMetrics.nextRoomNameSize,
+                                            height: 1,
+                                            color: theme.sage,
+                                            fontStyle: FontStyle.italic,
+                                          ),
                                         ),
                                       ),
                                     ),

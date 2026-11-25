@@ -251,7 +251,7 @@
   "settingsAboutVersion": "Versione",
   "settingsAboutVersionNumber": "0.1.0",
   "settingsAboutDataSource": "Dati specie",
-  "settingsAboutDataSourceSubtitle": "Forniti da Perenual API (piano gratuito)",
+  "settingsAboutDataSourceSubtitle": "Forniti da Open Plantbook API",
   "navHome": "Mensola",
   "navRooms": "Stanze",
   "navEncyclopedia": "Enciclopedia",

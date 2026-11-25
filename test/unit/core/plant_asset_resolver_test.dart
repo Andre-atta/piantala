@@ -9,14 +9,14 @@ void main() {
       final assetPath =
           PlantAssetResolver.plantAsset('epipremnum_aureum', water: true);
       expect(assetPath,
-          equals('assets/illustrations/plants/epipremnum_aureum_water.png'));
+          equals('assets/illustrations/plants/epipremnum_aureum_water.png'),);
     });
 
     test(
         'returns null for unknown substrate of a known species (epipremnum_aureum, soil)',
         () {
       final assetPath =
-          PlantAssetResolver.plantAsset('epipremnum_aureum', water: false);
+          PlantAssetResolver.plantAsset('epipremnum_aureum');
       expect(assetPath, isNull);
     });
 
@@ -29,7 +29,7 @@ void main() {
     test('wallBackground returns the correct generic room asset', () {
       final assetPath = PlantAssetResolver.wallBackground();
       expect(
-          assetPath, equals('assets/illustrations/rooms/wall_background.png'));
+          assetPath, equals('assets/illustrations/rooms/wall_background.png'),);
     });
   });
 }

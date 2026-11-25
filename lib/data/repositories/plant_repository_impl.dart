@@ -70,7 +70,7 @@ class PlantRepositoryImpl implements IPlantRepository {
       });
     } catch (error) {
       throw LocalDatabaseException(
-          "Errore durante l'aggiunta della pianta: $error");
+          "Errore durante l'aggiunta della pianta: $error",);
     }
   }
 

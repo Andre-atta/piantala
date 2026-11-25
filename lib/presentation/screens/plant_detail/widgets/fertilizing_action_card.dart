@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/domain/entities/plant_entity.dart';
 import 'package:piantala/presentation/providers/plant_providers.dart';
@@ -42,7 +42,7 @@ class FertilizingActionCard extends ConsumerWidget {
         title: const Text('Concimazione'),
         subtitle: Text(next == null
             ? 'Ogni ${config?.frequencyDays ?? days} giorni'
-            : 'Prossima: ${DateFormat('dd MMM yyyy').format(next)}'),
+            : 'Prossima: ${DateFormat('dd MMM yyyy').format(next)}',),
         trailing: IconButton(
           onPressed: () => _fertilize(context, ref),
           icon: const Icon(Icons.check),

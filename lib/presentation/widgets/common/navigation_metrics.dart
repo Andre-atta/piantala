@@ -12,7 +12,7 @@ abstract class NavigationMetrics {
   static const createButtonWidth = 108.0;
   static const createButtonHeight = 72.0;
   static const createButtonBottom = 30.0;
-  static const createIconSize = 38.0;
+  static const createIconSize = 34.0;
   static const createContentTopPadding = 2.0;
   static const createLabelFontSize = 12.0;
   static const createLabelLineHeight = 16.0;

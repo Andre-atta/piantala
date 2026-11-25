@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:piantala/core/theme/piantala_theme.dart';
 import 'package:piantala/core/theme/temporal_theme.dart';
 
 void main() {
+  test('espone i token della mensola con i valori richiesti', () {
+    expect(PiantalaTheme.standard.cabinetBack, const Color(0xFFE8DABB));
+    expect(PiantalaTheme.standard.cabinetSide, const Color(0xFFD3C29A));
+    expect(PiantalaTheme.standard.shelfTop, const Color(0xFFC5D1AE));
+  });
+
   group('PiantalaTheme.copyWith', () {
     test('sostituisce i campi richiesti e conserva gli altri', () {
       const replacementColor = Color(0xFF112233);
@@ -11,12 +17,18 @@ void main() {
       final copied = PiantalaTheme.standard.copyWith(
         leafGreen: replacementColor,
         paperTan: replacementColor,
+        cabinetBack: replacementColor,
+        cabinetSide: replacementColor,
+        shelfTop: replacementColor,
         h1: replacementStyle,
       );
 
       expect(copied.leafGreen, replacementColor);
       expect(copied.deepGreen, PiantalaTheme.standard.deepGreen);
       expect(copied.paperTan, replacementColor);
+      expect(copied.cabinetBack, replacementColor);
+      expect(copied.cabinetSide, replacementColor);
+      expect(copied.shelfTop, replacementColor);
       expect(copied.h1, replacementStyle);
       expect(copied.h2, PiantalaTheme.standard.h2);
       expect(copied.body, PiantalaTheme.standard.body);
@@ -37,6 +49,9 @@ void main() {
         terracotta: replacementColor,
         paper: replacementColor,
         paperTan: replacementColor,
+        cabinetBack: replacementColor,
+        cabinetSide: replacementColor,
+        shelfTop: replacementColor,
         cream: replacementColor,
         ink: replacementColor,
         softInk: replacementColor,
@@ -67,6 +82,9 @@ void main() {
         start.terracotta,
         start.paper,
         start.paperTan,
+        start.cabinetBack,
+        start.cabinetSide,
+        start.shelfTop,
         start.cream,
         start.ink,
         start.softInk,
@@ -91,6 +109,9 @@ void main() {
         halfway.terracotta,
         halfway.paper,
         halfway.paperTan,
+        halfway.cabinetBack,
+        halfway.cabinetSide,
+        halfway.shelfTop,
         halfway.cream,
         halfway.ink,
         halfway.softInk,
