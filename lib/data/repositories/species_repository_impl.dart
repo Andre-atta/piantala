@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:piantala/core/utils/watering_heuristic.dart';
+import 'package:piantala/core/utils/scheduling_engine.dart';
 import 'package:piantala/data/local/collections/species_cache_collection.dart';
 import 'package:piantala/data/local/isar_service.dart';
 import 'package:piantala/data/services/local_catalog_service.dart';
@@ -19,7 +19,7 @@ class SpeciesRepositoryImpl {
   final Isar _isar;
 
   Future<List<Map<String, dynamic>>> searchSpecies(String query) async {
-    const locale = 'it'; // TODO: iniettare tramite LocaleUtils se disponibile
+    const locale = 'it'; // TODO(andrea): iniettare tramite LocaleUtils se disponibile
 
     // 1. Cerca nel catalogo locale (immediato)
     final localResults =
@@ -44,10 +44,11 @@ class SpeciesRepositoryImpl {
     for (final locRes in localResults) {
       final pid = locRes['pid'] as String? ?? '';
       if (pid.isNotEmpty) {
+        final commonNameMap = locRes['commonName'] as Map<String, dynamic>?;
         merged[pid] = {
           'pid': pid,
-          'common_name': locRes['commonName']?[locale] ??
-              locRes['commonName']?['en'] ??
+          'common_name': commonNameMap?[locale] ??
+              commonNameMap?['en'] ??
               pid,
           'scientific_name': locRes['scientificName'] ?? pid,
           'default_image':
@@ -99,12 +100,17 @@ class SpeciesRepositoryImpl {
 
     // 3. Costruisci il nuovo oggetto SpeciesCacheCollection unendo le fonti
     const locale = 'it';
+    final localCommonName =
+        localData?['commonName'] as Map<String, dynamic>?;
+    final localDescription =
+        localData?['description'] as Map<String, dynamic>?;
+    final localCareNotes = localData?['careNotes'] as Map<String, dynamic>?;
 
     final newCache = SpeciesCacheCollection()
       ..apiId = pid
       // La Cloud Function normalizza già common_name e scientific_name
-      ..commonName = (localData?['commonName']?[locale] as String?) ??
-          (localData?['commonName']?['en'] as String?) ??
+      ..commonName = (localCommonName?[locale] as String?) ??
+          (localCommonName?['en'] as String?) ??
           (apiData?['common_name'] as String?) ??
           pid
       ..scientificName = (localData?['scientificName'] as String?) ??
@@ -119,7 +125,7 @@ class SpeciesRepositoryImpl {
       ..wateringFrequencyDays = localData?['wateringFrequencyDays'] != null
           ? (localData!['wateringFrequencyDays'] as num).toInt()
           : (apiData?['min_soil_moist'] != null
-              ? WateringHeuristic.estimateFrequencyDays(
+              ? SchedulingEngine.soilBaseFreqFromMoisture(
                   (apiData!['min_soil_moist'] as num).toInt(),
                 )
               : 7)
@@ -156,12 +162,12 @@ class SpeciesRepositoryImpl {
       ..careFertilization = apiData?['care_fertilization'] as String?
       ..carePruning = apiData?['care_pruning'] as String?
       ..propagationMethods = []
-      ..description = (localData?['description']?[locale] as String?) ??
-          (localData?['description']?['en'] as String?)
-      ..funFacts = (localData?['careNotes']?[locale] != null)
-          ? [localData!['careNotes'][locale] as String]
-          : ((localData?['careNotes']?['en'] != null)
-              ? [localData!['careNotes']['en'] as String]
+      ..description = (localDescription?[locale] as String?) ??
+          (localDescription?['en'] as String?)
+      ..funFacts = (localCareNotes?[locale] != null)
+          ? [localCareNotes![locale] as String]
+          : ((localCareNotes?['en'] != null)
+              ? [localCareNotes!['en'] as String]
               : [])
       // image_url è già normalizzato dalla Cloud Function
       ..imageUrl =

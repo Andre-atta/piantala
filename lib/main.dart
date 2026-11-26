@@ -22,8 +22,9 @@ Future<void> main() async {
 
   // 1.b Inizializza Firebase App Check (DebugProvider in debug, PlayIntegrity in release)
   await FirebaseAppCheck.instance.activate(
-    androidProvider:
-        kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    providerAndroid: kDebugMode
+        ? const AndroidDebugProvider()
+        : const AndroidPlayIntegrityProvider(),
   );
 
   // 2. Registra handler FCM in background (deve essere top-level)

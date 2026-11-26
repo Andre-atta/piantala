@@ -6,7 +6,7 @@ import 'package:piantala/presentation/widgets/common/paper_component_metrics.dar
 import 'package:piantala/presentation/widgets/common/paper_text_field.dart';
 import 'package:piantala/presentation/widgets/common/paper_text_link.dart';
 
-const _fieldGoldenKey = ValueKey('paper-text-field-golden');
+const ValueKey<String> _fieldGoldenKey = ValueKey('paper-text-field-golden');
 
 Widget _app({
   double textScale = 1,

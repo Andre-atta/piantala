@@ -26,3 +26,13 @@ linter:
     public_member_api_docs: false
     # Permetti underscore per parametri inutilizzati
     no_leading_underscores_for_local_identifiers: false
+    # Regole molto rumorose introdotte da very_good_analysis 11
+    lines_longer_than_80_chars: false
+    avoid_catches_without_on_clauses: false
+    discarded_futures: false
+    document_ignores: false
+    comment_references: false
+    unnecessary_type_name_in_constructor: false
+    empty_container_bodies: false
+    prefer_initializing_formals: false
+    unnecessary_underscores: false

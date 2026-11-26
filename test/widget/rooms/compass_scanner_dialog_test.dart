@@ -12,7 +12,7 @@ import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
 
-const _compassGoldenKey = ValueKey('compass-dialog-golden');
+const ValueKey<String> _compassGoldenKey = ValueKey('compass-dialog-golden');
 
 ({Widget widget, GlobalKey<_CompassTestHostState> hostKey}) _app({
   required Stream<double?> stream,

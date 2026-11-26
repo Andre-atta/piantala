@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: ff0a84a2734d9e1089f8aedd5c0af0061b82fb94e95260d943404e0ef2134b11
+      sha256: "8e61ea4a9d2cbbc7de085f660b11ccb2c65f38417bb3f313cfdcf9b62b7e53a3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.59"
+    version: "1.4.0"
   analyzer:
     dependency: transitive
     description:
@@ -141,34 +141,34 @@ packages:
     dependency: "direct main"
     description:
       name: cached_network_image
-      sha256: "7c1183e361e5c8b0a0f21a28401eecdbde252441106a9816400dd4c2b2424916"
+      sha256: "0cb71977516a1354434893163d74bf5f79b3055d1a7e936fb75095aef0d8a3a9"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.1"
+    version: "4.0.7"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
       name: cached_network_image_platform_interface
-      sha256: "35814b016e37fbdc91f7ae18c8caf49ba5c88501813f73ce8a07027a395e2829"
+      sha256: fc48eb93237498afdb88fb2273867e32ec27b01c365e5a19ccc0de5bb11dbccb
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "5.0.4"
   cached_network_image_web:
     dependency: transitive
     description:
       name: cached_network_image_web
-      sha256: "980842f4e8e2535b8dbd3d5ca0b1f0ba66bf61d14cc3a17a9b4788a3685ba062"
+      sha256: f75209409e5a723054e5769e49df86f4f1e5c03eaf94aac69ccddfa00373380d
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "2.0.5"
   cel:
     dependency: transitive
     description:
       name: cel
-      sha256: a1813e13a43709bbcc393a9c9ea497e1867f724a49a018ca2a2368d07aa31ee8
+      sha256: "36048193ae78b83970a54916a86aa82a58c0ad64e92fa4d79b427542d3cb2c3a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.6"
+    version: "0.6.1"
   characters:
     dependency: transitive
     description:
@@ -205,50 +205,50 @@ packages:
     dependency: "direct main"
     description:
       name: cloud_firestore
-      sha256: "2d33da4465bdb81b6685c41b535895065adcb16261beb398f5f3bbc623979e9c"
+      sha256: "350aa5e71bfc31701381c90fd48c1f7c1bdd884b407dc229d6dbc97c62f01748"
       url: "https://pub.dev"
     source: hosted
-    version: "5.6.12"
+    version: "7.2.0"
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
-      sha256: "413c4e01895cf9cb3de36fa5c219479e06cd4722876274ace5dfc9f13ab2e39b"
+      sha256: "27a135c7d364a2a4f647803fba8372c2dd97a8531da80a06c319ce2a5df96f19"
       url: "https://pub.dev"
     source: hosted
-    version: "6.6.12"
+    version: "8.2.0"
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
-      sha256: c1e30fc4a0fcedb08723fb4b1f12ee4e56d937cbf9deae1bda43cbb6367bb4cf
+      sha256: "090eb7641041527cbaa5caa66f674e189f98d745bca90174d06f3b1db83a70b2"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.12"
+    version: "5.9.0"
   cloud_functions:
     dependency: "direct main"
     description:
       name: cloud_functions
-      sha256: b9ece944fc8c97ac0937cdf45e895f4670213c722ed819581e3d517b43413753
+      sha256: dc03dee69b3e005ff3c7337766d2d0ae32d1b6ec084b87dddc7107c9ffcb038f
       url: "https://pub.dev"
     source: hosted
-    version: "5.6.2"
+    version: "7.1.0"
   cloud_functions_platform_interface:
     dependency: transitive
     description:
       name: cloud_functions_platform_interface
-      sha256: "9720aa2ba715bfb1de6a131c70bbb0fa79329294ec1327fd24ce08004a080dcc"
+      sha256: "0e4e0b125837da76431bdc8729a359a1578153db26bf6259b4076cdbe6828622"
       url: "https://pub.dev"
     source: hosted
-    version: "5.8.2"
+    version: "6.2.0"
   cloud_functions_web:
     dependency: transitive
     description:
       name: cloud_functions_web
-      sha256: "7756b6a6cf16016dc4c8631c88b31b81156b129c40914a84021216a841c0b3d8"
+      sha256: "897e0afc466f7b49a2f2797cebdec81d2d93eaf0c1f9767a8bba77e60fd42445"
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.5"
+    version: "5.2.0"
   code_assets:
     dependency: transitive
     description:
@@ -298,7 +298,7 @@ packages:
     source: hosted
     version: "3.0.8"
   cupertino_ui:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_ui
       sha256: c3eaf7f5bdfee36deb0b14a4cbf7602f1b6b8d8b8576b81f38fc08c25881c94c
@@ -373,18 +373,18 @@ packages:
     dependency: "direct dev"
     description:
       name: fake_cloud_firestore
-      sha256: "804bfb59108fc93b93c28b61e8142c477bd6f188a12d06875310f0b2f01b3974"
+      sha256: bb277acd4816d4870d1d101f293adc1fb4e980b5ad1b7a4eb3fcafad9d255ed8
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "4.5.0"
   fake_firebase_security_rules:
     dependency: transitive
     description:
       name: fake_firebase_security_rules
-      sha256: "6af54bedfd6985451a9735f2cfac91ffe0128bfc92bf15e8544cd56c6941d6cc"
+      sha256: "983a1b3aec751af3122c1cfa79ebac0336a1589226a9683548b30457a5268720"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.4"
+    version: "0.6.0"
   ffi:
     dependency: transitive
     description:
@@ -437,122 +437,122 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_app_check
-      sha256: c4124632094a4062d7a1ff0a9f9c657ff54bece5d8393af4626cb191351a2aac
+      sha256: "224ace3355e6d1601b4f385cc115f56cca91b75c2b53438ed34d36d8d6d72742"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2+10"
+    version: "0.5.2"
   firebase_app_check_platform_interface:
     dependency: transitive
     description:
       name: firebase_app_check_platform_interface
-      sha256: "4ca80bcc6c5c55289514d85e7c8ba8bc354342d23ab807b01c3f82e2fc7158e4"
+      sha256: "238254f0b35a0ddb85e2ee1a36ca4cb51be48bb90b05b27383fb22f2b5a25885"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1+10"
+    version: "0.5.2+4"
   firebase_app_check_web:
     dependency: transitive
     description:
       name: firebase_app_check_web
-      sha256: b3150a78fe18c27525af05b149724ee33bd8592a5959e484fdfa5c98e25edb5f
+      sha256: "384282ab3b0265ad738f8c78f45b2109e0c3e011f3858fed7614dfacc77135c4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0+14"
+    version: "0.3.2+4"
   firebase_auth:
     dependency: "direct main"
     description:
       name: firebase_auth
-      sha256: "0fed2133bee1369ee1118c1fef27b2ce0d84c54b7819a2b17dada5cfec3b03ff"
+      sha256: "8463bcb93f95fa3bc5a479705ea8b41cfd35f637336d8f01c71e4128521c185b"
       url: "https://pub.dev"
     source: hosted
-    version: "5.7.0"
+    version: "7.1.0"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
-      sha256: "871c9df4ec9a754d1a793f7eb42fa3b94249d464cfb19152ba93e14a5966b386"
+      sha256: fb464ec9ab078c8821bc0a129f224a33865b2976c08cfd5dd61648b71dbf3543
       url: "https://pub.dev"
     source: hosted
-    version: "7.7.3"
+    version: "9.2.0"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
-      sha256: d9ada769c43261fd1b18decf113186e915c921a811bd5014f5ea08f4cf4bc57e
+      sha256: "0f41af84ce6849fafc731b1ade9b8f2f41f3913f77bb651f915d7208b04ede67"
       url: "https://pub.dev"
     source: hosted
-    version: "5.15.3"
+    version: "6.4.0"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
+      sha256: "1a3a65a71c5a21311a37f3e94fd4aef4c77801a66008a1859b30eb1a8fc1744b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.15.2"
+    version: "5.2.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: "0ecda14c1bfc9ed8cac303dd0f8d04a320811b479362a9a4efb14fd331a473ce"
+      sha256: cc7da0faa34a02bbaa94d221810c7d0a6296c7c9ddd3a7cd2845c8352a00a5cc
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.3"
+    version: "8.2.0"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
-      sha256: "0ed0dc292e8f9ac50992e2394e9d336a0275b6ae400d64163fdf0a8a8b556c37"
+      sha256: a07d6f21a17472ac34e1013c0ad256eeeabc6efb420ac4ee9871d3cf082cf67c
       url: "https://pub.dev"
     source: hosted
-    version: "2.24.1"
+    version: "4.2.0"
   firebase_messaging:
     dependency: "direct main"
     description:
       name: firebase_messaging
-      sha256: "60be38574f8b5658e2f22b7e311ff2064bea835c248424a383783464e8e02fcc"
+      sha256: b971abf6ca94426d4cfc7685d6f97a34d3e1c2fda8e21d0e923d61736a984774
       url: "https://pub.dev"
     source: hosted
-    version: "15.2.10"
+    version: "17.1.0"
   firebase_messaging_platform_interface:
     dependency: transitive
     description:
       name: firebase_messaging_platform_interface
-      sha256: "685e1771b3d1f9c8502771ccc9f91485b376ffe16d553533f335b9183ea99754"
+      sha256: d51e4d1d1b3f575b83d3eff908f567311792601caafb04e63aff2c6ba09b6079
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.10"
+    version: "4.12.0"
   firebase_messaging_web:
     dependency: transitive
     description:
       name: firebase_messaging_web
-      sha256: "0d1be17bc89ed3ff5001789c92df678b2e963a51b6fa2bdb467532cc9dbed390"
+      sha256: d519ccbf71ca759c4817ee2894960f7bfeb6568d8adef9ec8dbc4bea848b9e74
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.10"
+    version: "4.4.0"
   firebase_storage:
     dependency: "direct main"
     description:
       name: firebase_storage
-      sha256: "958fc88a7ef0b103e694d30beed515c8f9472dde7e8459b029d0e32b8ff03463"
+      sha256: "1794f6b8198415d2705ec5015d6a5490d81ca49635b8bd23fae01d983c4a5ed6"
       url: "https://pub.dev"
     source: hosted
-    version: "12.4.10"
+    version: "14.1.0"
   firebase_storage_platform_interface:
     dependency: transitive
     description:
       name: firebase_storage_platform_interface
-      sha256: d2661c05293c2a940c8ea4bc0444e1b5566c79dd3202c2271140c082c8cd8dd4
+      sha256: de011e8bc949ce2c0a91dd4ccfa3b26ac3a7d721087b9da836f1575ed80ecd42
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.10"
+    version: "6.1.0"
   firebase_storage_web:
     dependency: transitive
     description:
       name: firebase_storage_web
-      sha256: "629a557c5e1ddb97a3666cbf225e97daa0a66335dbbfdfdce113ef9f881e833f"
+      sha256: "08d30e6936e9deffe388a8ede4a163e6dc5e1f19e97c9778b18b8d5a77bfee2b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.17"
+    version: "3.12.0"
   fixnum:
     dependency: transitive
     description:
@@ -594,26 +594,42 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: "674173fd3c9eda9d4c8528da2ce0ea69f161577495a9cc835a2a4ecd7eadeb35"
+      sha256: "2b7579556c117b535ef83835798a7f3c4003dc892a888a4a99f2107bca7b6675"
       url: "https://pub.dev"
     source: hosted
-    version: "17.2.4"
+    version: "23.0.4"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
       name: flutter_local_notifications_linux
-      sha256: c49bd06165cad9beeb79090b18cd1eb0296f4bf4b23b84426e37dd7c027fc3af
+      sha256: bcbcf3c15e33b6866805092308f5f6ef27e1191874f6a92ef59213a0812a79a2
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.1"
+    version: "9.0.0"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
-      sha256: "85f8d07fe708c1bdcf45037f2c0109753b26ae077e9d9e899d55971711a4ea66"
+      sha256: "4a49db4ce3d633ebc85c85b5fa959572600ec10bd097419c454579444308a0a0"
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.0"
+    version: "13.0.0"
+  flutter_local_notifications_web:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_web
+      sha256: ef117694fbfcd82308ab0e324cfc9282fa50c192e24ec54a58173ae327ebc544
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  flutter_local_notifications_windows:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_windows
+      sha256: "8e80ac29433c71e267493b397457e3a8430c5c1d9c76bb58a6971c016cdba3d7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -631,10 +647,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_reorderable_grid_view
-      sha256: ac92a49a8411adfda40f75eff44d0958ee879b0f9d6776bb6154c74aa166aaf1
+      sha256: "96fa216fb9745d8b6a1fc00c24b1e335b4440cf66fab44e9dfc9ba27223bf114"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "5.10.0"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -660,10 +676,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_timezone
-      sha256: ea53c61c9152f271a5e30624a624184804947b6a733ff2b64186bb2579446892
+      sha256: "7830bc64bef0b003468fc1f58fc3f3faf54817f8cd6e68fa818b306560410d68"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "5.1.1"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -705,10 +721,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: f02fd7d2a4dc512fec615529824fdd217fecb3a3d3de68360293a551f21634b3
+      sha256: d4105f50c438c37d0d1372b1fbf1617fe9be398b559fa29d2067756ebbd42b69
       url: "https://pub.dev"
     source: hosted
-    version: "14.8.1"
+    version: "18.1.4"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -721,42 +737,42 @@ packages:
     dependency: "direct main"
     description:
       name: google_sign_in
-      sha256: d0a2c3bcb06e607bb11e4daca48bd4b6120f0bbc4015ccebbe757d24ea60ed2a
+      sha256: "521031b65853b4409b8213c0387d57edaad7e2a949ce6dea0d8b2afc9cb29763"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.0"
+    version: "7.2.0"
   google_sign_in_android:
     dependency: transitive
     description:
       name: google_sign_in_android
-      sha256: d5e23c56a4b84b6427552f1cf3f98f716db3b1d1a647f16b96dbb5b93afa2805
+      sha256: af51a005b7c3c3f54cb5e7d04dd5db96f081e6f92b36468c60d14726a047f918
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.1"
+    version: "7.2.19"
   google_sign_in_ios:
     dependency: transitive
     description:
       name: google_sign_in_ios
-      sha256: "102005f498ce18442e7158f6791033bbc15ad2dcc0afa4cf4752e2722a516c96"
+      sha256: bc03e8f8cf0e5a5cbbc1d582516e5f792c734f0a41d324d4760dcb8bef523b28
       url: "https://pub.dev"
     source: hosted
-    version: "5.9.0"
+    version: "6.4.0"
   google_sign_in_platform_interface:
     dependency: transitive
     description:
       name: google_sign_in_platform_interface
-      sha256: "5f6f79cf139c197261adb6ac024577518ae48fdff8e53205c5373b5f6430a8aa"
+      sha256: "7f59208c42b415a3cca203571128d6f84f885fead2d5b53eb65a9e27f2965bb5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "3.1.0"
   google_sign_in_web:
     dependency: transitive
     description:
       name: google_sign_in_web
-      sha256: "460547beb4962b7623ac0fb8122d6b8268c951cf0b646dd150d60498430e4ded"
+      sha256: d473003eeca892f96a01a64fc803378be765071cb0c265ee872c7f8683245d14
       url: "https://pub.dev"
     source: hosted
-    version: "0.12.4+4"
+    version: "1.1.3"
   graphs:
     dependency: transitive
     description:
@@ -1169,18 +1185,18 @@ packages:
     dependency: "direct main"
     description:
       name: permission_handler
-      sha256: "59adad729136f01ea9e35a48f5d1395e25cba6cea552249ddbe9cf950f5d7849"
+      sha256: e6bcecadfe40df6b888141f23cbaf6ba6c3da49fb33f6ff887d060dd48544fbd
       url: "https://pub.dev"
     source: hosted
-    version: "11.4.0"
+    version: "13.0.2"
   permission_handler_android:
     dependency: transitive
     description:
       name: permission_handler_android
-      sha256: d3971dcdd76182a0c198c096b5db2f0884b0d4196723d21a866fc4cdea057ebc
+      sha256: baf93fbf80008c240b2cf5e6d62e9495ea7727fe327444d135c44bfff9af6b6e
       url: "https://pub.dev"
     source: hosted
-    version: "12.1.0"
+    version: "14.1.1"
   permission_handler_apple:
     dependency: transitive
     description:
@@ -1269,14 +1285,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
-  quiver:
-    dependency: transitive
-    description:
-      name: quiver
-      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.2"
   record_use:
     dependency: transitive
     description:
@@ -1321,10 +1329,10 @@ packages:
     dependency: transitive
     description:
       name: rx
-      sha256: "7f54bd39cc63a01c770c1de4b6ce8e135eb13119614cba2216bd9a93ccd29e56"
+      sha256: "3c819c80915138089c517e0d78f462792c5a2de05189466ab38bee7b6a8a330f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.5.0"
   rxdart:
     dependency: transitive
     description:
@@ -1550,10 +1558,10 @@ packages:
     dependency: "direct main"
     description:
       name: timezone
-      sha256: "2236ec079a174ce07434e89fcd3fcda430025eb7692244139a9cf54fdcf1fc7d"
+      sha256: "9f4e5a1a0e4fef7dd3424842c0575db01bfb7a11730e8d55753fcd5c5c98767b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.4"
+    version: "0.11.2"
   timing:
     dependency: transitive
     description:
@@ -1678,10 +1686,10 @@ packages:
     dependency: "direct dev"
     description:
       name: very_good_analysis
-      sha256: "1fb637c0022034b1f19ea2acb42a3603cbd8314a470646a59a2fb01f5f3a8629"
+      sha256: "0bd5eb8d6be76aa0d71e70cbdae6cac8f784f761170568e3c2214a6948c7f6d3"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.0"
+    version: "11.0.0"
   vm_service:
     dependency: transitive
     description:

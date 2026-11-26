@@ -9,7 +9,7 @@ class PlantbookCloudService {
   FirebaseFunctions get _functions =>
       _customFunctions ?? FirebaseFunctions.instanceFor(region: 'europe-west1');
 
-  /// Converte ricorsivamente Map<Object?, Object?> in Map<String, dynamic>
+  /// Converte ricorsivamente `Map<Object?, Object?>` in `Map<String, dynamic>`
   /// — necessario perché Firebase restituisce il tipo raw del deserializzatore.
   static Map<String, dynamic> _toStringDynamic(dynamic raw) {
     if (raw is Map) {

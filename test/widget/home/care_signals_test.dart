@@ -12,7 +12,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(
         locale: Locale('it'),
-        localizationsDelegates: const [
+        localizationsDelegates: [
         AppLocalizations.delegate,
         ...GlobalMaterialLocalizations.delegates,
       ],
@@ -76,7 +76,7 @@ void main() {
       (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        localizationsDelegates: const [
+        localizationsDelegates: [
         AppLocalizations.delegate,
         ...GlobalMaterialLocalizations.delegates,
       ],

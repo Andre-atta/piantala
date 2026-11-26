@@ -15,7 +15,7 @@ import 'package:piantala/presentation/screens/rooms/widgets/room_dialog.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
 
-const _dialogGoldKey = ValueKey('room-dialog-golden');
+const ValueKey<String> _dialogGoldKey = ValueKey('room-dialog-golden');
 
 class _RoomRepository implements IRoomRepository {
   final addedRooms = <RoomEntity>[];

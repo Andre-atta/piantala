@@ -16,7 +16,7 @@ import 'package:piantala/presentation/screens/rooms/widgets/room_paper_card.dart
 import 'package:piantala/presentation/screens/rooms/widgets/room_paper_card_metrics.dart';
 import 'package:piantala/presentation/widgets/common/piantala_navigation_bar.dart';
 
-const _roomsGoldenKey = ValueKey('rooms-screen-golden');
+const ValueKey<String> _roomsGoldenKey = ValueKey('rooms-screen-golden');
 
 RoomEntity _room(String id, String name, String exposure) => RoomEntity(
       id: id,

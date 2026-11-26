@@ -12,7 +12,7 @@
 Nome: **Piantala**  
 Tipo: App Flutter per la cura delle piante da appartamento  
 Design intent: "Posto tranquillo" — nessuna dashboard tecnica, nessuna interfaccia aggressiva  
-Stack: Flutter + Riverpod 2.x + Firebase + Isar
+Stack: Flutter 3.50.0 (Dart 3.14.0) + Riverpod 2.x + Firebase + Isar
 Dati di specie: OpenPlantBook (nessun'altra fonte; il testo "Perenual" nell'app è un errore da correggere)
 Pubblicazione: Play Store, quindi ogni risorsa (font, icone, asset, librerie) deve essere gratuita per uso commerciale
 Documento di riferimento architetturale: `README.md` + `docs/DATABASE_SCHEMA.md` + `docs/PROVIDERS.md`
