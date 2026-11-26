@@ -74,7 +74,7 @@ abstract class HomeMetrics {
   static const careSignalFertilizingRight = 0.0;
   static const careSignalFertilizingTop = 2.0;
 
-  static const degreesToRadians = math.pi / 180;
+  static const double degreesToRadians = math.pi / 180;
   static const vineWidth = 40.0;
   static const vineHeight = 200.0;
   static const vineRight = -14.0;

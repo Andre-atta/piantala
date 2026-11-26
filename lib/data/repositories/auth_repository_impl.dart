@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart'; // PlatformException per Google Sign-In
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:isar/isar.dart';
 
@@ -21,7 +20,7 @@ class AuthRepositoryImpl implements IAuthRepository {
     FirebaseFunctions? functions,
     Isar? isar,
   })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn(),
+        _googleSignIn = googleSignIn ?? GoogleSignIn.instance,
         _firestore = firestore,
         _functionsOverride = functions,
         _isar = isar;
@@ -31,6 +30,17 @@ class AuthRepositoryImpl implements IAuthRepository {
   final FirebaseFirestore? _firestore;
   final FirebaseFunctions? _functionsOverride;
   final Isar? _isar;
+  Future<void>? _init;
+
+  Future<void> _ensureGoogleSignInInitialized() {
+    final init = _init ??= _googleSignIn.initialize();
+    return init.catchError((Object error, StackTrace stackTrace) {
+      if (identical(_init, init)) {
+        _init = null;
+      }
+      Error.throwWithStackTrace(error, stackTrace);
+    });
+  }
 
   FirebaseFunctions get _functions =>
       _functionsOverride ??
@@ -115,17 +125,14 @@ class AuthRepositoryImpl implements IAuthRepository {
   @override
   Future<UserEntity?> signInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null;
+      await _ensureGoogleSignInInitialized();
+      final googleUser = await _googleSignIn.authenticate();
+      final idToken = googleUser.authentication.idToken;
+      if (idToken == null) {
+        throw const AuthException(AppAuthStrings.errGoogleSignIn);
       }
 
-      final googleAuth = await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
 
       final userCredential =
           await _firebaseAuth.signInWithCredential(credential);
@@ -133,8 +140,8 @@ class AuthRepositoryImpl implements IAuthRepository {
       return _mapFirebaseUser(userCredential.user);
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapGoogleAuthError(e));
-    } on PlatformException catch (error) {
-      if (error.code == GoogleSignIn.kSignInCanceledError) return null;
+    } on GoogleSignInException catch (error) {
+      if (error.code == GoogleSignInExceptionCode.canceled) return null;
       throw const AuthException(AppAuthStrings.errGoogleSignIn);
     } catch (_) {
       throw const AuthException(AppAuthStrings.errGoogleSignIn);
@@ -229,15 +236,16 @@ class AuthRepositoryImpl implements IAuthRepository {
   @override
   Future<void> signOut() async {
     try {
+      await _ensureGoogleSignInInitialized();
       await Future.wait([
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
     } on FirebaseAuthException catch (e) {
       throw AuthException(_mapGoogleAuthError(e));
-    } on PlatformException catch (e) {
+    } on GoogleSignInException catch (e) {
       throw AuthException(
-        e.message ?? AppAuthStrings.errLogout,
+        e.description ?? AppAuthStrings.errLogout,
       );
     } catch (_) {
       throw const AuthException(AppAuthStrings.errLogout);
@@ -266,7 +274,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
       // 2. Svuota il database locale Isar: rimuove piante, stanze, cache
       //    specie e operazioni pending per evitare dati orfani offline.
-      await _db.writeTxn(() async => _db.clear());
+      await _db.writeTxn(() => _db.clear());
 
       // 3. Logout locale: invalida il token FirebaseAuth e il token GoogleSignIn.
       //    Questo fa scattare authStateChanges -> null, che GoRouter intercetta

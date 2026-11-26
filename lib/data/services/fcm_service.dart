@@ -47,6 +47,7 @@ class FcmService {
       if (!_listenersAttached) {
         _listenersAttached = true;
         await _messaging.requestPermission();
+        // ignore: deprecated_member_use
         _messaging.onTokenRefresh.listen(_onTokenRefresh);
         _attachMessageHandlers();
       }
@@ -75,6 +76,7 @@ class FcmService {
 
     try {
       debugPrint('FcmService: getToken...');
+      // ignore: deprecated_member_use
       final token = await _messaging.getToken();
       debugPrint('FcmService: token = ${token == null ? "null" : "ok"}');
       if (token == null) return;
@@ -128,6 +130,7 @@ class FcmService {
     _tokenUid = null; // azzera subito così il prossimo init() non salta
     if (uid == null) {
       try {
+        // ignore: deprecated_member_use
         await _messaging.deleteToken();
       } catch (e) {
         debugPrint('FcmService: errore deleteToken → $e');
@@ -146,6 +149,7 @@ class FcmService {
       debugPrint('FcmService: errore rimozione token Firestore → $e');
     }
     try {
+      // ignore: deprecated_member_use
       await _messaging.deleteToken();
     } catch (e) {
       debugPrint('FcmService: errore deleteToken → $e');

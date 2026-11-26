@@ -7,7 +7,7 @@ abstract class RoomPaperCardMetrics {
   static const listHorizontalPadding = 16.0;
   static const listTopPadding = 60.0;
   static const listCardSpacing = 26.0;
-  static const listBottomPadding = NavigationMetrics.barHeight + AppSpacing.xl;
+  static const double listBottomPadding = NavigationMetrics.barHeight + AppSpacing.xl;
   static const minimumCardHeight = 112.0;
   static const cardPadding = EdgeInsets.fromLTRB(16, 20, 14, 10);
   static const cardRotationCream = -1.1;

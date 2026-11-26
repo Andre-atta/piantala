@@ -16,9 +16,9 @@
 ///   - [AppCommonStrings]       — Azioni comuni (salva, chiudi, conferma)
 abstract final class AppStrings {
   // Brand
-  static const appName = AppAuthStrings.appName;
-  static const tagline = AppAuthStrings.tagline;
-  static const tosNotice = AppAuthStrings.tosNotice;
+  static const String appName = AppAuthStrings.appName;
+  static const String tagline = AppAuthStrings.tagline;
+  static const String tosNotice = AppAuthStrings.tosNotice;
 
   // Namespace runtime access
   static const auth = AppAuthNamespace();

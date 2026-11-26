@@ -87,7 +87,7 @@ class OpbContributionRepository {
   /// Ritorna il risultato mappato. NON accoda — è chiamato dalla coda stessa.
   Future<OpbContributionResult> executeContribute(
     Map<String, dynamic> payload,
-  ) async {
+  ) {
     return _callAndMap(() => _cloudService.contributeSpecies(payload));
   }
 
@@ -95,7 +95,7 @@ class OpbContributionRepository {
   Future<OpbContributionResult> executeUpdate(
     String pid,
     Map<String, dynamic> partialPayload,
-  ) async {
+  ) {
     return _callAndMap(() => _cloudService.updateSpecies(pid, partialPayload));
   }
 

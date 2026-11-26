@@ -44,7 +44,7 @@ abstract class SpeciesAccentCatalog {
     'zamioculcas_zamiifolia': Color(0xFFC8D46A),
 
     // Calathea ornata: strisce rosa (#C16B3E)
-    // TODO: ATTENZIONE! #C16B3E è lo stesso colore "Terracotta" riservato ai vasi
+    // TODO(andrea): ATTENZIONE! #C16B3E è lo stesso colore "Terracotta" riservato ai vasi
     // in art-direction.md. Valutare un colore d'accento diverso (es. un rosa freddo
     // o un verde scuro) per evitare confusione visiva quando gli asset vaso saranno reali.
     'calathea_ornata': Color(0xFFC16B3E),

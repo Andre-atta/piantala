@@ -400,7 +400,7 @@ class SyncService {
     if (uid != null && op.userId != uid) return true;
     // ── Handler OPB (non usano Firestore, chiamano le callable) ──────────────
     if (op.operation == 'opb_contribute' || op.operation == 'opb_update') {
-      return _processOpbOperation(op);
+      return await _processOpbOperation(op);
     }
 
     // ── Handler Firestore standard ───────────────────────────────────────────

@@ -30,8 +30,8 @@ class NotificationService {
     if (_initialized) return;
     tz.initializeTimeZones();
     try {
-      final localName = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(localName));
+      final localTimezone = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(localTimezone.identifier));
     } catch (error) {
       debugPrint('Unable to set local timezone: $error');
     }
@@ -45,7 +45,7 @@ class NotificationService {
       ),
     );
     await _plugin.initialize(
-      settings,
+      settings: settings,
       onDidReceiveNotificationResponse: _onTap,
       onDidReceiveBackgroundNotificationResponse: _onBackgroundTap,
     );
@@ -76,9 +76,9 @@ class NotificationService {
       return (await Permission.notification.request()).isGranted;
     }
     return await _plugin
-            .resolvePlatformSpecificImplementation<
-                IOSFlutterLocalNotificationsPlugin>()
-            ?.requestPermissions(alert: true, badge: true, sound: true) ??
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(alert: true, badge: true, sound: true) ??
         false;
   }
 
@@ -100,24 +100,24 @@ class NotificationService {
         minute,
       );
       if (scheduled.isBefore(now)) {
-        await _plugin.cancel(_kDailyReminderId + i);
+        await _plugin.cancel(id: _kDailyReminderId + i);
         continue;
       }
       final count = schedulingInfos
           .where((info) => _sameDay(info.nextWateringAt, scheduled))
           .length;
       if (count == 0) {
-        await _plugin.cancel(_kDailyReminderId + i);
+        await _plugin.cancel(id: _kDailyReminderId + i);
         continue;
       }
       await _plugin.zonedSchedule(
-        _kDailyReminderId + i,
-        '🌿 Momento di innaffiare!',
-        count == 1
+        id: _kDailyReminderId + i,
+        title: '🌿 Momento di innaffiare!',
+        body: count == 1
             ? '1 pianta ha bisogno di acqua oggi.'
             : '$count piante hanno bisogno di acqua oggi.',
-        scheduled,
-        const NotificationDetails(
+        scheduledDate: scheduled,
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             NotifChannel.dailyReminder,
             'Promemoria giornaliero',
@@ -127,8 +127,6 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         payload: 'daily_reminder',
       );
     }
@@ -148,13 +146,13 @@ class NotificationService {
           ? 'È ora di controllare l’acqua di ${info.plantName}.'
           : '${info.plantName} ha bisogno di acqua.';
       await _plugin.zonedSchedule(
-        plantNotifId(info.plantId),
-        info.cultivationMethod == 'hydro'
+        id: plantNotifId(info.plantId),
+        title: info.cultivationMethod == 'hydro'
             ? 'Controlla l’acqua'
             : '🌵 ${info.plantName} ha sete!',
-        body,
-        urgent,
-        const NotificationDetails(
+        body: body,
+        scheduledDate: urgent,
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             NotifChannel.urgent,
             'Piante urgenti',
@@ -166,8 +164,6 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         payload: info.plantId,
       );
     }
@@ -178,7 +174,9 @@ class NotificationService {
           request.id < _kDailyReminderId + 14) {
         continue;
       }
-      if (!activeIds.contains(request.id)) await _plugin.cancel(request.id);
+      if (!activeIds.contains(request.id)) {
+        await _plugin.cancel(id: request.id);
+      }
     }
   }
 

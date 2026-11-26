@@ -7,7 +7,7 @@ import 'package:piantala/presentation/widgets/common/paper_dialog.dart';
 import 'package:piantala/presentation/widgets/common/paper_dialog_scaffold.dart';
 import 'package:piantala/presentation/widgets/common/torn_paper_sheet.dart';
 
-const _scaffoldGoldenKey = ValueKey('paper-dialog-scaffold-golden');
+const ValueKey<String> _scaffoldGoldenKey = ValueKey('paper-dialog-scaffold-golden');
 
 void _setScreenSize(WidgetTester tester) {
   tester.view

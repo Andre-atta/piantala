@@ -1,6 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mocktail/mocktail.dart';
@@ -23,6 +22,7 @@ void main() {
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
     mockGoogleSignIn = MockGoogleSignIn();
+    when(() => mockGoogleSignIn.initialize()).thenAnswer((_) async {});
     repository = AuthRepositoryImpl(
       firebaseAuth: mockFirebaseAuth,
       googleSignIn: mockGoogleSignIn,
@@ -31,8 +31,10 @@ void main() {
 
   group('AuthRepositoryImpl', () {
     test('returns null when Google sign-in is canceled', () async {
-      when(() => mockGoogleSignIn.signIn()).thenThrow(
-        PlatformException(code: GoogleSignIn.kSignInCanceledError),
+      when(() => mockGoogleSignIn.authenticate()).thenThrow(
+        const GoogleSignInException(
+          code: GoogleSignInExceptionCode.canceled,
+        ),
       );
 
       expect(await repository.signInWithGoogle(), isNull);
@@ -160,20 +162,26 @@ void main() {
     });
 
     test("signInWithGoogle restituisce null se l'utente annulla", () async {
-      when(() => mockGoogleSignIn.signIn()).thenAnswer((_) async => null);
+      when(() => mockGoogleSignIn.authenticate()).thenThrow(
+        const GoogleSignInException(
+          code: GoogleSignInExceptionCode.canceled,
+        ),
+      );
 
       final result = await repository.signInWithGoogle();
 
       expect(result, isNull);
-      verify(() => mockGoogleSignIn.signIn()).called(1);
+      verify(() => mockGoogleSignIn.initialize()).called(1);
+      verify(() => mockGoogleSignIn.authenticate()).called(1);
     });
 
     test('signOut chiama sia FirebaseAuth che GoogleSignIn signOut', () async {
       when(() => mockFirebaseAuth.signOut()).thenAnswer((_) async => {});
-      when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async => null);
+      when(() => mockGoogleSignIn.signOut()).thenAnswer((_) async {});
 
       await repository.signOut();
 
+      verify(() => mockGoogleSignIn.initialize()).called(1);
       verify(() => mockFirebaseAuth.signOut()).called(1);
       verify(() => mockGoogleSignIn.signOut()).called(1);
     });

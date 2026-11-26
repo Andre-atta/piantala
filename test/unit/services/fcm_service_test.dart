@@ -51,7 +51,11 @@ class _FakeMessaging extends Fake implements FirebaseMessaging {
   }
 
   @override
-  Future<String?> getToken({String? vapidKey}) async => tokenToReturn;
+  Future<String?> getToken({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) async =>
+      tokenToReturn;
 
   @override
   Future<void> deleteToken() async {
@@ -107,8 +111,9 @@ void main() {
 
       // 3. Utente B accede nella stessa sessione: init() salva un token in users/B (non viene saltato)
       currentUid = 'user_B';
-      fakeMessaging.tokenToReturn = 'fake-token-user-b';
-      fakeMessaging.deleteTokenCalled = false;
+      fakeMessaging
+        ..tokenToReturn = 'fake-token-user-b'
+        ..deleteTokenCalled = false;
 
       await service.init();
       expect(service.tokenUid, 'user_B');

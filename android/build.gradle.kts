@@ -39,8 +39,8 @@ subprojects {
                     val getCompileSdkVersion = androidExt.javaClass.getMethod("getCompileSdkVersion")
                     val setCompileSdkVersion = androidExt.javaClass.getMethod("compileSdkVersion", Int::class.java)
                     val current = getCompileSdkVersion.invoke(androidExt)?.toString()
-                        ?.removePrefix("android-")?.toIntOrNull() ?: 0
-                    if (current < 36) {
+                        ?.removePrefix("android-")?.substringBefore(".")?.toIntOrNull()
+                    if (current != null && current < 36) {
                         setCompileSdkVersion.invoke(androidExt, 36)
                     }
 
