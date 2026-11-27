@@ -523,4 +523,108 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsDeleteAccountRecentLoginError =>
       'For security reasons, please sign in again before deleting your account.';
+
+  @override
+  String get profilePolaroidDefaultName => 'Your name';
+
+  @override
+  String get profileEditNameTitle => 'Your name';
+
+  @override
+  String get profileEditNameLabel => 'NAME';
+
+  @override
+  String get profileAvatarUpdated => 'Profile photo updated';
+
+  @override
+  String get profileAvatarUpdateError => 'Unable to update profile photo';
+
+  @override
+  String get profileReminderPostItTitle => 'Morning\nreminder';
+
+  @override
+  String get profileReminderEveryMorning => 'Every morning';
+
+  @override
+  String get profileLanguageDialogSubtitle =>
+      'Change the app language right away.';
+
+  @override
+  String get profileLanguageNativeItalian => 'Italiano';
+
+  @override
+  String get profileLanguageNativeEnglish => 'English';
+
+  @override
+  String get profilePermissionsTitle => 'Permissions';
+
+  @override
+  String get profilePermissionsSubtitle =>
+      'What Piantala can do on your phone and why.';
+
+  @override
+  String get profilePermissionNotificationsName => 'Notifications';
+
+  @override
+  String get profilePermissionNotificationsActive => 'Active';
+
+  @override
+  String get profilePermissionNotificationsInactive => 'Inactive';
+
+  @override
+  String get profilePermissionNotificationsReason =>
+      'They let you know when a plant needs water or fertilizer.';
+
+  @override
+  String get profilePermissionCameraName => 'Camera';
+
+  @override
+  String get profilePermissionCameraGranted => 'Active';
+
+  @override
+  String get profilePermissionCameraNotAsked => 'Not asked yet';
+
+  @override
+  String get profilePermissionCameraReason =>
+      'Only when you take a photo of a plant. Your photos belong to you and stay private.';
+
+  @override
+  String get profilePermissionLocationName => 'Location';
+
+  @override
+  String get profilePermissionLocationUnused => 'Not used';
+
+  @override
+  String get profilePermissionLocationReason =>
+      'If we ever use it for weather, your city will be enough, never your exact location.';
+
+  @override
+  String get profilePermissionsOpenSettings => 'Open\nsettings';
+
+  @override
+  String get profileAccountSectionTitle => 'ACCOUNT';
+
+  @override
+  String get profileAccountStripSubtitle => 'Sign out, export, delete';
+
+  @override
+  String get profileAccountDialogTitle => 'Account';
+
+  @override
+  String get profileAccountAccessLabel => 'SIGNED IN AS';
+
+  @override
+  String get profileAccountPrivacyLink => 'Privacy policy';
+
+  @override
+  String get profileAccountSignOutTag => 'Sign out';
+
+  @override
+  String get profileDeleteConfirmWord => 'DELETE';
+
+  @override
+  String get profileDeleteConfirmPrompt => 'Type DELETE below to confirm.';
+
+  @override
+  String get profileDeleteConfirmLabel => 'CONFIRMATION WORD';
 }

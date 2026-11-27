@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 
+import 'package:piantala/core/theme/app_colors.dart';
 import 'package:piantala/core/theme/build_context_extensions.dart';
 import 'package:piantala/presentation/widgets/common/hanging_tag.dart';
 import 'package:piantala/presentation/widgets/common/paper_component_metrics.dart';
@@ -15,8 +16,9 @@ class PaperDialogScaffold extends StatefulWidget {
     this.topInset = PaperComponentMetrics.dialogTopInset,
     this.rotationDegrees = PaperComponentMetrics.dialogSheetRotationDegrees,
     this.autofocus = false,
+    this.shrinkWrap = false,
     super.key,
-  })  : assert(
+  }) : assert(
           actions.length == 1 || actions.length == 2,
           PaperComponentMetrics.actionCountAssertionMessage,
         ),
@@ -32,6 +34,7 @@ class PaperDialogScaffold extends StatefulWidget {
   final double topInset;
   final double rotationDegrees;
   final bool autofocus;
+  final bool shrinkWrap;
 
   @override
   State<PaperDialogScaffold> createState() => _PaperDialogScaffoldState();
@@ -85,6 +88,81 @@ class _PaperDialogScaffoldState extends State<PaperDialogScaffold> {
                   final actionsTop = actionsBelowSheet
                       ? sheetHeight - PaperComponentMetrics.dialogActionOverlap
                       : math.max(0, availableHeight - actionHeight).toDouble();
+
+                  if (widget.shrinkWrap) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal:
+                              PaperComponentMetrics.dialogHorizontalMargin,
+                          vertical: AppSpacing.md,
+                        ),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: constraints.maxHeight - AppSpacing.xl,
+                          ),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: actionReserve,
+                                ),
+                                child: TornPaperSheet(
+                                  color: TornPaperColor.warm,
+                                  decoration: TornPaperDecoration.tape,
+                                  rotationDegrees: widget.rotationDegrees,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          widget.title,
+                                          style: theme.h1.copyWith(
+                                            color: theme.deepGreen,
+                                            fontSize: PaperComponentMetrics
+                                                .dialogTitleFontSize,
+                                          ),
+                                        ),
+                                        widget.child,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      for (var index = 0;
+                                          index < widget.actions.length;
+                                          index++) ...[
+                                        if (index > 0)
+                                          const SizedBox(
+                                            width: PaperComponentMetrics
+                                                .dialogActionSpacing,
+                                          ),
+                                        Flexible(
+                                          child: widget.actions[index],
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
 
                   return Padding(
                     padding: EdgeInsets.only(top: topInset),

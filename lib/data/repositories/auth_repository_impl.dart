@@ -199,9 +199,6 @@ class AuthRepositoryImpl implements IAuthRepository {
           .doc('users/${user.uid}')
           .set(
         {
-          'uid': user.uid,
-          'email': normalizedEmail,
-          'displayName': normalizedDisplayName,
           'updatedAt': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true),
@@ -263,6 +260,28 @@ class AuthRepositoryImpl implements IAuthRepository {
       default:
         return AppAuthStrings.errAuthFallback;
     }
+  }
+
+  @override
+  Future<UserEntity?> updateDisplayName(String displayName) async {
+    final trimmed = displayName.trim();
+    if (trimmed.isEmpty) {
+      throw const AuthException(AppAuthStrings.errAllFieldsRequired);
+    }
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return null;
+    await user.updateDisplayName(trimmed);
+    await user.reload();
+    return _mapFirebaseUser(_firebaseAuth.currentUser ?? user);
+  }
+
+  @override
+  Future<UserEntity?> updatePhotoUrl(String? photoUrl) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) return null;
+    await user.updatePhotoURL(photoUrl);
+    await user.reload();
+    return _mapFirebaseUser(_firebaseAuth.currentUser ?? user);
   }
 
   @override

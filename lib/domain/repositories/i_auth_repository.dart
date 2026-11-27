@@ -29,5 +29,11 @@ abstract class IAuthRepository {
   /// Ottiene l'utente corrente, se presente.
   UserEntity? get currentUser;
 
+  /// Aggiorna il nome mostrato dell'utente autenticato.
+  Future<UserEntity?> updateDisplayName(String displayName);
+
+  /// Aggiorna l'URL della foto profilo dell'utente autenticato.
+  Future<UserEntity?> updatePhotoUrl(String? photoUrl);
+
   Future<void> deleteAccount() async {}
 }

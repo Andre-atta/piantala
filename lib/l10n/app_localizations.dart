@@ -1033,6 +1033,204 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Per sicurezza, effettua nuovamente il login prima di eliminare il profilo.'**
   String get settingsDeleteAccountRecentLoginError;
+
+  /// No description provided for @profilePolaroidDefaultName.
+  ///
+  /// In it, this message translates to:
+  /// **'Il tuo nome'**
+  String get profilePolaroidDefaultName;
+
+  /// No description provided for @profileEditNameTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Il tuo nome'**
+  String get profileEditNameTitle;
+
+  /// No description provided for @profileEditNameLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'NOME'**
+  String get profileEditNameLabel;
+
+  /// No description provided for @profileAvatarUpdated.
+  ///
+  /// In it, this message translates to:
+  /// **'Foto profilo aggiornata'**
+  String get profileAvatarUpdated;
+
+  /// No description provided for @profileAvatarUpdateError.
+  ///
+  /// In it, this message translates to:
+  /// **'Impossibile aggiornare la foto profilo'**
+  String get profileAvatarUpdateError;
+
+  /// No description provided for @profileReminderPostItTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Promemoria\nmattutino'**
+  String get profileReminderPostItTitle;
+
+  /// No description provided for @profileReminderEveryMorning.
+  ///
+  /// In it, this message translates to:
+  /// **'Ogni mattina'**
+  String get profileReminderEveryMorning;
+
+  /// No description provided for @profileLanguageDialogSubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Cambia subito la lingua dell\'app.'**
+  String get profileLanguageDialogSubtitle;
+
+  /// No description provided for @profileLanguageNativeItalian.
+  ///
+  /// In it, this message translates to:
+  /// **'Italiano'**
+  String get profileLanguageNativeItalian;
+
+  /// No description provided for @profileLanguageNativeEnglish.
+  ///
+  /// In it, this message translates to:
+  /// **'English'**
+  String get profileLanguageNativeEnglish;
+
+  /// No description provided for @profilePermissionsTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Permessi'**
+  String get profilePermissionsTitle;
+
+  /// No description provided for @profilePermissionsSubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Cosa può fare Piantala sul telefono e perché.'**
+  String get profilePermissionsSubtitle;
+
+  /// No description provided for @profilePermissionNotificationsName.
+  ///
+  /// In it, this message translates to:
+  /// **'Notifiche'**
+  String get profilePermissionNotificationsName;
+
+  /// No description provided for @profilePermissionNotificationsActive.
+  ///
+  /// In it, this message translates to:
+  /// **'Attive'**
+  String get profilePermissionNotificationsActive;
+
+  /// No description provided for @profilePermissionNotificationsInactive.
+  ///
+  /// In it, this message translates to:
+  /// **'Non attive'**
+  String get profilePermissionNotificationsInactive;
+
+  /// No description provided for @profilePermissionNotificationsReason.
+  ///
+  /// In it, this message translates to:
+  /// **'Ti avvisano quando una pianta ha bisogno di acqua o di concime.'**
+  String get profilePermissionNotificationsReason;
+
+  /// No description provided for @profilePermissionCameraName.
+  ///
+  /// In it, this message translates to:
+  /// **'Fotocamera'**
+  String get profilePermissionCameraName;
+
+  /// No description provided for @profilePermissionCameraGranted.
+  ///
+  /// In it, this message translates to:
+  /// **'Attiva'**
+  String get profilePermissionCameraGranted;
+
+  /// No description provided for @profilePermissionCameraNotAsked.
+  ///
+  /// In it, this message translates to:
+  /// **'Non ancora chiesta'**
+  String get profilePermissionCameraNotAsked;
+
+  /// No description provided for @profilePermissionCameraReason.
+  ///
+  /// In it, this message translates to:
+  /// **'Solo quando scatti la foto di una pianta. Le foto sono tue e restano private.'**
+  String get profilePermissionCameraReason;
+
+  /// No description provided for @profilePermissionLocationName.
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione'**
+  String get profilePermissionLocationName;
+
+  /// No description provided for @profilePermissionLocationUnused.
+  ///
+  /// In it, this message translates to:
+  /// **'Non usata'**
+  String get profilePermissionLocationUnused;
+
+  /// No description provided for @profilePermissionLocationReason.
+  ///
+  /// In it, this message translates to:
+  /// **'Se un giorno la useremo per il meteo, basterà la città, mai la posizione precisa.'**
+  String get profilePermissionLocationReason;
+
+  /// No description provided for @profilePermissionsOpenSettings.
+  ///
+  /// In it, this message translates to:
+  /// **'Apri\nimpostazioni'**
+  String get profilePermissionsOpenSettings;
+
+  /// No description provided for @profileAccountSectionTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'ACCOUNT'**
+  String get profileAccountSectionTitle;
+
+  /// No description provided for @profileAccountStripSubtitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Esci, esporta, elimina'**
+  String get profileAccountStripSubtitle;
+
+  /// No description provided for @profileAccountDialogTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Account'**
+  String get profileAccountDialogTitle;
+
+  /// No description provided for @profileAccountAccessLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'ACCESSO'**
+  String get profileAccountAccessLabel;
+
+  /// No description provided for @profileAccountPrivacyLink.
+  ///
+  /// In it, this message translates to:
+  /// **'Informativa sulla privacy'**
+  String get profileAccountPrivacyLink;
+
+  /// No description provided for @profileAccountSignOutTag.
+  ///
+  /// In it, this message translates to:
+  /// **'Esci'**
+  String get profileAccountSignOutTag;
+
+  /// No description provided for @profileDeleteConfirmWord.
+  ///
+  /// In it, this message translates to:
+  /// **'ELIMINA'**
+  String get profileDeleteConfirmWord;
+
+  /// No description provided for @profileDeleteConfirmPrompt.
+  ///
+  /// In it, this message translates to:
+  /// **'Per confermare scrivi ELIMINA qui sotto.'**
+  String get profileDeleteConfirmPrompt;
+
+  /// No description provided for @profileDeleteConfirmLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'PAROLA DI CONFERMA'**
+  String get profileDeleteConfirmLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -71,6 +71,17 @@ class NotificationService {
     _initialized = true;
   }
 
+  Future<bool> arePermissionsGranted() async {
+    if (Platform.isAndroid) {
+      return (await Permission.notification.status).isGranted;
+    }
+    final iosPermissions = await _plugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.checkPermissions();
+    return iosPermissions?.isEnabled ?? false;
+  }
+
   Future<bool> requestPermissions() async {
     if (Platform.isAndroid) {
       return (await Permission.notification.request()).isGranted;

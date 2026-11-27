@@ -9,8 +9,8 @@ import 'package:piantala/presentation/screens/encyclopedia/species_detail_screen
 import 'package:piantala/presentation/screens/home/home_screen.dart';
 import 'package:piantala/presentation/screens/login/login_screen.dart';
 import 'package:piantala/presentation/screens/plant_detail/plant_detail_screen.dart';
+import 'package:piantala/presentation/screens/profile/settings_screen.dart';
 import 'package:piantala/presentation/screens/rooms/rooms_screen.dart';
-import 'package:piantala/presentation/screens/settings/settings_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'router.g.dart';

@@ -49,7 +49,7 @@ final currentUserProvider = Provider<UserEntity?>.internal(
 );
 
 typedef CurrentUserRef = ProviderRef<UserEntity?>;
-String _$authControllerHash() => r'260f8bc5b8823f6cbfa9788f6fa9b4a45ea19c35';
+String _$authControllerHash() => r'2bf8f8f59c57ca665ab66bb4be5880ad6b31c48d';
 
 /// See also [AuthController].
 @ProviderFor(AuthController)

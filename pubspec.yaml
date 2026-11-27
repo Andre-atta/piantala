@@ -99,6 +99,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/avatars/
     - assets/animations/
     - assets/icons/
     - assets/data/

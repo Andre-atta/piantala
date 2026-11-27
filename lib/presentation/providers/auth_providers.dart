@@ -86,6 +86,24 @@ class AuthController extends _$AuthController {
     });
   }
 
+  Future<void> updateDisplayName(String displayName) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.updateDisplayName(displayName);
+      ref.invalidate(authStateProvider);
+    });
+  }
+
+  Future<void> updatePhotoUrl(String? photoUrl) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final repository = ref.read(authRepositoryProvider);
+      await repository.updatePhotoUrl(photoUrl);
+      ref.invalidate(authStateProvider);
+    });
+  }
+
   Future<void> deleteAccount() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
